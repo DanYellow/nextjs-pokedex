@@ -3,7 +3,7 @@ import { Metadata, ResolvingMetadata } from "next";
 import { cache } from 'react'
 
 
-import type { IPokemon, IPokemonType } from "@/app/_types/Pokemon";
+import type { IPokemonAbilityComplete, IPokemonType } from "@/app/_types/Pokemon";
 import { fetchPokemon } from "@/app/_api/tyradex";
 import { fetchPokemonDetails, fetchAbilityData } from "@/app/_api/pokeapi";
 import { cleanString, typesAnimatedBorderColor, getAbilityForLang } from "@/app/_utils/index";
@@ -27,8 +27,21 @@ export async function generateMetadata(
 
     const pkmn = await getPkmn(Number(id))
 
+    if (pkmn === null || pkmn.status) {
+        return {
+            title: "Erreur",
+        }
+    }
+
     return {
         title: `#${String(id).padStart(4, '0')} ${pkmn.name.fr}`,
+        icons: {
+            icon: pkmn.sprites.regular,
+        },
+        openGraph: {
+            title: `#${String(id).padStart(4, '0')} ${pkmn.name.fr}`,
+            images: [pkmn.sprites.regular]
+        },
         // description: post.description,
     }
 }
@@ -39,6 +52,13 @@ export default async function BlogPostPage({
 }: Props) {
     const { id } = await params;
     const pkmn = await getPkmn(Number(id));
+
+    if (pkmn.status) {
+        return (
+            <p>{pkmn.message}</p>
+        )
+    }
+
     const pkmnExtraData = await fetchPokemonDetails(Number(id));
 
     const listTypes = pkmn.types.map((item: { name: string }) => item.name)
@@ -49,14 +69,25 @@ export default async function BlogPostPage({
         listAbilitiesDescriptions.push(getAbilityForLang(abilityData));
     };
 
-    const listKnownAbilities = listAbilitiesDescriptions.map((item) => cleanString(item.name.fr.toLowerCase().replace("-", "")));
+    const listKnownAbilities: string[] = listAbilitiesDescriptions.map((item) => cleanString(item.name.fr.toLowerCase().replace("-", "")));
+
+    // const listTalents = (pkmn?.talents || [])
+    //     .filter((item) => listKnownAbilities.includes(cleanString(item.name.toLowerCase().replace("-", ""))))
+    //     .map((item) => {
+    //         const description = listAbilitiesDescriptions.find((desc) => cleanString(desc.name.fr.toLowerCase().replace("-", "")) === cleanString(item.name.toLowerCase().replace("-", "")));
+    //         return {
+    //             ...item,
+    //             ...description
+    //         }
+    //     }) as unknown as IPokemonAbilityComplete[];
 
     const listTalents = (pkmn?.talents || [])
         .filter((item) => listKnownAbilities.includes(cleanString(item.name.toLowerCase().replace("-", ""))))
         .map((item) => ({
             ...item,
             ...listAbilitiesDescriptions.find((description) => cleanString(description.name.fr.toLowerCase().replace("-", "")) === cleanString(item.name.toLowerCase().replace("-", "")))
-        }));
+        })) as unknown as IPokemonAbilityComplete[];
+
 
     return (
         <>
@@ -105,16 +136,6 @@ export default async function BlogPostPage({
                                     </ul>
                                 </div>
                             </div>
-                            {/* <button
-                                type="button"
-                                className="rounded-sm absolute px-1.5 bg-white right-0 top-0 hocus:text-(color:--bg-modal-color) toggle-pip-btn grid overflow-x-clip whitespace-nowrap group-picture-in-picture:hidden"
-                                data-toggle-picture-in-picture
-                            >
-                                <svg fill="none" style={{ scale: 0.75, translate: "10% 0", }} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M2 6.25C2 4.45507 3.45507 3 5.25 3H18.75C20.5449 3 22 4.45507 22 6.25V12H20.5V6.25C20.5 5.2835 19.7165 4.5 18.75 4.5H5.25C4.2835 4.5 3.5 5.2835 3.5 6.25V15.75C3.5 16.7165 4.2835 17.5 5.25 17.5H11V19H5.25C3.45507 19 2 17.5449 2 15.75V6.25ZM14 13C12.8954 13 12 13.8954 12 15V20C12 21.1046 12.8954 22 14 22H21C22.1046 22 23 21.1046 23 20V15C23 13.8954 22.1046 13 21 13H14ZM5.21967 6.21967C5.51256 5.92678 5.98744 5.92678 6.28033 6.21967L9.5 9.43934V7.75C9.5 7.33579 9.83579 7 10.25 7C10.6642 7 11 7.33579 11 7.75V11.25C11 11.6642 10.6642 12 10.25 12H6.75C6.33579 12 6 11.6642 6 11.25C6 10.8358 6.33579 10.5 6.75 10.5H8.43934L5.21967 7.28033C4.92678 6.98744 4.92678 6.51256 5.21967 6.21967Z" fill="currentColor"></path>
-                                </svg>
-                                <p className="text-black content-center ml-1.5">Ouvrir dans une fenêtre</p>
-                            </button> */}
                         </div>
                     </div>
                     <div className="flex flex-col md:flex-row gap-3 mt-2 items-stretch md:items-start px-4">
@@ -131,8 +152,10 @@ export default async function BlogPostPage({
                                         <summary
                                             className="hover:marker:text-[color:--type-vol]"
                                         >
-                                            {item.name.fr}
-                                            {item.tc ? (<span className="py-0.5 px-1.5 whitespace-nowrap bg-slate-900 text-white rounded-md text-xs align-super font-normal">Talent caché</span>) : null}
+                                            <p className="inline-flex gap-1.5 items-start">
+                                                {item.name.fr}
+                                                {item.tc ? (<span className="py-0.5 px-1.5 whitespace-nowrap bg-slate-900 text-white rounded-md text-xs align-super font-normal">Talent caché</span>) : null}
+                                            </p>
                                         </summary>
                                         <p className="ml-4">
                                             {item.description}
