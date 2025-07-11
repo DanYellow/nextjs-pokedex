@@ -2,9 +2,9 @@ import Image from "next/image";
 import { Metadata, ResolvingMetadata } from "next";
 import { cache } from 'react'
 
+import type { IPokemonAbilityComplete, IPokemonType, IPokemon } from "@/app/_types/Pokemon";
 
-import type { IPokemonAbilityComplete, IPokemonType } from "@/app/_types/Pokemon";
-import { fetchPokemon } from "@/app/_api/tyradex";
+import { fetchPokemon, fetchPokemonForGeneration } from "@/app/_api/tyradex";
 import { fetchPokemonDetails, fetchAbilityData } from "@/app/_api/pokeapi";
 import { cleanString, typesAnimatedBorderColor, getAbilityForLang } from "@/app/_utils/index";
 
@@ -59,6 +59,8 @@ export default async function BlogPostPage({
         )
     }
 
+    const { data: pokedex, hasReachedEnd } = await fetchPokemonForGeneration();
+
     const pkmnExtraData = await fetchPokemonDetails(Number(id));
 
     const listTypes = pkmn.types.map((item: { name: string }) => item.name)
@@ -88,6 +90,8 @@ export default async function BlogPostPage({
             ...listAbilitiesDescriptions.find((description) => cleanString(description.name.fr.toLowerCase().replace("-", "")) === cleanString(item.name.toLowerCase().replace("-", "")))
         })) as unknown as IPokemonAbilityComplete[];
 
+    const prevPokemon = pokedex.find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id - 1) || {};
+    let nextPokemon = pokedex.find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id + 1) || null;
 
     return (
         <>
@@ -166,6 +170,35 @@ export default async function BlogPostPage({
                         </div>
                     </div>
                 </header>
+
+                <nav className="text-black">
+                    <ul className="my-3 px-4 py-3 flex flex-col sm:flex-row gap-6 justify-center" data-list-siblings-pokemon>
+                        {
+                            [prevPokemon, pkmn, nextPokemon].map((item: IPokemon) => {
+                                const isCurrentPkmn = item.pokedex_id === (pkmn as IPokemon).pokedex_id;
+                                const listClasses = [
+                                    "group",
+                                    ...[isCurrentPkmn ? ["shrink-0", "hidden", "sm:[display:revert]", "basis-0", "font-bold", "text-center"] : ""],
+                                    ...[!isCurrentPkmn ? ["grow"] : ""],
+                                ].flat()
+
+                                return (
+                                    <li
+                                        className={listClasses.join(" ")}
+                                    >
+                                        <a href="" inert={isCurrentPkmn} data-testid="" className="pkmn-sibling ripple-effect h-full group-last:flex-row-reverse flex gap-5 items-center group border-transparent transition-colors border-2 border-solid rounded-lg p-2 outline-offset-2 !opacity-100">
+                                            {!isCurrentPkmn ? <img className="w-12" src={item.sprites.regular} alt="" /> : null}
+                                            <div>
+                                                <p className="text-sm">{item.pokedex_id}</p>
+                                                <p>{item.name.fr}</p>
+                                            </div>
+                                        </a>
+                                    </li>
+                                )
+                            })
+                        }
+                    </ul>
+                </nav>
             </div>
         </>
     )
