@@ -1,35 +1,38 @@
+import type { IPokemon, IPokemonType } from "@/app/_types/Pokemon";
 
 export const fetchPokemonForGeneration = async (generation = 1) => {
+    let hasReachedEnd = false;
     try {
-        const req: { status: number, json: () => object } = await fetch(`https://tyradex.vercel.app/api/v1/gen/${generation}`);
+        const req: { status: number, json: () => Promise<IPokemon[]> } = await fetch(`https://tyradex.vercel.app/api/v1/gen/${generation}`);
 
         const serverErrorStartNumber = 400;
         if (req.status >= serverErrorStartNumber) {
-            throw new Error("" );
+            hasReachedEnd = true;
+            throw new Error("");
         }
 
-        return req.json();
+        return { hasReachedEnd, data: await req.json() };
     } catch (error) {
-        throw new Error("eee", { cause: error.cause });
+        return { hasReachedEnd, data: [] };
     }
 }
 
 export const fetchPokemon = async (pkmnId: number, region: string|null = null) => {
     try {
         const regionName = region ? `/${region}` : "";
-        const req: { json: () => object } = await fetch(`https://tyradex.vercel.app/api/v1/pokemon/${pkmnId}${regionName}`);
+        const req: { json: () => Promise<IPokemon> } = await fetch(`https://tyradex.vercel.app/api/v1/pokemon/${pkmnId}${regionName}`);
 
         return req.json();
     } catch (error) {
-        throw new Error(error);
+        return null;
     }
 }
 
 export const fetchAllTypes = async () => {
     try {
-        const req: { json: () => object } = await fetch("https://tyradex.app/api/v1/types");
+        const req: { json: () => Promise<IPokemonType> } = await fetch("https://tyradex.app/api/v1/types");
         return req.json();
     } catch (error) {
-        throw new Error(error);
+        return [];
     }
 }
