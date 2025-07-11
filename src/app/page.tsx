@@ -1,26 +1,24 @@
 import { fetchPokemonForGeneration } from "@/app/_api/tyradex";
-import PokedexEntry from "@/app/_components/PokedexEntry";
+import Pokedex from "@/app/_components/Pokedex";
+import LayoutSwitch from "@/app/_components/LayoutSwitch";
 
-import type { IPokemon } from "@/app/_types/Pokemon";
+// import Wrapper from "./_components/Wrapper";
+
+import { LayoutProvider } from '@/app/_contexts/LayoutContext';
 
 export default async function Home() {
     const { data, hasReachedEnd } = await fetchPokemonForGeneration();
 
     return (
-        <div>
-            <main>
-                <ol className="pokedex grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-4 mb-4 mx-auto max-w-6xl mt-2">
-                    {!hasReachedEnd && data.slice(0, 5).map((pokemon: IPokemon) => (
-                        <PokedexEntry
-                            key={pokemon.pokedex_id}
-                            id={pokemon.pokedex_id}
-                            name={pokemon.name.fr}
-                            sprite={pokemon.sprites.regular}
-                            listTypes={pokemon.types}
-                        />
-                    ))}
-                </ol>
+        <LayoutProvider>
+            <header className="py-2 px-4 bg-slate-900 text-white sticky left-0 right-0">
+                <LayoutSwitch />
+            </header>
+            {/* <div className="py-2 bg-slate-900 text-white fixed right-[max(env(safe-area-inset-right),_theme(space.3))] top-1/2 -translate-y-1/2 flex">
+                </div> */}
+            <main className="px-4">
+                {!hasReachedEnd && <Pokedex data={data} />}
             </main>
-        </div>
+        </LayoutProvider>
     );
 }

@@ -1,8 +1,9 @@
 import Image from "next/image";
+
 import { Metadata, ResolvingMetadata } from "next";
 import { cache } from 'react'
 
-import type { IPokemonAbilityComplete, IPokemonType, IPokemon } from "@/app/_types/Pokemon";
+import type { IPokemonAbilityComplete, IPokemonType, IPokemon, IPokemonError } from "@/app/_types/Pokemon";
 
 import { fetchPokemon, fetchPokemonForGeneration } from "@/app/_api/tyradex";
 import { fetchPokemonDetails, fetchAbilityData } from "@/app/_api/pokeapi";
@@ -27,13 +28,15 @@ export async function generateMetadata(
 ): Promise<Metadata> {
     const id = (await params).id
 
-    const pkmn = await getPkmn(Number(id))
+    let pkmn = await getPkmn(Number(id))
 
-    if (pkmn === null || pkmn.status) {
+    if (pkmn === null || (pkmn as IPokemonError).status) {
         return {
             title: "Erreur",
         }
     }
+
+    pkmn = (pkmn as IPokemon);
 
     return {
         title: `#${String(id).padStart(4, '0')} ${pkmn.name.fr}`,
@@ -53,37 +56,29 @@ export default async function BlogPostPage({
     params,
 }: Props) {
     const { id } = await params;
-    const pkmn = await getPkmn(Number(id));
+    let pkmn = await getPkmn(Number(id));
 
-    if (pkmn.status) {
+    if ((pkmn as IPokemonError).status) {
         return (
-            <p>{pkmn.message}</p>
+            <p>{(pkmn as IPokemonError).message}</p>
         )
     }
 
-    const { data: pokedex, hasReachedEnd } = await fetchPokemonForGeneration();
+    pkmn = (pkmn as IPokemon);
+
+    const { data: pokedex } = await fetchPokemonForGeneration(pkmn.generation);
 
     const pkmnExtraData = await fetchPokemonDetails(Number(id));
 
     const listTypes = pkmn.types.map((item: { name: string }) => item.name)
 
-    const listAbilitiesDescriptions: object[] = [];
+    const listAbilitiesDescriptions: { name: { fr: string; } }[] = [];
     for (const ability of (pkmnExtraData?.abilities || [])) {
         const abilityData = await fetchAbilityData(ability.ability.url);
         listAbilitiesDescriptions.push(getAbilityForLang(abilityData));
     };
 
     const listKnownAbilities: string[] = listAbilitiesDescriptions.map((item) => cleanString(item.name.fr.toLowerCase().replace("-", "")));
-
-    // const listTalents = (pkmn?.talents || [])
-    //     .filter((item) => listKnownAbilities.includes(cleanString(item.name.toLowerCase().replace("-", ""))))
-    //     .map((item) => {
-    //         const description = listAbilitiesDescriptions.find((desc) => cleanString(desc.name.fr.toLowerCase().replace("-", "")) === cleanString(item.name.toLowerCase().replace("-", "")));
-    //         return {
-    //             ...item,
-    //             ...description
-    //         }
-    //     }) as unknown as IPokemonAbilityComplete[];
 
     const listTalents = (pkmn?.talents || [])
         .filter((item) => listKnownAbilities.includes(cleanString(item.name.toLowerCase().replace("-", ""))))
@@ -97,12 +92,7 @@ export default async function BlogPostPage({
 
     return (
         <>
-            {/* <style jsx>{`
-      p {
-        color: red;
-      }
-    `}</style> */}
-            <div className="max-w-6xl mx-auto ">
+            <div className="max-w-6xl mx-auto">
                 <header className="main-infos border-b text-black pb-4 mb-3 md:sticky landscape:static landscape:lg:sticky top-0">
                     <div
                         style={{

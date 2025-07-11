@@ -1,12 +1,17 @@
 
-interface IPokemonType {
+export interface IPokemonType {
     name: string;
     image: string;
 }
 
-interface IPokemon {
+export interface IPokemonAbilityComplete {
+    name: { fr: string };
+    tc: boolean;
+    description: boolean;
+}
+
+export interface IPokemonCore {
     pokedex_id: number;
-    generation: number;
     name: {
         fr: string
     };
@@ -16,10 +21,18 @@ interface IPokemon {
         gmax: string | null;
     };
     types: IPokemonType[];
+}
+
+export interface IPokemon extends IPokemonCore {
+    generation: number;
     talents: { name: string; tc: boolean; }[];
     height: string;
     weight: string;
     catch_rate: number;
+    sexe: { male: number; female: number; } | null
 }
 
-export type { IPokemon, IPokemonType };
+export interface IPokemonError {
+    status: number;
+    message: string;
+}
