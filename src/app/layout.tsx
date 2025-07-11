@@ -9,6 +9,9 @@ const DMSans = DM_Sans({
 
 export const metadata: Metadata = {
     title: "Pokédex",
+    icons: {
+        icon: [{ rel: "icon", url: "/images/favicon.png" }]
+    },
 };
 
 export default function RootLayout({

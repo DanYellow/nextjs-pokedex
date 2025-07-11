@@ -38,7 +38,7 @@ export async function generateMetadata(
     return {
         title: `#${String(id).padStart(4, '0')} ${pkmn.name.fr}`,
         icons: {
-            icon: pkmn.sprites.regular,
+            icon: [{ rel: "icon", url: pkmn.sprites.regular }]
         },
         openGraph: {
             title: `#${String(id).padStart(4, '0')} ${pkmn.name.fr}`,
@@ -165,7 +165,7 @@ export default async function BlogPostPage({
 
                         {(pkmn.sexe === null) ? (
                             <div
-                                className="bg-slate-300 border-b-slate-700 border-b-4 border-solid px-2 py-1 w-full rounded-md"
+                                className="bg-slate-300 border-b-slate-700 border-b-4 border-solid px-2 py-1 w-full rounded-md h-14"
                             >
                                 <p>Asexué</p>
                             </div>
@@ -229,10 +229,10 @@ export default async function BlogPostPage({
 
                                 return (
                                     <li
+                                        key={item.pokedex_id}
                                         className={listClasses.join(" ")}
                                     >
                                         <PokemonSibling
-                                            key={item.pokedex_id}
                                             isCurrentPkmn={isCurrentPkmn}
                                             isPreviousPkmn={isPreviousPkmn}
                                             name={item.name}
