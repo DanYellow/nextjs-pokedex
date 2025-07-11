@@ -9,6 +9,8 @@ import { fetchPokemonDetails, fetchAbilityData } from "@/app/_api/pokeapi";
 import { cleanString, typesAnimatedBorderColor, getAbilityForLang } from "@/app/_utils/index";
 
 
+import PokemonSibling from "@/app/_components/PokemonSibling";
+
 type Props = {
     params: Promise<{ id: string }>
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
@@ -172,10 +174,11 @@ export default async function BlogPostPage({
                 </header>
 
                 <nav className="text-black">
-                    <ul className="my-3 px-4 py-3 flex flex-col sm:flex-row gap-6 justify-center" data-list-siblings-pokemon>
+                    <ul className="my-3 px-4 py-3 grid grid-cols-[1fr_1fr] sm:grid-cols-[1fr_auto_1fr] gap-6 justify-center" data-list-siblings-pokemon>
                         {
-                            [prevPokemon, pkmn, nextPokemon].map((item: IPokemon) => {
+                            [prevPokemon, pkmn, nextPokemon].filter(Boolean).map((item: IPokemon) => {
                                 const isCurrentPkmn = item.pokedex_id === (pkmn as IPokemon).pokedex_id;
+                                const isPreviousPkmn = item.pokedex_id < (pkmn as IPokemon).pokedex_id
                                 const listClasses = [
                                     "group",
                                     ...[isCurrentPkmn ? ["shrink-0", "hidden", "sm:[display:revert]", "basis-0", "font-bold", "text-center"] : ""],
@@ -186,13 +189,15 @@ export default async function BlogPostPage({
                                     <li
                                         className={listClasses.join(" ")}
                                     >
-                                        <a href="" inert={isCurrentPkmn} data-testid="" className="pkmn-sibling ripple-effect h-full group-last:flex-row-reverse flex gap-5 items-center group border-transparent transition-colors border-2 border-solid rounded-lg p-2 outline-offset-2 !opacity-100">
-                                            {!isCurrentPkmn ? <img className="w-12" src={item.sprites.regular} alt="" /> : null}
-                                            <div>
-                                                <p className="text-sm">{item.pokedex_id}</p>
-                                                <p>{item.name.fr}</p>
-                                            </div>
-                                        </a>
+                                        <PokemonSibling
+                                            key={item.pokedex_id}
+                                            isCurrentPkmn={isCurrentPkmn}
+                                            isPreviousPkmn={isPreviousPkmn}
+                                            name={item.name}
+                                            pokedex_id={item.pokedex_id}
+                                            sprites={item.sprites}
+                                            types={item.types}
+                                        />
                                     </li>
                                 )
                             })
