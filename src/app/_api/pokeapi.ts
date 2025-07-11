@@ -1,11 +1,11 @@
-import type { IPokemon, IPokemonType } from "@/app/_types/Pokemon";
+import type { IPokemonExtraData } from "@/app/_types/Pokeapi";
 
 export const fetchPokemonDetails = async (pkmnId: number) => {
     try {
-        const req: { json: () => Promise<IPokemon[]> } = await fetch(`https://pokeapi.co/api/v2/pokemon/${pkmnId}`);
+        const req: { json: () => Promise<IPokemonExtraData[]> } = await fetch(`https://pokeapi.co/api/v2/pokemon/${pkmnId}`);
         return req.json();
     } catch (error) {
-        throw new Error(error);
+        return {};
     }
 }
 
@@ -14,7 +14,7 @@ export const fetchPokemonExternalData = async (pkmnId: number) => {
         const req = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pkmnId}`);
         return req.json();
     } catch (error) {
-        throw new Error(error);
+        return {};
     }
 }
 
@@ -23,7 +23,7 @@ export const fetchEvolutionChain = async (url: string) => {
         const req = await fetch(url);
         return req.json();
     } catch (error) {
-        throw new Error(error);
+        return {};
     }
 }
 
@@ -32,7 +32,7 @@ export const fetchAbilityData = async (url: string) => {
         const req = await fetch(url);
         return req.json();
     } catch (error) {
-        throw new Error(error);
+        return {};
     }
 }
 
