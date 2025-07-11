@@ -110,7 +110,7 @@ export default async function BlogPostPage({
                         }}
                         className="sticky-header relative px-4 bg-white top-0 pt-2 pb-3 border-black border-solid border-b">
 
-                        <div className="flex flex-row gap-3 relative">
+                        <div className="flex flex-row gap-3 relative items-center">
                             <div className="w-20">
                                 <Image
                                     className="@xs:max-w-20 group-[.selected]:scale-85 group-hocus:scale-85 transition-transform"
@@ -122,7 +122,7 @@ export default async function BlogPostPage({
                                 />
                             </div>
                             <div className="grow">
-                                <h1 className="text-3xl font-bold">#{String(id).padStart(4, '0')} {pkmn.name.fr}</h1>
+                                <h1 className="text-2xl font-bold">#{String(id).padStart(4, '0')} {pkmn.name.fr}</h1>
                                 <p className="text-sm -mt-1">{pkmn.category}</p>
                                 <div className="@container">
                                     <ul className="flex gap-2 mt-2 flex-col @[10rem]:flex-row">
@@ -144,7 +144,49 @@ export default async function BlogPostPage({
                             </div>
                         </div>
                     </div>
-                    <div className="flex flex-col md:flex-row gap-3 mt-2 items-stretch md:items-start px-4">
+                    <div className="flex flex-row w-full overflow-hidden mt-2 min-h-9">
+                        {pkmn.sexe === null || pkmn.sexe.male === 0 ? null : (
+                            <div className="bar-sex-male only:rounded-md relative bg-sky-300 border-b-sky-700 border-b-4 border-solid px-2 py-1 rounded-l-md after:bg-sky-700 overflow-hidden" style={{ width: `${pkmn.sexe.male}%` }}>
+                                <div className="hidden md:block text-black">
+                                    <p className="whitespace-nowrap" id="sex-male">Mâle ♂</p>
+                                    <p className="text-xs" aria-labelledby="sex-male">{pkmn.sexe.male}%</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {pkmn.sexe === null || pkmn.sexe.female === 0 ? null : (
+                            <div className="bar-sex-female only:rounded-md relative bg-pink-300 border-b-pink-700 border-b-4 border-solid px-2 py-1 rounded-r-md after:bg-pink-700 overflow-hidden" style={{ width: `${pkmn.sexe.female}%` }}>
+                                <div className="hidden md:block text-black">
+                                    <p className="whitespace-nowrap" id="sex-female">Femelle ♀</p>
+                                    <p className="text-xs" aria-labelledby="sex-female">{pkmn.sexe.female}%</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {(pkmn.sexe === null) ? (
+                            <div
+                                className="bg-slate-300 border-b-slate-700 border-b-4 border-solid px-2 py-1 w-full rounded-md"
+                            >
+                                <p>Asexué</p>
+                            </div>
+                        ) : null}
+
+                    </div>
+                    <div className="md:hidden grid grid-flow-col">
+                        {pkmn.sexe === null || pkmn.sexe.male === 0 ? null : (
+                            <div>
+                                <p className="whitespace-nowrap">Mâle ♂</p>
+                                <p className="text-xs">{pkmn.sexe.male}%</p>
+                            </div>
+                        )}
+                        {pkmn.sexe === null || pkmn.sexe.female === 0 ? null : (
+                            <div className="text-right">
+                                <p className="whitespace-nowrap">Femelle ♀</p>
+                                <p className="text-xs">{pkmn.sexe.female}%</p>
+                            </div>
+                        )}
+                    </div>
+                    <div className="flex flex-col md:flex-row gap-3 mt-2 items-stretch md:items-start">
                         <ul className="shrink-0 bg-slate-50 rounded-md px-2 py-3">
                             <li><span className="font-bold">Masse : </span>{pkmn.weight}</li>
                             <li><span className="font-bold">Taille : </span>{pkmn.height}</li>
@@ -174,7 +216,7 @@ export default async function BlogPostPage({
                 </header>
 
                 <nav className="text-black">
-                    <ul className="my-3 px-4 py-3 grid grid-cols-[1fr_1fr] sm:grid-cols-[1fr_auto_1fr] gap-6 justify-center" data-list-siblings-pokemon>
+                    <ul className="my-3 py-3 grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-6 justify-center" data-list-siblings-pokemon>
                         {
                             [prevPokemon, pkmn, nextPokemon].filter(Boolean).map((item: IPokemon) => {
                                 const isCurrentPkmn = item.pokedex_id === (pkmn as IPokemon).pokedex_id;

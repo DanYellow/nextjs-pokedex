@@ -1,3 +1,5 @@
+"use client";
+
 import type { IPokemonCore } from "@/app/_types/Pokemon";
 import { typesTextColorGroupHocus, cleanString } from "../_utils";
 import Link from "next/link";
@@ -14,7 +16,7 @@ export default ({ isCurrentPkmn, isPreviousPkmn, name, pokedex_id, sprites, type
                 pkmn-sibling h-full group-last:flex-row-reverse flex gap-5 items-center
             `}>
                 <div>
-                    <p className="text-sm">{pokedex_id}</p>
+                    <p className="text-sm">#{String(pokedex_id).padStart(4, '0')}</p>
                     <p>{name.fr}</p>
                 </div>
             </div>
@@ -26,7 +28,7 @@ export default ({ isCurrentPkmn, isPreviousPkmn, name, pokedex_id, sprites, type
             <p className={`group-hocus:scale-120 arrow ${isPreviousPkmn ? "-mr-3.5" : "-ml-3.5"} ${typesTextColorGroupHocus[cleanString(types[0].name)]}`}> {isPreviousPkmn ? "◄" : "►"}</p>
             <img className="w-12" src={sprites.regular} alt="" />
             <div>
-                <p className="text-sm">{pokedex_id}</p>
+                <p className="text-sm">#{String(pokedex_id).padStart(4, '0')}</p>
                 <p>{name.fr}</p>
             </div>
         </Link>

@@ -19,7 +19,7 @@ export default function RootLayout({
     return (
         <html lang="fr">
             <body
-                className={`${DMSans.variable} antialiased`}
+                className={`${DMSans.variable} antialiased px-4`}
                 style={{ fontFamily: `var(--font-dm-sans)` }}
             >
                 {children}
