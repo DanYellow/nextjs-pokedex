@@ -1,4 +1,4 @@
-export const typesBorderColor = {
+export const typesBorderColor: { [key: string]: string; } = {
     plante_poison: "hocus:border-plante_poison",
     plante_plante: "hocus:border-plante_plante",
     plante_feu: "hocus:border-plante_feu",
@@ -325,7 +325,7 @@ export const typesBorderColor = {
     spectre_fee: "hocus:border-spectre_fee",
 };
 
-export const typesAnimatedBorderColor = {
+export const typesAnimatedBorderColor: { [key: string]: string; } = {
     plante_plante:
         "hocus:border-animated-plante_plante, [.selected]:border-animated-plante_plante",
     plante_poison:
@@ -976,7 +976,7 @@ export const typesAnimatedBorderColor = {
         "hocus:border-animated-spectre_spectre, [.selected]:border-animated-spectre_spectre",
 };
 
-export const typesTextColorGroupHocus = {
+export const typesTextColorGroupHocus: { [key: string]: string; } = {
     plante: "group-hocus:text-plante",
     acier: "group-hocus:text-acier",
     feu: "group-hocus:text-feu",

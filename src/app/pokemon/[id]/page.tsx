@@ -223,8 +223,7 @@ export default async function BlogPostPage({
                                 const isPreviousPkmn = item.pokedex_id < (pkmn as IPokemon).pokedex_id
                                 const listClasses = [
                                     "group",
-                                    ...[isCurrentPkmn ? ["shrink-0", "hidden", "sm:[display:revert]", "basis-0", "font-bold", "text-center"] : ""],
-                                    ...[!isCurrentPkmn ? ["grow"] : ""],
+                                    ...[isCurrentPkmn ? ["hidden", "sm:[display:revert]", "font-bold", "text-center"] : ""],
                                 ].flat()
 
                                 return (
