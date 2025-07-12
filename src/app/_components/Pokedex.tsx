@@ -13,9 +13,20 @@ const MAX_GENERATION = 9;
 
 const DexLink = ({ generation }: { generation: number; }) => {
     return (
-        <li className="border-2 border-black rounded-md  bg-gray-200  hocus:text-white @container/pokemon overflow-hidden">
-            <Link data-generation={generation} href={`?id=${generation}`} className={`block hocus:bg-gray-500 p-2 w-full h-full ${pkdexStyle["pkdex-link"]} @sm/pokemon:h-16 transition-colors`}>
+        <li className="border-2 border-black rounded-md  bg-gray-200  hocus:text-white @container/pokemon">
+            <Link data-generatione={generation} href={`?id=${generation}`} className={`block hocus:bg-gray-500 p-2 w-full h-full ${pkdexStyle["pkdex-link"]} @sm/pokemon:h-16 transition-colors overflow-hidden`}>
                 Aller à la <span className='font-bold text-lg text-wrap'>GÉNÉRATION #{generation}</span>
+
+                {Array.from({length:6}).map((_, idx) => {
+                    return (
+                        <p
+                            key={idx}
+                            aria-hidden="true"
+                            className={`${pkdexStyle["generation-number"]}`}>
+                                {generation}
+                        </p>
+                    )
+                })}
             </Link>
         </li>
     )
