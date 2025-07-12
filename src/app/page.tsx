@@ -30,7 +30,14 @@ export async function generateMetadata(
 
 export default async function Home({ searchParams }: PageProps) {
     const { id = 1 } = await searchParams;
-    const { data, hasFoundGeneration } = await fetchPokemonForGeneration(Number(id));
+    let { data, hasFoundGeneration } = await fetchPokemonForGeneration(Number(id));
+
+    if (hasFoundGeneration) {
+        data = (data as IPokemon[])
+        data = data.filter((item: IPokemon) => {
+            return item.pokedex_id >= (data as IPokemon[])[0].pokedex_id
+        })
+    }
 
     return (
         <LayoutProvider>
