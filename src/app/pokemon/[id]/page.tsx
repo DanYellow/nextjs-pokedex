@@ -48,7 +48,7 @@ export async function generateMetadata(
             icon: [{ rel: "icon", url: pkmn.sprites.regular }]
         },
         openGraph: {
-            title: `#${String(id).padStart(4, '0')} ${pkmn.name.fr}`,
+            title: `#${String(id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} ${pkmn.name.fr}`,
             images: [pkmn.sprites.regular]
         },
         // description: post.description,
@@ -80,7 +80,25 @@ export default async function BlogPostPage({
 
     if ((pkmn as IPokemonError).status) {
         return (
-            <p>{(pkmn as IPokemonError).message}</p>
+            <>
+                <header className="py-2 px-4 bg-slate-900 text-white sticky left-0 right-0 top-0 z-50 ">
+                    <div className="max-w-6xl flex justify-between mx-auto px-4">
+                        <div>
+                            <h2 className="text-2xl">
+                                Erreur
+                            </h2>
+                        </div>
+                        <Link className="underline hocus:no-underline self-end" href="/?id=1">
+                            Retourner au Pokédex
+                        </Link>
+                    </div>
+                </header>
+                <div className="max-w-6xl mx-auto px-4 min-h-screen pt-4"
+                    style={{ borderLeft: "1px solid black", borderRight: "1px solid black" }}
+                >
+                    <p className="text-2xl font-bold">{(pkmn as IPokemonError).message}</p>
+                </div>
+            </>
         )
     }
 
@@ -89,6 +107,18 @@ export default async function BlogPostPage({
     const { data: pokedex } = await fetchPokemonForGeneration(pkmn.generation);
 
     const pkmnExtraData = await fetchPokemonDetails(Number(id));
+
+    let prevPokemon = (pokedex as IPokemon[]).find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id - 1) || {};
+    let nextPokemon = (pokedex as IPokemon[]).find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id + 1) || null;
+
+    const firstPokemonGenerationId = (pokedex as IPokemon[])[0].pokedex_id
+    const lastPokemonGenerationId = ((pokedex as IPokemon[]).at(-1) as IPokemon).pokedex_id;
+
+    if (lastPokemonGenerationId === pkmn.pokedex_id) {
+        nextPokemon = await getPkmn(Number(pkmn.pokedex_id + 1)) as IPokemon;
+    } else if (firstPokemonGenerationId === pkmn.pokedex_id && pkmn.generation > 1) {
+        prevPokemon = await getPkmn(Number(pkmn.pokedex_id - 1)) as IPokemon;
+    }
 
     const listTypes = pkmn.types.map((item: { name: string }) => item.name)
 
@@ -107,9 +137,6 @@ export default async function BlogPostPage({
             ...listAbilitiesDescriptions.find((description) => cleanString(description.name.fr.toLowerCase().replace("-", "")) === cleanString(item.name.toLowerCase().replace("-", "")))
         })) as unknown as IPokemonAbilityComplete[];
 
-    const prevPokemon = (pokedex as IPokemon[]).find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id - 1) || {};
-    let nextPokemon = (pokedex as IPokemon[]).find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id + 1) || null;
-
     return (
         <>
             <header className="py-2 px-4 bg-slate-900 text-white sticky left-0 right-0 top-0 z-50 ">
@@ -119,7 +146,7 @@ export default async function BlogPostPage({
                             Génération #{pkmn.generation}
                         </h2>
                         <p className="py-0.5 px-2 rounded-md bg-slate-600 text-white inline-flex">
-                            <span>{String((pokedex as IPokemon[])[0].pokedex_id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} → {String(((pokedex as IPokemon[]).at(-1) as IPokemon).pokedex_id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')}</span>
+                            <span>{String(firstPokemonGenerationId).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} ➜ {String(lastPokemonGenerationId).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')}</span>
                         </p>
                     </div>
                     <Link className="underline hocus:no-underline self-end" href={`/?id=${pkmn.generation}#pkmn-${pkmn.pokedex_id}`}>
