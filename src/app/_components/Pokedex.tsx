@@ -1,7 +1,5 @@
 "use client";
 
-import { useContext } from 'react';
-
 import type { IPokemon } from "@/app/_types/Pokemon";
 import PokedexEntry from "@/app/_components/PokedexEntry";
 
@@ -13,6 +11,10 @@ export default ({ data }: { data: IPokemon[] }) => {
         ...(layout === "grid" ? ["grid-cols-3", "md:grid-cols-5", "lg:grid-cols-6"] : []),
         ...(layout === "list" ? ["grid-cols-1"] : []),
     ];
+
+    if (!layout) {
+        return null;
+    }
 
     return (
         <ol className={`pokedex grid gap-4 mb-4 mx-auto max-w-6xl mt-2 ${listClasses.join(" ")}`}>

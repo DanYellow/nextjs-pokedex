@@ -5,6 +5,10 @@ import { useLayout } from '../_contexts/LayoutContext';
 export default () => {
     const { layout, setLayout } = useLayout();
 
+    if (!layout) {
+        return null;
+    }
+
     return (
         <div className="flex gap-y-1 gap-x-2 items-center">
             <svg data-icon="list" aria-label="Affichage en liste" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-7 transition-opacity">
@@ -12,7 +16,7 @@ export default () => {
             </svg>
 
             <label className="inline-flex items-center cursor-pointer col-span-2" data-testid="switch-layout">
-                <input type="checkbox" defaultChecked={layout === "grid"} className="sr-only peer switch-checkbox" onChange={(e) => {
+                <input type="checkbox" checked={layout === "grid"} className="sr-only peer switch-checkbox" onChange={(e) => {
                     setLayout(e.target.checked ? "grid" : "list")
                 }} />
                 <div className="switch relative w-14 h-8 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 peer-checked:after:start-[-2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-7 after:w-7 peer-checked:bg-blue-600"></div>

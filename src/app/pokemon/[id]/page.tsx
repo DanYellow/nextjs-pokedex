@@ -1,6 +1,8 @@
 import Image from "next/image";
 
 import { Metadata, ResolvingMetadata } from "next";
+import type { Viewport } from 'next';
+
 import { cache } from 'react'
 
 import type { IPokemonAbilityComplete, IPokemonType, IPokemon, IPokemonError } from "@/app/_types/Pokemon";
@@ -23,7 +25,7 @@ const getPkmn = cache(async (id: Number) => {
 })
 
 export async function generateMetadata(
-    { params, searchParams }: Props,
+    { params }: Props,
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     const id = (await params).id
@@ -48,6 +50,22 @@ export async function generateMetadata(
             images: [pkmn.sprites.regular]
         },
         // description: post.description,
+    }
+}
+
+export async function generateViewport({ params }: Props): Promise<Viewport> {
+    const id = (await params).id
+
+    let pkmn = await getPkmn(Number(id))
+
+    if (pkmn === null || (pkmn as IPokemonError).status) {
+        return {
+            themeColor: 'black',
+        }
+    }
+
+    return {
+        themeColor: 'black',
     }
 }
 
@@ -92,13 +110,13 @@ export default async function BlogPostPage({
 
     return (
         <>
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-6xl mx-auto px-4">
                 <header className="main-infos border-b text-black pb-4 mb-3 md:sticky landscape:static landscape:lg:sticky top-0">
                     <div
                         style={{
                             borderImage: `linear-gradient(to right, var(--type-${cleanString(listTypes[0])}) 0%, var(--type-${cleanString(listTypes[0])}) 50%, var(--type-${cleanString(listTypes?.[1] || listTypes[0])}) 50%, var(--type-${cleanString(listTypes?.[1] || listTypes[0])}) 100%) 1`
                         }}
-                        className="sticky-header relative px-4 bg-white top-0 pt-2 pb-3 border-black border-solid border-b">
+                        className="sticky-header relative px-4 bg-gray-50 top-0 pt-2 pb-3 border-black border-solid border-b">
 
                         <div className="flex flex-row gap-3 relative items-center">
                             <div className="w-20">
