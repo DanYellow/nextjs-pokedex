@@ -29,7 +29,7 @@ export default ({ id, name, sprite, listTypes: _listTypes }: { id: number, name:
     const listBorderClasses = typesAnimatedBorderColor[`${cleanString(listTypes[0])}_${cleanString(listTypes?.[1] || listTypes[0])}`]
 
     return (
-        <li className="@container/pokemon">
+        <li className="@container/pokemon" id={`pkmn-${id}`}>
             <a href={`/pokemon/${id}`}
                 className={`
                     pokemon ripple-effect duration-150

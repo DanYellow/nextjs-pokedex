@@ -14,7 +14,7 @@ const MAX_GENERATION = 9;
 const DexLink = ({ generation }: { generation: number; }) => {
     return (
         <li className="border-2 border-black rounded-md  bg-gray-200  hocus:text-white @container/pokemon overflow-hidden">
-            <Link data-generation={generation} href={`?id=${generation}`} className={`block hocus:bg-gray-500 p-2 w-full h-full ${pkdexStyle["pkdex-link"]} @sm/pokemon:h-16`}>
+            <Link data-generation={generation} href={`?id=${generation}`} className={`block hocus:bg-gray-500 p-2 w-full h-full ${pkdexStyle["pkdex-link"]} @sm/pokemon:h-16 transition-colors`}>
                 Aller à la <span className='font-bold text-lg text-wrap'>GÉNÉRATION #{generation}</span>
             </Link>
         </li>

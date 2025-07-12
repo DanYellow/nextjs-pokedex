@@ -34,17 +34,19 @@ export default async function Home({ searchParams }: PageProps) {
 
     return (
         <LayoutProvider>
-            <header className="py-2 px-4 bg-slate-900 text-white sticky left-0 right-0 top-0 z-50 flex justify-between">
-                <div>
-                    <h2 className="text-2xl">
-                        Génération #{id}
-                    </h2>
-                    {hasFoundGeneration && (<p className="py-0.5 px-2 rounded-md bg-slate-600 text-white inline-flex">
-                        <span>{String((data as IPokemon[])[0].pokedex_id).padStart(4, '0')} → {String(((data as IPokemon[]).at(-1) as IPokemon).pokedex_id).padStart(4, '0')}</span>
-                    </p>)}
-                </div>
+            <header className="py-2 px-4 bg-slate-900 text-white sticky left-0 right-0 top-0 z-50 ">
+                <div className="max-w-6xl flex justify-between mx-auto px-4">
+                    <div>
+                        <h2 className="text-2xl">
+                            Génération #{id}
+                        </h2>
+                        {hasFoundGeneration && (<p className="py-0.5 px-2 rounded-md bg-slate-600 text-white inline-flex">
+                            <span>{String((data as IPokemon[])[0].pokedex_id).padStart(4, '0')} → {String(((data as IPokemon[]).at(-1) as IPokemon).pokedex_id).padStart(4, '0')}</span>
+                        </p>)}
+                    </div>
 
-                <LayoutSwitch />
+                    <LayoutSwitch />
+                </div>
             </header>
             <main className="px-4">
                 {hasFoundGeneration && (<Pokedex data={(data as IPokemon[])} />)}
