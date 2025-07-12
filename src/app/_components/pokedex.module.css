@@ -1,24 +1,35 @@
+@property --border-type-angle {
+    syntax: "<number>";
+    initial-value: 20;
+}
+
 .pkdex-link {
+    --random-value: 10;
+
     position: relative;
 
     &::after {
-        /* content: url("/images/arrow.svg"); */
+        content: url("/images/arrow.svg");
         position: absolute;
-        opacity: 0.35;
-        inset: 0;
+        opacity: 0.15;
         mix-blend-mode: color-burn;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 0;
+        right: 0;
     }
 
     &:hover {
         .generation-number {
             @supports (opacity: sibling-index()) {
-                transform: translateX(calc(calc(sibling-index() - 2) * -35px));
+                transform: translateX(calc(calc(sibling-index() - 2) * -75%));
                 -webkit-text-stroke-color: hsl(
-                    calc(sibling-index() * 20),
+                    calc(sibling-index() * var(--random-value)),
                     100%,
                     60%
                 );
-                opacity: calc(1 - calc(calc(sibling-index() - 2) * 0.2));
+                opacity: calc(1 - calc(calc(sibling-index() - 2) * 0.15));
+                z-index: calc(100 - sibling-index());
             }
         }
     }

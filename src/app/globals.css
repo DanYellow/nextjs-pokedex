@@ -169,12 +169,6 @@ html {
     );
 }
 
-[inert]:not(li:has(a), dialog, .arrow, .pokemon) {
-    opacity: theme(opacity.20);
-    position: relative;
-    z-index: -10;
-}
-
 .horizontal-evolution-layout {
     display: grid;
     grid-template-columns: auto min-content auto;

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import Link from 'next/link';
 
 import type { IPokemon } from "@/app/_types/Pokemon";
@@ -11,12 +12,27 @@ import pkdexStyle from "./pokedex.module.css";
 
 const MAX_GENERATION = 9;
 
-const DexLink = ({ generation }: { generation: number; }) => {
+const DexLink = ({ generation, isLast }: { generation: number; isLast: boolean; }) => {
+    const linkRef = useRef<HTMLAnchorElement>(null);
+
     return (
         <li className="@container/pokemon">
             <Link
                 href={`?id=${generation}`}
-                className={`block hocus:bg-gray-500 bg-gray-200 hocus:text-white p-2 w-full h-full ${pkdexStyle["pkdex-link"]} @sm/pokemon:h-16 transition-colors overflow-hidden border-2 border-black rounded-md `}
+                className={`
+                    block hocus:bg-gray-500 bg-gray-200 hocus:text-white
+                    p-2 w-full h-full ${pkdexStyle["pkdex-link"]} @sm/pokemon:h-16
+                    transition-colors overflow-hidden border-2 border-black rounded-md
+                    @sm/pokemon:after:!content-none
+                    ${isLast ? "after:-scale-x-100" : ""}
+                    `
+                }
+                onMouseEnter={() => {
+                    if (linkRef.current) {
+                        linkRef.current.style.setProperty('--random-value', String(Math.floor(Math.random() * 50)))
+                    }
+                }}
+                ref={linkRef}
             >
                 Aller à la <span className='font-bold text-lg text-wrap'>GÉNÉRATION #{generation}</span>
 
@@ -25,7 +41,9 @@ const DexLink = ({ generation }: { generation: number; }) => {
                         <p
                             key={idx}
                             aria-hidden="true"
-                            className={`${pkdexStyle["generation-number"]}`}>
+                            className={`${pkdexStyle["generation-number"]}`}
+                            inert
+                        >
                             {generation}
                         </p>
                     )
@@ -51,7 +69,7 @@ export default ({ data }: { data: IPokemon[]; }) => {
     return (
         <ol className={`pokedex grid gap-4 mb-4 mx-auto max-w-6xl mt-2 ${listClasses.join(" ")}`}>
             {currentGeneration > 1 ? (
-                <DexLink generation={currentGeneration - 1} />
+                <DexLink generation={currentGeneration - 1} isLast={false} />
             ) : null}
 
             {data.map((pokemon: IPokemon) => (
@@ -64,7 +82,7 @@ export default ({ data }: { data: IPokemon[]; }) => {
                 />
             ))}
             {currentGeneration < MAX_GENERATION ? (
-                <DexLink generation={currentGeneration + 1} />
+                <DexLink generation={currentGeneration + 1} isLast={true} />
             ) : null}
         </ol>
     );
