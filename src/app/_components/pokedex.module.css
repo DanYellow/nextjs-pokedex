@@ -14,7 +14,7 @@
             @supports (opacity: sibling-index()) {
                 transform: translateX(calc(calc(sibling-index() - 2) * -35px));
                 -webkit-text-stroke-color: hsl(
-                    calc(sibling-index() * 9),
+                    calc(sibling-index() * 20),
                     100%,
                     60%
                 );
