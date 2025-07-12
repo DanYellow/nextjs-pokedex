@@ -4,6 +4,7 @@ import Image from "next/image";
 import type { IPokemonCore } from "@/app/_types/Pokemon";
 import { typesTextColorGroupHocus, typesBorderColor, cleanString } from "../_utils";
 import Link from "next/link";
+import { useEffect } from "react";
 
 interface IPokemonSibling extends IPokemonCore {
     isCurrentPkmn: boolean;
@@ -12,6 +13,15 @@ interface IPokemonSibling extends IPokemonCore {
 
 export default ({ isCurrentPkmn, isPreviousPkmn, name, pokedex_id, sprites, types }: IPokemonSibling) => {
     if (isCurrentPkmn) {
+        useEffect(() => {
+            const r = document.querySelector(':root') as HTMLElement;
+            if (r) {
+                document.body.classList.add("bg-dots");
+                r.style.setProperty('--dot-color-1', `var(--type-${cleanString(types[0].name)})`);
+                r.style.setProperty('--dot-color-2', `var(--type-${cleanString(types[1]?.name || types[0].name)})`);
+            }
+        }, [])
+
         return (
             <div className={`
                 pkmn-sibling h-full group-last:flex-row-reverse flex gap-5 items-center

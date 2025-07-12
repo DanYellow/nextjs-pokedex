@@ -113,6 +113,7 @@ export default async function BlogPostPage({
     let nextPokemon = (pokedex as IPokemon[]).find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id + 1) || null;
 
     const firstPokemonGenerationId = (pokedex as IPokemon[])[0].pokedex_id
+
     const lastPokemonGenerationId = ((pokedex as IPokemon[]).at(-1) as IPokemon).pokedex_id;
 
     if (lastPokemonGenerationId === pkmn.pokedex_id) {
@@ -170,7 +171,7 @@ export default async function BlogPostPage({
                     </Link>
                 </div>
             </header>
-            <div className="max-w-6xl mx-auto px-4 min-h-screen"
+            <div className="max-w-6xl mx-auto px-4 min-h-screen bg-gray-50"
                 style={{ borderLeft: `1px solid var(--type-${cleanString(listTypes[0])})`, borderRight: `1px solid var(--type-${cleanString(listTypes?.[1] || listTypes[0])})` }}
             >
                 <header className="main-infos border-b text-black pb-4 mb-3 md:sticky landscape:static landscape:lg:sticky top-0">
@@ -287,7 +288,7 @@ export default async function BlogPostPage({
 
                 <details>
                     <summary className="hover:marker:text-[color:--bg-modal-color] font-bold text-xl">Statistiques de base</summary>
-                    <div className="grid gap-y-1.5 grid-cols-[1fr_max-content] sm:grid-cols-[max-content_max-content_1fr] grid-rows-[max-content] items-center pt-3 relative -z-10">
+                    <div className="grid gap-y-1.5 grid-cols-[1fr_max-content] sm:grid-cols-[max-content_max-content_1fr] grid-rows-[max-content] items-center pt-3 relative">
                         {listStatistics.map((item) => (
                             <React.Fragment key={item.name}>
                                 <p className="px-3 py-2 h-full font-bold sm:top-0 sm:rounded-bl-lg rounded-tl-lg border-l-4 border-solid" style={{ backgroundColor: item.transparentColor, borderColor: item.transparentColor }} aria-label={item.ariaLabel}>{item.name}</p>
