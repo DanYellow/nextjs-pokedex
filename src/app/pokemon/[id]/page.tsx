@@ -3,17 +3,18 @@ import Image from "next/image";
 import { Metadata, ResolvingMetadata } from "next";
 import type { Viewport } from 'next';
 
-import { cache } from 'react'
+import { cache } from 'react';
 
 import type { IPokemonAbilityComplete, IPokemonType, IPokemon, IPokemonError } from "@/app/_types/Pokemon";
 
 import { fetchPokemon, fetchPokemonForGeneration } from "@/app/_api/tyradex";
 import { fetchPokemonDetails, fetchAbilityData } from "@/app/_api/pokeapi";
-import { cleanString, typesAnimatedBorderColor, getAbilityForLang } from "@/app/_utils/index";
+import { cleanString, NB_NUMBER_INTEGERS_PKMN_ID, getAbilityForLang } from "@/app/_utils/index";
 
 
 import PokemonSibling from "@/app/_components/PokemonSibling";
 import { IPokemonExtraData } from "@/app/_types/Pokeapi";
+import Link from "next/link";
 
 type Props = {
     params: Promise<{ id: string }>
@@ -106,12 +107,29 @@ export default async function BlogPostPage({
             ...listAbilitiesDescriptions.find((description) => cleanString(description.name.fr.toLowerCase().replace("-", "")) === cleanString(item.name.toLowerCase().replace("-", "")))
         })) as unknown as IPokemonAbilityComplete[];
 
-    const prevPokemon = pokedex.find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id - 1) || {};
-    let nextPokemon = pokedex.find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id + 1) || null;
+    const prevPokemon = (pokedex as IPokemon[]).find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id - 1) || {};
+    let nextPokemon = (pokedex as IPokemon[]).find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id + 1) || null;
 
     return (
         <>
-            <div className="max-w-6xl mx-auto px-4">
+            <header className="py-2 px-4 bg-slate-900 text-white sticky left-0 right-0 top-0 z-50 ">
+                <div className="max-w-6xl flex justify-between mx-auto px-4">
+                    <div>
+                        <h2 className="text-2xl">
+                            Génération #{pkmn.generation}
+                        </h2>
+                        <p className="py-0.5 px-2 rounded-md bg-slate-600 text-white inline-flex">
+                            <span>{String((pokedex as IPokemon[])[0].pokedex_id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} → {String(((pokedex as IPokemon[]).at(-1) as IPokemon).pokedex_id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')}</span>
+                        </p>
+                    </div>
+                    <Link className="underline hocus:no-underline self-end" href={`/?id=${pkmn.generation}#pkmn-${pkmn.pokedex_id}`}>
+                        Retourner au Pokédex
+                    </Link>
+                </div>
+            </header>
+            <div className="max-w-6xl mx-auto px-4 min-h-screen"
+                style={{ borderLeft: `1px solid var(--type-${cleanString(listTypes[0])})`, borderRight: `1px solid var(--type-${cleanString(listTypes?.[1] || listTypes[0])})` }}
+            >
                 <header className="main-infos border-b text-black pb-4 mb-3 md:sticky landscape:static landscape:lg:sticky top-0">
                     <div
                         style={{
@@ -196,12 +214,12 @@ export default async function BlogPostPage({
                         )}
                     </div>
                     <div className="flex flex-col md:flex-row gap-3 mt-2 items-stretch md:items-start">
-                        <ul className="shrink-0 bg-slate-50 rounded-md px-2 py-3">
+                        <ul className="shrink-0 bg-slate-200 rounded-md px-2 py-3">
                             <li><span className="font-bold">Masse : </span>{pkmn.weight}</li>
                             <li><span className="font-bold">Taille : </span>{pkmn.height}</li>
                             <li><span className="font-bold">Taux de capture : </span>{pkmn.catch_rate}</li>
                         </ul>
-                        <div className="grow bg-slate-50 rounded-md px-2 py-3">
+                        <div className="grow bg-slate-200 rounded-md px-2 py-3">
                             <p className="font-bold">Talents</p>
                             <div className="flex flex-col gap-y-2">
                                 {listTalents.map((item) => (
