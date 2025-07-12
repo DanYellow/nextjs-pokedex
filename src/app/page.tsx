@@ -4,12 +4,17 @@ import Pokedex from "@/app/_components/Pokedex";
 import LayoutSwitch from "@/app/_components/LayoutSwitch";
 import { LayoutProvider } from '@/app/_contexts/LayoutContext';
 
-export default async function Home() {
-    const { data, hasReachedEnd } = await fetchPokemonForGeneration();
+export default async function Home({
+    searchParams,
+}: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+    const { id = 1 } = await searchParams;
+    const { data, hasReachedEnd } = await fetchPokemonForGeneration(id as number);
 
     return (
         <LayoutProvider>
-            <header className="py-2 px-4 bg-slate-900 text-white sticky left-0 right-0 top-0 z-50">
+            <header className="py-2 px-4 bg-slate-900 text-white sticky left-0 right-0 top-0 z-50 flex justify-end">
                 <LayoutSwitch />
             </header>
             <main className="px-4">
