@@ -67,7 +67,7 @@ export default ({ data }: { data: IPokemon[]; }) => {
     const currentGeneration = data[0].generation;
 
     return (
-        <ol className={`pokedex grid gap-4 mb-4 mx-auto max-w-6xl mt-2 ${listClasses.join(" ")}`}>
+        <ol className={`pokedex grid gap-4 mb-4 mx-auto max-w-6xl mt-2 auto-rows-fr ${listClasses.join(" ")}`}>
             {currentGeneration > 1 ? (
                 <DexLink generation={currentGeneration - 1} isLast={false} />
             ) : null}
