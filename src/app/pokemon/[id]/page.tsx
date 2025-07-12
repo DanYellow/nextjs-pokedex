@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Metadata, ResolvingMetadata } from "next";
 import type { Viewport } from 'next';
 
-import { cache } from 'react';
+import React, { cache } from 'react';
 
 import type { IPokemonAbilityComplete, IPokemonType, IPokemon, IPokemonError } from "@/app/_types/Pokemon";
 import type { IStatComputed } from "@/app/_types/Pokeapi";
@@ -140,6 +140,7 @@ export default async function BlogPostPage({
 
     const listStatistics: IStatComputed[] = [];
     const alpha: number = 0.45;
+    let totalBaseStat = 0;
 
     (pkmnExtraData as IPokemonExtraData).stats.forEach((item) => {
         listStatistics.push({
@@ -149,9 +150,8 @@ export default async function BlogPostPage({
             value: item.base_stat,
             ariaLabel: `${statistics[item.stat.name].name} de base ${item.base_stat}`,
         })
+        totalBaseStat += item.base_stat;
     })
-
-    console.log(listStatistics)
 
     return (
         <>
@@ -289,14 +289,16 @@ export default async function BlogPostPage({
                     <summary className="hover:marker:text-[color:--bg-modal-color] font-bold text-xl">Statistiques de base</summary>
                     <div className="grid gap-y-1.5 grid-cols-[1fr_max-content] sm:grid-cols-[max-content_max-content_1fr] grid-rows-[max-content] items-center pt-3 relative -z-10">
                         {listStatistics.map((item) => (
-                            <>
+                            <React.Fragment key={item.name}>
                                 <p className="px-3 py-2 h-full font-bold sm:top-0 sm:rounded-bl-lg rounded-tl-lg border-l-4 border-solid" style={{ backgroundColor: item.transparentColor, borderColor: item.transparentColor }} aria-label={item.ariaLabel}>{item.name}</p>
-                                <p className="px-3 py-2 h-full border-r-4 sm:border-r-0 rounded-tr-lg text-right sm:rounded-tr-none" aria-hidden="true" style={{ backgroundColor: item.transparentColor }}>{item.value}</p>
+                                <p className="px-3 py-2 h-full border-r-4 sm:border-r-0 rounded-tr-lg text-right sm:rounded-tr-none" aria-hidden="true" style={{ backgroundColor: item.transparentColor, borderColor: item.transparentColor }}>{item.value}</p>
                                 <div className="col-span-2 sm:col-auto px-3 py-2 h-full relative -top-[0.39rem] sm:top-0 sm:rounded-tr-lg sm:rounded-es-none rounded-ee-lg rounded-es-lg flex items-center sm:border-l-0 border-l-4 border-r-4 border-solid" style={{ backgroundColor: item.transparentColor, borderColor: item.transparentColor }}>
-                                    <div className="stat-bar h-5 max-w-full bg-blue-300 border border-solid border-slate-900 relative" style={{ backgroundColor: item.color, width: `${item.value}px` }} />
+                                    <div className="stat-bar h-5 max-w-full border border-solid border-slate-900 relative" style={{ backgroundColor: item.color, width: `${item.value}px` }} />
                                 </div>
-                            </>
+                            </React.Fragment>
                         ))}
+                        <p className="mt-8 px-3 py-2 h-full font-bold rounded-tl-lg border-t-2 border-t-solid border-black"  aria-label="Total statistique de Hypnomade : 483">Total</p>
+                        <p className="mt-8 px-3 py-2 h-full rounded-tr-lg text-right sm:col-span-2 border-t-2 border-black" aria-hidden="true">{totalBaseStat}</p>
                     </div>
                 </details>
 

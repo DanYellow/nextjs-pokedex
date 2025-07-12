@@ -15,6 +15,9 @@ export interface IPokemonExtraData {
 
 // type Color = RGB | RGBA | HEX;
 
+// style="border-top: 2px solid black; margin-top: 1.75rem; border-left-width: 0px;"
+// style="border-top: 2px solid black; margin-top: 1.75rem; border-right-width: 0px;"
+
 export interface IStatComputed {
     color: string;
     transparentColor: string;
