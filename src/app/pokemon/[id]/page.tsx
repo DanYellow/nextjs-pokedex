@@ -228,6 +228,10 @@ export default async function BlogPostPage({
                     <ul className="my-3 py-3 grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-6 justify-center" data-list-siblings-pokemon>
                         {
                             ([prevPokemon, pkmn, nextPokemon].filter(Boolean) as IPokemon[]).map((item: IPokemon) => {
+                                if (!Object.keys(item).length) {
+                                    return (<li></li>)
+                                }
+
                                 const isCurrentPkmn = item.pokedex_id === (pkmn as IPokemon).pokedex_id;
                                 const isPreviousPkmn = item.pokedex_id < (pkmn as IPokemon).pokedex_id
                                 const listClasses = [
