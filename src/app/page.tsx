@@ -1,17 +1,36 @@
+import { Metadata, ResolvingMetadata } from "next";
+
 import { fetchPokemonForGeneration } from "@/app/_api/tyradex";
 
 import Pokedex from "@/app/_components/Pokedex";
 import LayoutSwitch from "@/app/_components/LayoutSwitch";
 import { LayoutProvider } from '@/app/_contexts/LayoutContext';
 import { IPokemon } from "./_types/Pokemon";
+import { Props as PageProps } from "./_types/Page";
 
-export default async function Home({
-    searchParams,
-}: {
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
+export async function generateMetadata(
+    { searchParams }: PageProps
+): Promise<Metadata> {
+    const { id = 1 } = await searchParams
+
+    let { hasFoundGeneration } = await fetchPokemonForGeneration(Number(id))
+
+    if (!hasFoundGeneration) {
+        return {
+            title: "Erreur - Génération non trouvée",
+        }
+    }
+    return {
+        title: `Pokédex génération #${id}`,
+        openGraph: {
+            title: `Pokédex génération #${id}`,
+        },
+    }
+}
+
+export default async function Home({ searchParams }: PageProps) {
     const { id = 1 } = await searchParams;
-    const { data, hasFoundGeneration } = await fetchPokemonForGeneration(id as number);
+    const { data, hasFoundGeneration } = await fetchPokemonForGeneration(Number(id));
 
     return (
         <LayoutProvider>
@@ -20,9 +39,9 @@ export default async function Home({
                     <h2 className="text-2xl">
                         Génération #{id}
                     </h2>
-                    <p className="py-0.5 px-2 rounded-md bg-slate-600 text-white inline-flex">
-                        {hasFoundGeneration && <span>{String((data as IPokemon[])[0].pokedex_id).padStart(4, '0')} → {String(((data as IPokemon[]).at(-1) as IPokemon).pokedex_id).padStart(4, '0')}</span>}
-                    </p>
+                    {hasFoundGeneration && (<p className="py-0.5 px-2 rounded-md bg-slate-600 text-white inline-flex">
+                        <span>{String((data as IPokemon[])[0].pokedex_id).padStart(4, '0')} → {String(((data as IPokemon[]).at(-1) as IPokemon).pokedex_id).padStart(4, '0')}</span>
+                    </p>)}
                 </div>
 
                 <LayoutSwitch />
