@@ -25,6 +25,7 @@ export interface IPokemonCore {
 
 export interface IPokemon extends IPokemonCore {
     generation: number;
+    category: string;
     talents: { name: string; tc: boolean; }[];
     height: string;
     weight: string;

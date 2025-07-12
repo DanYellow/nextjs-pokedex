@@ -13,6 +13,7 @@ import { cleanString, typesAnimatedBorderColor, getAbilityForLang } from "@/app/
 
 
 import PokemonSibling from "@/app/_components/PokemonSibling";
+import { IPokemonExtraData } from "@/app/_types/Pokeapi";
 
 type Props = {
     params: Promise<{ id: string }>
@@ -91,7 +92,7 @@ export default async function BlogPostPage({
     const listTypes = pkmn.types.map((item: { name: string }) => item.name)
 
     const listAbilitiesDescriptions: { name: { fr: string; } }[] = [];
-    for (const ability of (pkmnExtraData?.abilities || [])) {
+    for (const ability of ((pkmnExtraData as IPokemonExtraData)?.abilities || [])) {
         const abilityData = await fetchAbilityData(ability.ability.url);
         listAbilitiesDescriptions.push(getAbilityForLang(abilityData));
     };
@@ -226,7 +227,7 @@ export default async function BlogPostPage({
                 <nav className="text-black">
                     <ul className="my-3 py-3 grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-6 justify-center" data-list-siblings-pokemon>
                         {
-                            [prevPokemon, pkmn, nextPokemon].filter(Boolean).map((item: IPokemon) => {
+                            ([prevPokemon, pkmn, nextPokemon].filter(Boolean) as IPokemon[]).map((item: IPokemon) => {
                                 const isCurrentPkmn = item.pokedex_id === (pkmn as IPokemon).pokedex_id;
                                 const isPreviousPkmn = item.pokedex_id < (pkmn as IPokemon).pokedex_id
                                 const listClasses = [
