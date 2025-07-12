@@ -6,10 +6,11 @@ import type { Viewport } from 'next';
 import { cache } from 'react';
 
 import type { IPokemonAbilityComplete, IPokemonType, IPokemon, IPokemonError } from "@/app/_types/Pokemon";
+import type { IStatComputed } from "@/app/_types/Pokeapi";
 
 import { fetchPokemon, fetchPokemonForGeneration } from "@/app/_api/tyradex";
 import { fetchPokemonDetails, fetchAbilityData } from "@/app/_api/pokeapi";
-import { cleanString, NB_NUMBER_INTEGERS_PKMN_ID, getAbilityForLang } from "@/app/_utils/index";
+import { cleanString, NB_NUMBER_INTEGERS_PKMN_ID, getAbilityForLang, statistics } from "@/app/_utils/index";
 
 
 import PokemonSibling from "@/app/_components/PokemonSibling";
@@ -43,7 +44,7 @@ export async function generateMetadata(
     pkmn = (pkmn as IPokemon);
 
     return {
-        title: `#${String(id).padStart(4, '0')} ${pkmn.name.fr}`,
+        title: `#${String(id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} ${pkmn.name.fr}`,
         icons: {
             icon: [{ rel: "icon", url: pkmn.sprites.regular }]
         },
@@ -137,6 +138,21 @@ export default async function BlogPostPage({
             ...listAbilitiesDescriptions.find((description) => cleanString(description.name.fr.toLowerCase().replace("-", "")) === cleanString(item.name.toLowerCase().replace("-", "")))
         })) as unknown as IPokemonAbilityComplete[];
 
+    const listStatistics: IStatComputed[] = [];
+    const alpha: number = 0.45;
+
+    (pkmnExtraData as IPokemonExtraData).stats.forEach((item) => {
+        listStatistics.push({
+            transparentColor: `rgb(from ${statistics[item.stat.name].color} r g b / ${alpha})`,
+            color: statistics[item.stat.name].color,
+            name: statistics[item.stat.name].name,
+            value: item.base_stat,
+            ariaLabel: `${statistics[item.stat.name].name} de base ${item.base_stat}`,
+        })
+    })
+
+    console.log(listStatistics)
+
     return (
         <>
             <header className="py-2 px-4 bg-slate-900 text-white sticky left-0 right-0 top-0 z-50 ">
@@ -176,7 +192,7 @@ export default async function BlogPostPage({
                                 />
                             </div>
                             <div className="grow">
-                                <h1 className="text-2xl font-bold">#{String(id).padStart(4, '0')} {pkmn.name.fr}</h1>
+                                <h1 className="text-2xl font-bold">#{String(id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} {pkmn.name.fr}</h1>
                                 <p className="text-sm -mt-1">{pkmn.category}</p>
                                 <div className="@container">
                                     <ul className="flex gap-2 mt-2 flex-col @[10rem]:flex-row">
@@ -246,7 +262,7 @@ export default async function BlogPostPage({
                             <li><span className="font-bold">Taille : </span>{pkmn.height}</li>
                             <li><span className="font-bold">Taux de capture : </span>{pkmn.catch_rate}</li>
                         </ul>
-                        <div className="grow bg-slate-200 rounded-md px-2 py-3">
+                        <div className="grow bg-slate-200 rounded-md px-2 py-3 self-stretch">
                             <p className="font-bold">Talents</p>
                             <div className="flex flex-col gap-y-2">
                                 {listTalents.map((item) => (
@@ -268,6 +284,21 @@ export default async function BlogPostPage({
                         </div>
                     </div>
                 </header>
+
+                <details>
+                    <summary className="hover:marker:text-[color:--bg-modal-color] font-bold text-xl">Statistiques de base</summary>
+                    <div className="grid gap-y-1.5 grid-cols-[1fr_max-content] sm:grid-cols-[max-content_max-content_1fr] grid-rows-[max-content] items-center pt-3 relative -z-10">
+                        {listStatistics.map((item) => (
+                            <>
+                                <p className="px-3 py-2 h-full font-bold sm:top-0 sm:rounded-bl-lg rounded-tl-lg border-l-4 border-solid" style={{ backgroundColor: item.transparentColor, borderColor: item.transparentColor }} aria-label={item.ariaLabel}>{item.name}</p>
+                                <p className="px-3 py-2 h-full border-r-4 sm:border-r-0 rounded-tr-lg text-right sm:rounded-tr-none" aria-hidden="true" style={{ backgroundColor: item.transparentColor }}>{item.value}</p>
+                                <div className="col-span-2 sm:col-auto px-3 py-2 h-full relative -top-[0.39rem] sm:top-0 sm:rounded-tr-lg sm:rounded-es-none rounded-ee-lg rounded-es-lg flex items-center sm:border-l-0 border-l-4 border-r-4 border-solid" style={{ backgroundColor: item.transparentColor, borderColor: item.transparentColor }}>
+                                    <div className="stat-bar h-5 max-w-full bg-blue-300 border border-solid border-slate-900 relative" style={{ backgroundColor: item.color, width: `${item.value}px` }} />
+                                </div>
+                            </>
+                        ))}
+                    </div>
+                </details>
 
                 <nav className="text-black">
                     <ul className="my-3 py-3 grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-6 justify-center" data-list-siblings-pokemon>

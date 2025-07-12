@@ -173,33 +173,6 @@ export const getEvolutionChain = (data, evolutionLineTranslated, listPokemon) =>
     return payload;
 };
 
-export const statistics = {
-    hp: {
-        name: "PV",
-        color: "rgb(132 204 22)",
-    },
-    attack: {
-        name: "Attaque",
-        color: "rgb(45 212 191)",
-    },
-    defense: {
-        name: "Défense",
-        color: "rgb(96 165 250)",
-    },
-    "special-attack": {
-        name: "Attaque Spéciale",
-        color: "rgb(251 146 60)",
-    },
-    "special-defense": {
-        name: "Défense Spéciale",
-        color: "rgb(250 204 21)",
-    },
-    speed: {
-        name: "Vitesse",
-        color: "rgb(192 132 252)",
-    },
-};
-
 export const debounce = (callback, wait) => {
     let timeoutId = null;
     return (...args) => {

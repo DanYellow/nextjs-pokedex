@@ -4,5 +4,21 @@ export interface IPokemonExtraData {
         latest: URL;
         legacy: URL;
     };
-    foo:string;
+    stats: { base_stat: number; effort: number; stat: { name: string} }[]
+}
+
+
+// type RGB = `rgb(${number}, ${number}, ${number})`;
+// type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`;
+// type RGBA = `rgba(from ${number}, ${number}, ${number}, ${number})`;
+// type HEX = `#${string}`;
+
+// type Color = RGB | RGBA | HEX;
+
+export interface IStatComputed {
+    color: string;
+    transparentColor: string;
+    name: string;
+    ariaLabel: string;
+    value: number;
 }
