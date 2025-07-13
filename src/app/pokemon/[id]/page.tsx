@@ -365,9 +365,7 @@ export default async function PokemonDetailsPage({
                         {listEffectiveness.map((item) => {
                             return (
                                 <li className="flex gap-3" key={item.name.fr.clean}>
-                                    <div className="rounded-md content-center aspect-square size-12">
-                                        <IconType type={{ fr: item.name.fr.clean, en: item.name.en.clean }} />
-                                    </div>
+                                    <IconType type={{ fr: item.name.fr.clean, en: item.name.en.clean }} />
                                     <div>
                                         <p className={`-ml-2 py-0.5 px-2 rounded-md gap-1 flex items-center type-name w-fit bg-[var(--type-${item.name.fr.clean})]`} style={{
                                             backgroundColor: `var(--type-${item.name.fr.clean})`

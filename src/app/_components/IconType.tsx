@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 
 export default ({ type }: { type: { fr: string; en: string; } }) => {
-    const containerRef = useRef<HTMLDivElement|null>(null);
+    const containerRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         (async () => {
@@ -23,10 +23,16 @@ export default ({ type }: { type: { fr: string; en: string; } }) => {
             })
 
             if (containerRef.current && !containerRef.current.hasChildNodes()) {
+                containerRef.current.style.backgroundColor = window.getComputedStyle(document.body).getPropertyValue(`--type-${type.fr}`)
                 containerRef.current.appendChild(svgTypeIcon.documentElement)
             }
         })()
     }, [])
 
-    return <div ref={containerRef} />;
+    return (
+        <div
+            className="rounded-md content-center aspect-square size-12"
+            ref={containerRef}
+        />
+    );
 }
