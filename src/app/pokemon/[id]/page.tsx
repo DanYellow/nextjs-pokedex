@@ -376,7 +376,7 @@ export default async function PokemonDetailsPage({
                     </div>
                 </details>
 
-                <details className="mb-3 @container/sensibilities" open>
+                <details className="mb-3 @container/sensibilities">
                     <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Sensibilités</summary>
                     <ul className="grid grid-cols-1 @md/sensibilities:grid-cols-2 @xl/sensibilities:grid-cols-3 gap-3 mt-3">
                         {listEffectiveness.map((item) => {
