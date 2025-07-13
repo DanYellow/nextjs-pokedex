@@ -1,2 +1,3 @@
-export const NB_NUMBER_INTEGERS_PKMN_ID:number = 4;
-export const HTTP_NOT_FOUND_CODE_ERROR:number = 404;
+export const NB_NUMBER_INTEGERS_PKMN_ID: number = 4;
+export const HTTP_NOT_FOUND_CODE_ERROR: number = 404;
+export const MAX_GENERATION: number = 9;

@@ -1,12 +1,14 @@
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
 
 import { fetchPokemonForGeneration } from "@/app/_api/tyradex";
 
 import Pokedex from "@/app/_components/Pokedex";
 import LayoutSwitch from "@/app/_components/LayoutSwitch";
 import { LayoutProvider } from '@/app/_contexts/LayoutContext';
-import { IPokemon } from "./_types/Pokemon";
-import { Props as PageProps } from "./_types/Page";
+import { IPokemon } from "@/app/_types/Pokemon";
+import { Props as PageProps } from "@/app/_types/Page";
+
+import GenerationDropdown from "@/app/_components/GenerationDropdown";
 
 export async function generateMetadata(
     { searchParams }: PageProps
@@ -44,9 +46,10 @@ export default async function Home({ searchParams }: PageProps) {
             <header className="py-2 bg-slate-900 text-white sticky left-0 right-0 top-0 z-50 ">
                 <div className="max-w-6xl flex justify-between mx-auto pr-[max(env(safe-area-inset-right),_theme(space.4))] pl-[max(env(safe-area-inset-left),_theme(space.4))]">
                     <div>
-                        <h2 className="text-2xl">
-                            Génération #{id}
-                        </h2>
+                        <label className="text-2xl block">
+                            Génération&#8239;
+                            <GenerationDropdown />
+                        </label>
                         {hasFoundGeneration && (<p className="py-0.5 px-2 rounded-md bg-slate-600 text-white inline-flex">
                             <span>{String((data as IPokemon[])[0].pokedex_id).padStart(4, '0')} → {String(((data as IPokemon[]).at(-1) as IPokemon).pokedex_id).padStart(4, '0')}</span>
                         </p>)}

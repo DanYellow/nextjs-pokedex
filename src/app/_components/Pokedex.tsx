@@ -9,8 +9,9 @@ import PokedexEntry from "@/app/_components/PokedexEntry";
 import { useLayout } from '@/app/_contexts/LayoutContext';
 
 import pkdexStyle from "./pokedex.module.css";
+import { MAX_GENERATION } from "@/app/_utils";
 
-const MAX_GENERATION = 9;
+
 
 const DexLink = ({ generation, isLast }: { generation: number; isLast: boolean; }) => {
     const linkRef = useRef<HTMLAnchorElement>(null);
