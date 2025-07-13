@@ -154,7 +154,6 @@ export default async function PokemonDetailsPage({
     const groupedSprites = Object.groupBy(listSprites, ({ key }) =>
         key === "female" ? "Femelle ♀" : "Mâle ♂"
     );
-    console.log(groupedSprites)
 
     const listStatistics: IStatComputed[] = [];
     const alpha: number = 0.45;
@@ -189,57 +188,58 @@ export default async function PokemonDetailsPage({
                     </Link>
                 </div>
             </header>
-            <div className="max-w-6xl mx-auto px-4 min-h-screen bg-gray-50"
+            <div className="max-w-6xl mx-auto px-4 min-h-screen bg-gray-50 z-50"
                 style={{ borderLeft: `1px solid var(--type-${cleanString(listTypes[0])})`, borderRight: `1px solid var(--type-${cleanString(listTypes?.[1] || listTypes[0])})` }}
             >
-                <header className="main-infos border-b text-black pb-4 mb-3 md:sticky landscape:static landscape:lg:sticky top-0">
-                    <div
-                        style={{
-                            borderImage: `linear-gradient(to right, var(--type-${cleanString(listTypes[0])}) 0%, var(--type-${cleanString(listTypes[0])}) 50%, var(--type-${cleanString(listTypes?.[1] || listTypes[0])}) 50%, var(--type-${cleanString(listTypes?.[1] || listTypes[0])}) 100%) 1`
-                        }}
-                        className="sticky-header relative px-4 bg-gray-50 top-0 pt-2 pb-3 border-black border-solid border-b">
+                <div
+                    style={{
+                        borderImage: `linear-gradient(to right, var(--type-${cleanString(listTypes[0])}) 0%, var(--type-${cleanString(listTypes[0])}) 50%, var(--type-${cleanString(listTypes?.[1] || listTypes[0])}) 50%, var(--type-${cleanString(listTypes?.[1] || listTypes[0])}) 100%) 1`
+                    }}
+                    className="sticky1 top-0 px-4 bg-gray-50 pt-2 pb-3 border-black border-solid border-b">
 
-                        <div className="flex flex-row gap-3 relative items-center">
-                            <div className="w-20">
-                                <Image
-                                    className="@xs:max-w-20 group-[.selected]:scale-85 group-hocus:scale-85 transition-transform"
-                                    src={pkmn.sprites.regular}
-                                    alt={`sprite de ${pkmn.name.fr}`}
-                                    width={175}
-                                    height={38}
-                                    priority
-                                />
-                            </div>
-                            <div className="grow">
-                                <h1 className="text-2xl font-bold">
-                                    #{String(id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} {pkmn.name.fr}
-                                    {(pkmnSpecies.is_legendary || pkmnSpecies.is_mythical) && (
-                                        <span className={`py-0.5 ml-1.5 px-1.5 whitespace-nowrap text-black rounded-md text-xs align-super font-normal ${pkmnSpecies.is_legendary ? "bg-amber-400" : "bg-slate-400"}`}>
-                                            {pkmnSpecies.is_legendary ? "Pokémon Légendaire" : "Pokémon Fabuleux"}
-                                        </span>
-                                    )}
-                                </h1>
-                                <p className="text-sm -mt-1">{pkmn.category}</p>
-                                <div className="@container">
-                                    <ul className="flex gap-2 mt-2 flex-col @[10rem]:flex-row">
-                                        {pkmn.types.map(({ name, image }: IPokemonType) => (
-                                            <li
-                                                key={name}
-                                                className="py-0.5 px-2 rounded-md gap-1 flex items-center type-name w-fit"
-                                                aria-label="Type ${idx + 1} ${type.name}"
-                                                style={{
-                                                    backgroundColor: `var(--type-${cleanString(name)})`
-                                                }}
-                                            >
-                                                <img className="h-5" src={image} alt={`icône type ${name}`} />
-                                                {name}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
+                    <div className="flex flex-row gap-3 relative items-center">
+                        <div className="w-20">
+                            <Image
+                                className="@xs:max-w-20 group-[.selected]:scale-85 group-hocus:scale-85 transition-transform"
+                                src={pkmn.sprites.regular}
+                                alt={`sprite de ${pkmn.name.fr}`}
+                                width={175}
+                                height={38}
+                                priority
+                            />
+                        </div>
+                        <div className="grow">
+                            <h1 className="text-2xl font-bold">
+                                #{String(id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} {pkmn.name.fr}
+                                {(pkmnSpecies.is_legendary || pkmnSpecies.is_mythical) && (
+                                    <span className={`py-0.5 ml-1.5 px-1.5 whitespace-nowrap text-black rounded-md text-xs align-super font-normal ${pkmnSpecies.is_legendary ? "bg-amber-400" : "bg-slate-400"}`}>
+                                        {pkmnSpecies.is_legendary ? "Pokémon Légendaire" : "Pokémon Fabuleux"}
+                                    </span>
+                                )}
+                            </h1>
+                            <p className="text-sm -mt-1">{pkmn.category}</p>
+                            <div className="@container">
+                                <ul className="flex gap-2 mt-2 flex-col @[10rem]:flex-row">
+                                    {pkmn.types.map(({ name, image }: IPokemonType) => (
+                                        <li
+                                            key={name}
+                                            className="py-0.5 px-2 rounded-md gap-1 flex items-center type-name w-fit"
+                                            aria-label="Type ${idx + 1} ${type.name}"
+                                            style={{
+                                                backgroundColor: `var(--type-${cleanString(name)})`
+                                            }}
+                                        >
+                                            <img className="h-5" src={image} alt={`icône type ${name}`} />
+                                            {name}
+                                        </li>
+                                    ))}
+                                </ul>
                             </div>
                         </div>
                     </div>
+                </div>
+                <header className="main-infos border-b text-black pb-4 mb-3 top-0">
+
                     <div className="flex flex-row w-full overflow-hidden mt-2 min-h-9">
                         {pkmn.sexe === null || pkmn.sexe.male === 0 ? null : (
                             <div className="bar-sex-male only:rounded-md relative bg-sky-300 border-b-sky-700 border-b-4 border-solid px-2 py-1 rounded-l-md after:bg-sky-700 overflow-hidden" style={{ width: `${pkmn.sexe.male}%` }}>
@@ -312,7 +312,7 @@ export default async function PokemonDetailsPage({
                 </header>
 
                 <details className="mb-3">
-                    <summary className="hover:marker:text-[color:--bg-modal-color] font-bold text-xl">Descriptions</summary>
+                    <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Descriptions</summary>
                     <dl>
                         {pkmnSpecies.flavor_text_entries?.filter((item) => item.language.name === "fr").map((item) => (
                             <React.Fragment key={item.version.name}>
@@ -324,7 +324,7 @@ export default async function PokemonDetailsPage({
                 </details>
 
                 <details className="mb-3">
-                    <summary className="hover:marker:text-[color:--bg-modal-color] font-bold text-xl">Statistiques de base</summary>
+                    <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Statistiques de base</summary>
                     <div className="grid gap-y-1.5 grid-cols-[1fr_max-content] sm:grid-cols-[max-content_max-content_1fr] grid-rows-[max-content] items-center pt-3 relative">
                         {listStatistics.map((item) => (
                             <React.Fragment key={item.name}>
@@ -341,7 +341,12 @@ export default async function PokemonDetailsPage({
                 </details>
 
                 <details className="mb-3">
-                    <summary className="hover:marker:text-[color:--bg-modal-color] font-bold text-xl">Sprites</summary>
+                    <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Sensibilités</summary>
+
+                </details>
+
+                <details className="mb-3">
+                    <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Sprites</summary>
                     <div className="mt-3 grid gap-2 grid-flow-col-dense">
                         {Object.entries(groupedSprites).map(([key, _listSprites]) => {
                             let labelColorClass = key === "Femelle ♀" ? "bg-pink-300" : "bg-sky-300";
