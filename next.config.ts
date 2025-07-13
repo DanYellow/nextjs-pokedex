@@ -10,6 +10,13 @@ const nextConfig: NextConfig = {
                 pathname: '/Yarkis01/TyraDex/images/sprites/**',
                 search: '',
             },
+            {
+                protocol: 'https',
+                hostname: 'raw.githubusercontent.com',
+                port: '',
+                pathname: '/PokeAPI/sprites/master/sprites/**',
+                search: '',
+            },
         ],
     },
 };

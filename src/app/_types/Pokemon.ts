@@ -30,7 +30,7 @@ export interface IPokemon extends IPokemonCore {
     height: string;
     weight: string;
     catch_rate: number;
-    sexe: { male: number; female: number; } | null
+    sexe: { male: number; female: number; } | null;
 }
 
 export interface IPokemonError {

@@ -1,4 +1,4 @@
-export const getVersionForName = {
+export const versionForName: { [key: string]: string; } = {
     red: "Pokémon Rouge",
     blue: "Pokémon Bleue",
     yellow: "Pokémon Jaune",
@@ -36,45 +36,14 @@ export const getVersionForName = {
     "legends-arceus": "Légendes Pokémon : Arceus",
 };
 
-export const cleanString = (string) =>
+export const cleanString = (string: string) =>
     string
         .toLowerCase()
         .normalize("NFD")
         .replace(/\p{Diacritic}/gu, "");
 
-export const clearTagContent = (tag) => {
-    while (tag.firstChild) {
-        tag.removeChild(tag.firstChild);
-    }
-};
 
-export const aRem = 16;
-export const convertTailwindRemToPx = (val) => Number(val.replace("rem", "")) * aRem;
-
-export const replaceImage = (img, heavyImagePath, errorCallback = () => {}) => {
-    const newImg = new Image();
-    newImg.onload = () => {
-        img.src = newImg.src;
-    };
-    newImg.onerror = () => {
-        errorCallback();
-    };
-    newImg.src = heavyImagePath;
-};
-
-export const delegateEventHandler = (el, evt, sel, handler) => {
-    el.addEventListener(evt, function (event) {
-        let t = event.target;
-        while (t && t !== this) {
-            if (t.matches(sel)) {
-                handler.call(t, event);
-            }
-            t = t.parentNode;
-        }
-    });
-};
-
-export const isElementInViewport = (el) => {
+export const isElementInViewport = (el: HTMLElement) => {
     const rect = el.getBoundingClientRect();
 
     return (
@@ -85,12 +54,8 @@ export const isElementInViewport = (el) => {
     );
 };
 
-export const capitalizeFirstLetter = (val) => {
+export const capitalizeFirstLetter = (val: string) => {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
-};
-
-export const getPkmnIdFromURL = (url) => {
-    return url.split("/").filter(Boolean).at(-1);
 };
 
 export const getEvolutionChain = (data, evolutionLineTranslated, listPokemon) => {
@@ -173,7 +138,7 @@ export const getEvolutionChain = (data, evolutionLineTranslated, listPokemon) =>
     return payload;
 };
 
-export const debounce = (callback, wait) => {
+export const debounce = (callback: Function, wait: number) => {
     let timeoutId = null;
     return (...args) => {
         window.clearTimeout(timeoutId);
@@ -183,11 +148,11 @@ export const debounce = (callback, wait) => {
     };
 };
 
-export const clamp = (value, min, max) => {
+export const clamp = (value: number, min: number, max:number) => {
     return Math.min(Math.max(value, min), max);
 };
 
-export const onTransitionsEnded = (node) => {
+export const onTransitionsEnded = (node: Element) => {
     return Promise.allSettled(
         node.getAnimations().map(animation => animation.finished)
     );

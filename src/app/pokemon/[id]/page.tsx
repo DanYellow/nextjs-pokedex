@@ -10,7 +10,7 @@ import type { IPokemonSpecies, IStatComputed } from "@/app/_types/Pokeapi";
 
 import { fetchPokemon, fetchPokemonForGeneration } from "@/app/_api/tyradex";
 import { fetchPokemonDetails, fetchAbilityData, fetchPokemonExternalData } from "@/app/_api/pokeapi";
-import { cleanString, NB_NUMBER_INTEGERS_PKMN_ID, getAbilityForLang, statistics } from "@/app/_utils/index";
+import { cleanString, NB_NUMBER_INTEGERS_PKMN_ID, getAbilityForLang, statistics, versionForName } from "@/app/_utils/index";
 
 
 import PokemonSibling from "@/app/_components/PokemonSibling";
@@ -108,9 +108,9 @@ export default async function PokemonDetailsPage({
 
     const { data: pokedex } = await fetchPokemonForGeneration(pkmn.generation);
 
-    const pkmnExtraData = await fetchPokemonDetails(Number(id));
+    const pkmnExtraData = await fetchPokemonDetails(Number(id)) as IPokemonExtraData;
     const pkmnSpecies = await fetchPokemonExternalData(Number(id)) as IPokemonSpecies;
-    console.log()
+
 
     let prevPokemon = (pokedex as IPokemon[]).find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id - 1) || {};
     let nextPokemon = (pokedex as IPokemon[]).find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id + 1) || null;
@@ -128,7 +128,7 @@ export default async function PokemonDetailsPage({
     const listTypes = pkmn.types.map((item: { name: string }) => item.name)
 
     const listAbilitiesDescriptions: { name: { fr: string; } }[] = [];
-    for (const ability of ((pkmnExtraData as IPokemonExtraData)?.abilities || [])) {
+    for (const ability of (pkmnExtraData?.abilities || [])) {
         const abilityData = await fetchAbilityData(ability.ability.url);
         listAbilitiesDescriptions.push(getAbilityForLang(abilityData));
     };
@@ -141,6 +141,20 @@ export default async function PokemonDetailsPage({
             ...item,
             ...listAbilitiesDescriptions.find((description) => cleanString(description.name.fr.toLowerCase().replace("-", "")) === cleanString(item.name.toLowerCase().replace("-", "")))
         })) as unknown as IPokemonAbilityComplete[];
+
+    const listSprites = Object.entries(pkmnExtraData.sprites.other.home).map(([key, value]) => {
+        if (value === null) {
+            return;
+        }
+
+        let sexLabel = value.includes("female") ? "female" : "male";
+        return { key: sexLabel, sprite: value, name: key, is_shiny: key.includes("shiny") }
+    }).filter(Boolean) as { key: string, sprite: string, name: string, is_shiny: boolean }[];
+
+    const groupedSprites = Object.groupBy(listSprites, ({ key }) =>
+        key === "female" ? "Femelle ♀" : "Mâle ♂"
+    );
+    console.log(groupedSprites)
 
     const listStatistics: IStatComputed[] = [];
     const alpha: number = 0.45;
@@ -297,7 +311,19 @@ export default async function PokemonDetailsPage({
                     </div>
                 </header>
 
-                <details>
+                <details className="mb-3">
+                    <summary className="hover:marker:text-[color:--bg-modal-color] font-bold text-xl">Descriptions</summary>
+                    <dl>
+                        {pkmnSpecies.flavor_text_entries?.filter((item) => item.language.name === "fr").map((item) => (
+                            <React.Fragment key={item.version.name}>
+                                <dt className="font-bold">{versionForName[item.version.name]}</dt>
+                                <dd className="mb-2">{item.flavor_text}</dd>
+                            </React.Fragment>
+                        ))}
+                    </dl>
+                </details>
+
+                <details className="mb-3">
                     <summary className="hover:marker:text-[color:--bg-modal-color] font-bold text-xl">Statistiques de base</summary>
                     <div className="grid gap-y-1.5 grid-cols-[1fr_max-content] sm:grid-cols-[max-content_max-content_1fr] grid-rows-[max-content] items-center pt-3 relative">
                         {listStatistics.map((item) => (
@@ -309,8 +335,53 @@ export default async function PokemonDetailsPage({
                                 </div>
                             </React.Fragment>
                         ))}
-                        <p className="mt-8 px-3 py-2 h-full font-bold rounded-tl-lg border-t-2 border-t-solid border-black"  aria-label="Total statistique de Hypnomade : 483">Total</p>
+                        <p className="mt-8 px-3 py-2 h-full font-bold rounded-tl-lg border-t-2 border-t-solid border-black" aria-label="Total statistique de Hypnomade : 483">Total</p>
                         <p className="mt-8 px-3 py-2 h-full rounded-tr-lg sm:col-span-2 border-t-2 border-black" aria-hidden="true">{totalBaseStat}</p>
+                    </div>
+                </details>
+
+                <details className="mb-3">
+                    <summary className="hover:marker:text-[color:--bg-modal-color] font-bold text-xl">Sprites</summary>
+                    <div className="mt-3 grid gap-2 grid-flow-col-dense">
+                        {Object.entries(groupedSprites).map(([key, _listSprites]) => {
+                            let labelColorClass = key === "Femelle ♀" ? "bg-pink-300" : "bg-sky-300";
+                            if (Object.entries(groupedSprites).length === 1) {
+                                labelColorClass = "no-dimorphism";
+                            }
+                            return (
+                                <div className="flex flex-col items-center" key={key}>
+                                    {pkmn.sexe !== null && (
+                                        <p className={`text-center py-0.5 px-2.5 w-fit rounded-lg ${labelColorClass}`}>
+                                            {Object.entries(groupedSprites).length === 1 ? "Mâle ♂ / Femelle ♀" : key}
+                                        </p>
+                                    )}
+                                    <ul
+                                        className="flex flex-col gap-3 mt-2"
+                                    >
+                                        {_listSprites.map((item) => (
+                                            <li key={item.name}>
+                                                <Image
+                                                    src={item.sprite}
+                                                    alt={`sprite de ${pkmn.name.fr}`}
+                                                    width={175}
+                                                    height={38}
+                                                    priority
+                                                />
+                                                {item.is_shiny && (
+                                                    <p className="text-center px-2 rounded-md">Chromatique
+                                                        <span className="align-super sparkles">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-5 inline">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"></path>
+                                                            </svg>
+                                                        </span>
+                                                    </p>
+                                                )}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )
+                        })}
                     </div>
                 </details>
 

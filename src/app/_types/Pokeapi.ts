@@ -4,7 +4,8 @@ export interface IPokemonExtraData {
         latest: URL;
         legacy: URL;
     };
-    stats: { base_stat: number; effort: number; stat: { name: string } }[]
+    stats: { base_stat: number; effort: number; stat: { name: string } }[];
+    sprites: { other: { home: { [key: string]: string } } };
 }
 
 export interface IPokemonSpecies {
@@ -13,6 +14,7 @@ export interface IPokemonSpecies {
     names: { language: { name: string; url: URL; }; name: string; }[];
     flavor_text_entries: { language: { name: string; url: URL; }; flavor_text: string; version: { name: string; } }[];
     pokedex_numbers: { entry_number: number; pokedex: { name: string; } }[];
+
 }
 
 // type RGB = `rgb(${number}, ${number}, ${number})`;
@@ -21,9 +23,6 @@ export interface IPokemonSpecies {
 // type HEX = `#${string}`;
 
 // type Color = RGB | RGBA | HEX;
-
-// style="border-top: 2px solid black; margin-top: 1.75rem; border-left-width: 0px;"
-// style="border-top: 2px solid black; margin-top: 1.75rem; border-right-width: 0px;"
 
 export interface IStatComputed {
     color: string;
