@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 
 export default ({ type }: { type: { fr: string; en: string; } }) => {
-
     const containerRef = useRef<HTMLDivElement|null>(null);
 
     useEffect(() => {
@@ -23,8 +22,8 @@ export default ({ type }: { type: { fr: string; en: string; } }) => {
                 (item as HTMLElement).style.fill = window.getComputedStyle(document.body).getPropertyValue(`--type-${type.fr}`);
             })
 
-            if (containerRef.current) {
-                // containerRef.current.appendChild(svgTypeIcon.documentElement)
+            if (containerRef.current && !containerRef.current.hasChildNodes()) {
+                containerRef.current.appendChild(svgTypeIcon.documentElement)
             }
         })()
     }, [])
