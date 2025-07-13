@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { cleanString } from "@/app/_utils";
 
 export default ({ types }: { types: string[] }) => {
+
     useEffect(() => {
         const r = document.querySelector(':root') as HTMLElement;
         if (r) {
@@ -13,5 +14,5 @@ export default ({ types }: { types: string[] }) => {
         }
     }, []);
 
-    return <></>;
+    return null;
 }

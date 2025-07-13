@@ -127,8 +127,11 @@ html {
     }
 }
 
+body {
+    transition: background-image 350ms;
+}
+
 body.bg-dots {
-    box-shadow: 0px 0px 53px 0px;
     background-image: radial-gradient(
             rgb(from var(--dot-color-1) r g b / var(--dot-alpha))
                 var(--dot-size),
