@@ -16,6 +16,7 @@ import { cleanString, NB_NUMBER_INTEGERS_PKMN_ID, getAbilityForLang, statistics 
 import PokemonSibling from "@/app/_components/PokemonSibling";
 import { IPokemonExtraData } from "@/app/_types/Pokeapi";
 import Link from "next/link";
+import PokemonBodyStyle from "@/app/_components/PokemonBodyStyle";
 
 type Props = {
     params: Promise<{ id: string }>
@@ -156,8 +157,9 @@ export default async function BlogPostPage({
 
     return (
         <>
+            <PokemonBodyStyle types={listTypes} />
             <header className="py-2 px-4 bg-slate-900 text-white sticky left-0 right-0 top-0 z-50 ">
-                <div className="max-w-6xl flex justify-between mx-auto px-4">
+                <div className="max-w-6xl flex justify-between mx-auto px-4 flex-col sm:flex-row landscape:!flex-row gap-y-5">
                     <div>
                         <h2 className="text-2xl">
                             Génération #{pkmn.generation}
@@ -166,7 +168,7 @@ export default async function BlogPostPage({
                             <span>{String(firstPokemonGenerationId).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} ➜ {String(lastPokemonGenerationId).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')}</span>
                         </p>
                     </div>
-                    <Link className="underline hocus:no-underline self-end" href={`/?id=${pkmn.generation}#pkmn-${pkmn.pokedex_id}`}>
+                    <Link className="underline hocus:no-underline sm:self-end" href={`/?id=${pkmn.generation}#pkmn-${pkmn.pokedex_id}`}>
                         Retourner au Pokédex
                     </Link>
                 </div>
@@ -299,7 +301,7 @@ export default async function BlogPostPage({
                             </React.Fragment>
                         ))}
                         <p className="mt-8 px-3 py-2 h-full font-bold rounded-tl-lg border-t-2 border-t-solid border-black"  aria-label="Total statistique de Hypnomade : 483">Total</p>
-                        <p className="mt-8 px-3 py-2 h-full rounded-tr-lg text-right sm:col-span-2 border-t-2 border-black" aria-hidden="true">{totalBaseStat}</p>
+                        <p className="mt-8 px-3 py-2 h-full rounded-tr-lg sm:col-span-2 border-t-2 border-black" aria-hidden="true">{totalBaseStat}</p>
                     </div>
                 </details>
 

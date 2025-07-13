@@ -103,7 +103,7 @@
     --type-spectre: #704170;
 
     --dot-size: 0.85px;
-    --dot-alpha: 0.3;
+    --dot-alpha: 0.75;
     --dot-color-1: white;
     --dot-color-2: white;
     --darken-bg-color: lch(from var(--dot-color-1) calc(l - 20) c h);
