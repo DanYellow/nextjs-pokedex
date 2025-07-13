@@ -31,9 +31,15 @@ export interface IPokemon extends IPokemonCore {
     weight: string;
     catch_rate: number;
     sexe: { male: number; female: number; } | null;
+    resistances: { name: string; multiplier: number; }[]
 }
 
 export interface IPokemonError {
     status: number;
     message: string;
+}
+
+export interface IType {
+    name: { [key: string]: string; };
+    sprites: string;
 }

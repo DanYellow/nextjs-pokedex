@@ -3,12 +3,12 @@ import Image from "next/image";
 import { Metadata, ResolvingMetadata } from "next";
 import type { Viewport } from 'next';
 
-import React, { cache } from 'react';
+import React, { cache, Suspense } from 'react';
 
-import type { IPokemonAbilityComplete, IPokemonType, IPokemon, IPokemonError } from "@/app/_types/Pokemon";
+import type { IPokemonAbilityComplete, IPokemonType, IPokemon, IPokemonError, IType } from "@/app/_types/Pokemon";
 import type { IPokemonSpecies, IStatComputed } from "@/app/_types/Pokeapi";
 
-import { fetchPokemon, fetchPokemonForGeneration } from "@/app/_api/tyradex";
+import { fetchAllTypes, fetchPokemon, fetchPokemonForGeneration } from "@/app/_api/tyradex";
 import { fetchPokemonDetails, fetchAbilityData, fetchPokemonExternalData } from "@/app/_api/pokeapi";
 import { cleanString, NB_NUMBER_INTEGERS_PKMN_ID, getAbilityForLang, statistics, versionForName } from "@/app/_utils/index";
 
@@ -17,6 +17,7 @@ import PokemonSibling from "@/app/_components/PokemonSibling";
 import { IPokemonExtraData } from "@/app/_types/Pokeapi";
 import Link from "next/link";
 import PokemonBodyStyle from "@/app/_components/PokemonBodyStyle";
+import IconType from "@/app/_components/IconType";
 
 type Props = {
     params: Promise<{ id: string }>
@@ -57,6 +58,10 @@ export async function generateMetadata(
     }
 }
 
+function Loading() {
+  return <h2>🌀 Loading...</h2>;
+}
+
 export async function generateViewport({ params }: Props): Promise<Viewport> {
     const id = (await params).id
 
@@ -79,6 +84,16 @@ export default async function PokemonDetailsPage({
 }: Props) {
     const { id } = await params;
     let pkmn = await getPkmn(Number(id));
+
+    const listAllTypes = await fetchAllTypes();
+    const listTypes = listAllTypes.map((item) => ({
+        ...item,
+        name: {
+            fr: cleanString(item.name.fr),
+            en: cleanString(item.name.en)
+        },
+    })) as IType[];
+
 
     if ((pkmn as IPokemonError).status) {
         return (
@@ -125,7 +140,7 @@ export default async function PokemonDetailsPage({
         prevPokemon = await getPkmn(Number(pkmn.pokedex_id - 1)) as IPokemon;
     }
 
-    const listTypes = pkmn.types.map((item: { name: string }) => item.name)
+    const listPokemonTypes = pkmn.types.map((item: { name: string }) => item.name)
 
     const listAbilitiesDescriptions: { name: { fr: string; } }[] = [];
     for (const ability of (pkmnExtraData?.abilities || [])) {
@@ -168,11 +183,37 @@ export default async function PokemonDetailsPage({
             ariaLabel: `${statistics[item.stat.name].name} de base ${item.base_stat}`,
         })
         totalBaseStat += item.base_stat;
+    });
+
+    const effectiveDamageMultiplier = 2;
+    const superEffectiveDamageMultiplier = 4;
+    const listResistances = pkmn.resistances.map((item) => {
+        const typeAllLangs = listTypes.find(
+            (type) => cleanString(type.name.fr) === cleanString(item.name)
+        );
+
+        // console.log(typeAllLangs)
+        // console.log(item)
+        return {
+            image: `/images/types-icons/${typeAllLangs.name.en}.svg`,
+            name: {
+                fr: {
+                    clean: cleanString(item.name),
+                    raw: item.name,
+                },
+                en: {
+                    clean: cleanString(typeAllLangs.name.en),
+                    raw: typeAllLangs.name.en,
+                },
+            },
+            multiplier: item.multiplier,
+            is_effective: (item.multiplier === effectiveDamageMultiplier || item.multiplier === superEffectiveDamageMultiplier)
+        };
     })
 
     return (
         <>
-            <PokemonBodyStyle types={listTypes} />
+            <PokemonBodyStyle types={listPokemonTypes} />
             <header className="py-2 px-4 bg-slate-900 text-white sticky left-0 right-0 top-0 z-50 ">
                 <div className="max-w-6xl flex justify-between mx-auto px-4 flex-col sm:flex-row landscape:!flex-row gap-y-5">
                     <div>
@@ -189,11 +230,11 @@ export default async function PokemonDetailsPage({
                 </div>
             </header>
             <div className="max-w-6xl mx-auto px-4 min-h-screen bg-gray-50 z-50"
-                style={{ borderLeft: `1px solid var(--type-${cleanString(listTypes[0])})`, borderRight: `1px solid var(--type-${cleanString(listTypes?.[1] || listTypes[0])})` }}
+                style={{ borderLeft: `1px solid var(--type-${cleanString(listPokemonTypes[0])})`, borderRight: `1px solid var(--type-${cleanString(listPokemonTypes?.[1] || listPokemonTypes[0])})` }}
             >
                 <div
                     style={{
-                        borderImage: `linear-gradient(to right, var(--type-${cleanString(listTypes[0])}) 0%, var(--type-${cleanString(listTypes[0])}) 50%, var(--type-${cleanString(listTypes?.[1] || listTypes[0])}) 50%, var(--type-${cleanString(listTypes?.[1] || listTypes[0])}) 100%) 1`
+                        borderImage: `linear-gradient(to right, var(--type-${cleanString(listPokemonTypes[0])}) 0%, var(--type-${cleanString(listPokemonTypes[0])}) 50%, var(--type-${cleanString(listPokemonTypes?.[1] || listPokemonTypes[0])}) 50%, var(--type-${cleanString(listPokemonTypes?.[1] || listPokemonTypes[0])}) 100%) 1`
                     }}
                     className="sticky1 top-0 px-4 bg-gray-50 pt-2 pb-3 border-black border-solid border-b">
 
@@ -340,9 +381,27 @@ export default async function PokemonDetailsPage({
                     </div>
                 </details>
 
-                <details className="mb-3">
+                <details className="mb-3 @container/sensibilities" open>
                     <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Sensibilités</summary>
-
+                    <ul className="grid grid-cols-1 @md/sensibilities:grid-cols-2 @lg/sensibilities:grid-cols-3 @xl/sensibilities:grid-cols-4 gap-3 mt-3">
+                        {listResistances.map((item) => {
+                            return (
+                                <li className="flex gap-3" key={item.name.fr.clean}>
+                                    <div className="rounded-md content-center aspect-square size-12">
+                                        <Suspense fallback={<Loading />}>
+                                            <IconType type={{ fr: item.name.fr.clean, en: item.name.en.clean }} />
+                                        </Suspense>
+                                    </div>
+                                    <div>
+                                        <p className={`-ml-2 py-0.5 px-2 rounded-md gap-1 flex items-center type-name w-fit bg-[var(--type-${item.name.fr.clean})]`} style={{
+                                            // backgroundColor: `var(--type-${cleanString(item.name)})`
+                                        }}>{item.name.fr.raw}</p>
+                                        <p className={`${item.is_effective ? "font-bold" : ""}`}>x{item.multiplier}</p>
+                                    </div>
+                                </li>
+                            )
+                        })}
+                    </ul>
                 </details>
 
                 <details className="mb-3">

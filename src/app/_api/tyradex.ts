@@ -1,6 +1,6 @@
 import { cache } from 'react';
 
-import type { IPokemon, IPokemonType, IPokemonError } from "@/app/_types/Pokemon";
+import type { IPokemon, IPokemonType, IPokemonError, IType } from "@/app/_types/Pokemon";
 
 const serverErrorStartNumber = 400;
 
@@ -36,7 +36,7 @@ export const fetchPokemon = async (pkmnId: number, region: string | null = null)
 
 export const fetchAllTypes = async () => {
     try {
-        const req: { json: () => Promise<IPokemonType> } = await fetch("https://tyradex.app/api/v1/types");
+        const req: { json: () => Promise<IType[]> } = await fetch("https://tyradex.app/api/v1/types");
         return req.json();
     } catch (error) {
         return [];
