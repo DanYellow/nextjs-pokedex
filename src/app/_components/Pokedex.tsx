@@ -16,7 +16,7 @@ const DexLink = ({ generation, isLast }: { generation: number; isLast: boolean; 
     const linkRef = useRef<HTMLAnchorElement>(null);
 
     return (
-        <li className="@container/pokemon">
+        <li className="@container/pokemon col-span-2 sm:col-auto">
             <Link
                 href={`?id=${generation}`}
                 className={`
@@ -25,8 +25,7 @@ const DexLink = ({ generation, isLast }: { generation: number; isLast: boolean; 
                     transition-colors overflow-hidden border-2 border-black rounded-md
                     @sm/pokemon:after:!content-none
                     ${isLast ? "after:-scale-x-100" : ""}
-                    `
-                }
+                `}
                 onMouseEnter={() => {
                     if (linkRef.current) {
                         linkRef.current.style.setProperty('--random-value', String(Math.floor(Math.random() * 50)))
