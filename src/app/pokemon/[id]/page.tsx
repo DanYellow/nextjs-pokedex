@@ -5,13 +5,12 @@ import type { Viewport } from 'next';
 
 import React, { cache, Suspense } from 'react';
 
-import type { IPokemonAbilityComplete, IPokemonType, IPokemon, IPokemonError, IType } from "@/app/_types/Pokemon";
+import type { IPokemonAbilityComplete, IPokemonType, IPokemon, IPokemonError, IType, IEffectiveness } from "@/app/_types/Pokemon";
 import type { IPokemonSpecies, IStatComputed } from "@/app/_types/Pokeapi";
 
 import { fetchAllTypes, fetchPokemon, fetchPokemonForGeneration } from "@/app/_api/tyradex";
 import { fetchPokemonDetails, fetchAbilityData, fetchPokemonExternalData } from "@/app/_api/pokeapi";
 import { cleanString, NB_NUMBER_INTEGERS_PKMN_ID, getAbilityForLang, statistics, versionForName } from "@/app/_utils/index";
-
 
 import PokemonSibling from "@/app/_components/PokemonSibling";
 import { IPokemonExtraData } from "@/app/_types/Pokeapi";
@@ -56,10 +55,6 @@ export async function generateMetadata(
         },
         // description: post.description,
     }
-}
-
-function Loading() {
-  return <h2>🌀 Loading...</h2>;
 }
 
 export async function generateViewport({ params }: Props): Promise<Viewport> {
@@ -187,35 +182,35 @@ export default async function PokemonDetailsPage({
 
     const effectiveDamageMultiplier = 2;
     const superEffectiveDamageMultiplier = 4;
-    const listResistances = pkmn.resistances.map((item) => {
-        const typeAllLangs = listTypes.find(
+    const listEffectiveness = pkmn.resistances.map((item) => {
+        let type = listTypes.find(
             (type) => cleanString(type.name.fr) === cleanString(item.name)
         );
 
-        // console.log(typeAllLangs)
-        // console.log(item)
-        return {
-            image: `/images/types-icons/${typeAllLangs.name.en}.svg`,
-            name: {
-                fr: {
-                    clean: cleanString(item.name),
-                    raw: item.name,
+        if (type) {
+            return {
+                name: {
+                    fr: {
+                        clean: cleanString(item.name),
+                        raw: item.name,
+                    },
+                    en: {
+                        clean: cleanString(type.name.en),
+                        raw: type.name.en,
+                    },
                 },
-                en: {
-                    clean: cleanString(typeAllLangs.name.en),
-                    raw: typeAllLangs.name.en,
-                },
-            },
-            multiplier: item.multiplier,
-            is_effective: (item.multiplier === effectiveDamageMultiplier || item.multiplier === superEffectiveDamageMultiplier)
-        };
-    })
+                multiplier: item.multiplier,
+                is_effective: (item.multiplier === effectiveDamageMultiplier || item.multiplier === superEffectiveDamageMultiplier)
+            };
+        }
+        return null;
+    }).filter(Boolean) as unknown as IEffectiveness[];
 
     return (
         <>
             <PokemonBodyStyle types={listPokemonTypes} />
             <header className="py-2 px-4 bg-slate-900 text-white sticky left-0 right-0 top-0 z-50 ">
-                <div className="max-w-6xl flex justify-between mx-auto px-4 flex-col sm:flex-row landscape:!flex-row gap-y-5">
+                <div className="max-w-6xl flex justify-between mx-auto sm:px-4 flex-col sm:flex-row landscape:!flex-row gap-y-5">
                     <div>
                         <h2 className="text-2xl">
                             Génération #{pkmn.generation}
@@ -383,20 +378,24 @@ export default async function PokemonDetailsPage({
 
                 <details className="mb-3 @container/sensibilities" open>
                     <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Sensibilités</summary>
-                    <ul className="grid grid-cols-1 @md/sensibilities:grid-cols-2 @lg/sensibilities:grid-cols-3 @xl/sensibilities:grid-cols-4 gap-3 mt-3">
-                        {listResistances.map((item) => {
+                    <ul className="grid grid-cols-1 @md/sensibilities:grid-cols-2 @xl/sensibilities:grid-cols-3 gap-3 mt-3">
+                        {listEffectiveness.map((item) => {
                             return (
                                 <li className="flex gap-3" key={item.name.fr.clean}>
                                     <div className="rounded-md content-center aspect-square size-12">
-                                        <Suspense fallback={<Loading />}>
-                                            <IconType type={{ fr: item.name.fr.clean, en: item.name.en.clean }} />
-                                        </Suspense>
+                                        <IconType type={{ fr: item.name.fr.clean, en: item.name.en.clean }} />
                                     </div>
                                     <div>
                                         <p className={`-ml-2 py-0.5 px-2 rounded-md gap-1 flex items-center type-name w-fit bg-[var(--type-${item.name.fr.clean})]`} style={{
-                                            // backgroundColor: `var(--type-${cleanString(item.name)})`
-                                        }}>{item.name.fr.raw}</p>
-                                        <p className={`${item.is_effective ? "font-bold" : ""}`}>x{item.multiplier}</p>
+                                            backgroundColor: `var(--type-${item.name.fr.clean})`
+                                        }}>{item.name.fr.raw}
+                                        </p>
+                                        <p className={`${item.is_effective ? "font-bold" : ""}`}>
+                                            x{item.multiplier}
+                                            {item.is_effective && (
+                                                <span className={`ml-2 py-0.5 px-1.5 whitespace-nowrap text-white rounded-md text-xs align-super font-normal ${item.multiplier === 4 ? "bg-red-600" : "bg-slate-900"}`}>Double faiblesse</span>
+                                            )}
+                                        </p>
                                     </div>
                                 </li>
                             )

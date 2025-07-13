@@ -43,3 +43,10 @@ export interface IType {
     name: { [key: string]: string; };
     sprites: string;
 }
+
+type EffectivenessNameType = 'clean' | 'raw';
+export interface IEffectiveness {
+    name: { [key: string]: { [key in EffectivenessNameType]: string } };
+    multiplier: number;
+    is_effective: boolean;
+}
