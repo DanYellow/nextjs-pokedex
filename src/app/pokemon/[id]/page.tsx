@@ -6,10 +6,10 @@ import type { Viewport } from 'next';
 import React, { cache } from 'react';
 
 import type { IPokemonAbilityComplete, IPokemonType, IPokemon, IPokemonError } from "@/app/_types/Pokemon";
-import type { IStatComputed } from "@/app/_types/Pokeapi";
+import type { IPokemonSpecies, IStatComputed } from "@/app/_types/Pokeapi";
 
 import { fetchPokemon, fetchPokemonForGeneration } from "@/app/_api/tyradex";
-import { fetchPokemonDetails, fetchAbilityData } from "@/app/_api/pokeapi";
+import { fetchPokemonDetails, fetchAbilityData, fetchPokemonExternalData } from "@/app/_api/pokeapi";
 import { cleanString, NB_NUMBER_INTEGERS_PKMN_ID, getAbilityForLang, statistics } from "@/app/_utils/index";
 
 
@@ -74,7 +74,7 @@ export async function generateViewport({ params }: Props): Promise<Viewport> {
 }
 
 
-export default async function BlogPostPage({
+export default async function PokemonDetailsPage({
     params,
 }: Props) {
     const { id } = await params;
@@ -109,6 +109,8 @@ export default async function BlogPostPage({
     const { data: pokedex } = await fetchPokemonForGeneration(pkmn.generation);
 
     const pkmnExtraData = await fetchPokemonDetails(Number(id));
+    const pkmnSpecies = await fetchPokemonExternalData(Number(id)) as IPokemonSpecies;
+    console.log()
 
     let prevPokemon = (pokedex as IPokemon[]).find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id - 1) || {};
     let nextPokemon = (pokedex as IPokemon[]).find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id + 1) || null;
@@ -195,7 +197,14 @@ export default async function BlogPostPage({
                                 />
                             </div>
                             <div className="grow">
-                                <h1 className="text-2xl font-bold">#{String(id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} {pkmn.name.fr}</h1>
+                                <h1 className="text-2xl font-bold">
+                                    #{String(id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} {pkmn.name.fr}
+                                    {(pkmnSpecies.is_legendary || pkmnSpecies.is_mythical) && (
+                                        <span className={`py-0.5 ml-1.5 px-1.5 whitespace-nowrap text-black rounded-md text-xs align-super font-normal ${pkmnSpecies.is_legendary ? "bg-amber-400" : "bg-slate-400"}`}>
+                                            {pkmnSpecies.is_legendary ? "Pokémon Légendaire" : "Pokémon Fabuleux"}
+                                        </span>
+                                    )}
+                                </h1>
                                 <p className="text-sm -mt-1">{pkmn.category}</p>
                                 <div className="@container">
                                     <ul className="flex gap-2 mt-2 flex-col @[10rem]:flex-row">

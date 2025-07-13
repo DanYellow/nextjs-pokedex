@@ -4,9 +4,16 @@ export interface IPokemonExtraData {
         latest: URL;
         legacy: URL;
     };
-    stats: { base_stat: number; effort: number; stat: { name: string} }[]
+    stats: { base_stat: number; effort: number; stat: { name: string } }[]
 }
 
+export interface IPokemonSpecies {
+    is_legendary: boolean;
+    is_mythical: boolean;
+    names: { language: { name: string; url: URL; }; name: string; }[];
+    flavor_text_entries: { language: { name: string; url: URL; }; flavor_text: string; version: { name: string; } }[];
+    pokedex_numbers: { entry_number: number; pokedex: { name: string; } }[];
+}
 
 // type RGB = `rgb(${number}, ${number}, ${number})`;
 // type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`;
