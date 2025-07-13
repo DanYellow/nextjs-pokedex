@@ -57,23 +57,6 @@ export async function generateMetadata(
     }
 }
 
-export async function generateViewport({ params }: Props): Promise<Viewport> {
-    const id = (await params).id
-
-    let pkmn = await getPkmn(Number(id))
-
-    if (pkmn === null || (pkmn as IPokemonError).status) {
-        return {
-            themeColor: 'black',
-        }
-    }
-
-    return {
-        themeColor: 'black',
-    }
-}
-
-
 export default async function PokemonDetailsPage({
     params,
 }: Props) {
@@ -209,13 +192,13 @@ export default async function PokemonDetailsPage({
     return (
         <>
             <PokemonBodyStyle types={listPokemonTypes} />
-            <header className="py-2 px-4 bg-slate-900 text-white sticky left-0 right-0 top-0 z-50 ">
-                <div className="max-w-6xl flex justify-between mx-auto sm:px-4 flex-col sm:flex-row landscape:!flex-row gap-y-5">
-                    <div>
+            <header className="py-2 bg-slate-900 text-white sticky top-0 z-50">
+                <div className="max-w-6xl flex justify-between mx-auto pr-[max(env(safe-area-inset-right),_theme(space.4))] pl-[max(env(safe-area-inset-left),_theme(space.4))] flex-col sm:flex-row landscape:!flex-row gap-y-1" >
+                    <div className="flex flex-row sm:flex-col justify-between">
                         <h2 className="text-2xl">
                             Génération #{pkmn.generation}
                         </h2>
-                        <p className="py-0.5 px-2 rounded-md bg-slate-600 text-white inline-flex">
+                        <p className="py-0.5 px-2 rounded-md bg-slate-600 text-white inline-flex self-start">
                             <span>{String(firstPokemonGenerationId).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} ➜ {String(lastPokemonGenerationId).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')}</span>
                         </p>
                     </div>
@@ -224,7 +207,7 @@ export default async function PokemonDetailsPage({
                     </Link>
                 </div>
             </header>
-            <div className="max-w-6xl mx-auto px-4 min-h-screen bg-gray-50 z-50"
+            <div className="max-w-6xl mx-auto pr-[max(env(safe-area-inset-right),_theme(space.4))] pl-[max(env(safe-area-inset-left),_theme(space.4))] min-h-screen bg-gray-50 z-50"
                 style={{ borderLeft: `1px solid var(--type-${cleanString(listPokemonTypes[0])})`, borderRight: `1px solid var(--type-${cleanString(listPokemonTypes?.[1] || listPokemonTypes[0])})` }}
             >
                 <div

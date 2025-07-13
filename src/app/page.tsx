@@ -41,8 +41,8 @@ export default async function Home({ searchParams }: PageProps) {
 
     return (
         <LayoutProvider>
-            <header className="py-2 px-4 bg-slate-900 text-white sticky left-0 right-0 top-0 z-50 ">
-                <div className="max-w-6xl flex justify-between mx-auto px-4">
+            <header className="py-2 bg-slate-900 text-white sticky left-0 right-0 top-0 z-50 ">
+                <div className="max-w-6xl flex justify-between mx-auto pr-[max(env(safe-area-inset-right),_theme(space.4))] pl-[max(env(safe-area-inset-left),_theme(space.4))]">
                     <div>
                         <h2 className="text-2xl">
                             Génération #{id}
@@ -55,7 +55,7 @@ export default async function Home({ searchParams }: PageProps) {
                     <LayoutSwitch />
                 </div>
             </header>
-            <main className="px-4">
+            <main className="pr-[max(env(safe-area-inset-right),_theme(space.4))] pl-[max(env(safe-area-inset-left),_theme(space.4))]">
                 {hasFoundGeneration && (<Pokedex data={(data as IPokemon[])} />)}
                 {!hasFoundGeneration ? (
                     <p>Impossible d'afficher cette génération, car elle n'existe pas.</p>

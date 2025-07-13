@@ -58,95 +58,15 @@ export const capitalizeFirstLetter = (val: string) => {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 };
 
-export const getEvolutionChain = (data, evolutionLineTranslated, listPokemon) => {
-    let evolutionLine = Object.values(evolutionLineTranslated).filter(Boolean).flat()
-    // evolutionLine = evolutionLine.map((item, idx) => ({
-    //     ...item,
-    //     condition: evolutionLine[idx - 1]?.condition || item.condition,
-    // }))
-
-    let res = [];
-    const listPokemonComputed = listPokemon.map((item) => ({
-        name: item?.name.fr,
-        pokedex_id: item?.pokedex_id,
-    }));
-    const pokedexId = getPkmnIdFromURL(data.chain.species.url);
-    const firstEvolution = {
-        ...evolutionLine.find(
-            (item) => Number(item.pokedex_id) === Number(pokedexId)
-        ),
-        sprite: `https://raw.githubusercontent.com/Yarkis01/TyraDex/images/sprites/${getPkmnIdFromURL(
-            data.chain.species.url
-        )}/regular.png`,
-        list_evolutions: data.chain.evolves_to.map(
-            (evolution) => evolution.species.name
-        ),
-    };
-    res.push([firstEvolution]);
-
-    const getNextEvolutions = (listEvolutions) => {
-        const evolutionLevel = [];
-        listEvolutions.forEach((item) => {
-            const pkmnId = getPkmnIdFromURL(item.species.url);
-
-            const idxEvolution = res.findIndex((addedEvolution) => {
-                return addedEvolution.some((obj) =>
-                    obj.list_evolutions.includes(item.species.name)
-                );
-            });
-
-            evolutionLevel.push({
-                name: capitalizeFirstLetter(item.species.name),
-                pokedex_id: pkmnId,
-                ...evolutionLine.find(
-                    (item) => Number(item.pokedex_id) === Number(pkmnId)
-                ),
-                sprite: `https://raw.githubusercontent.com/Yarkis01/TyraDex/images/sprites/${pkmnId}/regular.png`,
-                list_evolutions: item.evolves_to.map(
-                    (evolution) => evolution.species.name
-                ),
-            });
-
-            if (res[idxEvolution + 1]) {
-                evolutionLevel.map((evol) => {
-                    if (!res[idxEvolution + 1].includes(evol)) {
-                        res[idxEvolution + 1].push(evol);
-                    }
-                });
-            } else {
-                res.push(evolutionLevel);
-            }
-
-            if (item.evolves_to.length > 0) {
-                getNextEvolutions(item.evolves_to);
-            }
-        });
-    };
-
-    getNextEvolutions(data.chain.evolves_to);
-
-    const payload = res.map((item) => {
-        return item.map((subItem) => ({
-            ...subItem,
-            ...(listPokemonComputed.find(
-                (item) =>
-                    Number(item?.pokedex_id) === Number(subItem.pokedex_id)
-            ) || { lang: "en" }),
-        }));
-    });
-
-    return payload;
-};
-
-export const debounce = (callback: Function, wait: number) => {
-    let timeoutId = null;
-    return (...args) => {
-        window.clearTimeout(timeoutId);
-        timeoutId = window.setTimeout(() => {
-            callback(...args);
-        }, wait);
-    };
-};
+// export const debounce = (callback: Function, wait: number) => {
+//     let timeoutId = null;
+//     return (...args) => {
+//         window.clearTimeout(timeoutId);
+//         timeoutId = window.setTimeout(() => {
+//             callback(...args);
+//         }, wait);
+//     };
+// };
 
 export const clamp = (value: number, min: number, max:number) => {
     return Math.min(Math.max(value, min), max);
@@ -157,7 +77,6 @@ export const onTransitionsEnded = (node: Element) => {
         node.getAnimations().map(animation => animation.finished)
     );
 }
-
 
 export * from "./colors";
 export * from "./pokemon-modal.utils";
