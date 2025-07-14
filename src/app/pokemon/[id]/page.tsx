@@ -104,12 +104,10 @@ export default async function PokemonDetailsPage({
     const pkmnExtraData = await fetchPokemonDetails(Number(id)) as IPokemonExtraData;
     const pkmnSpecies = await fetchPokemonExternalData(Number(id)) as IPokemonSpecies;
 
-
     let prevPokemon = (pokedex as IPokemon[]).find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id - 1) || {};
     let nextPokemon = (pokedex as IPokemon[]).find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id + 1) || null;
 
     const firstPokemonGenerationId = (pokedex as IPokemon[])[0].pokedex_id
-
     const lastPokemonGenerationId = ((pokedex as IPokemon[]).at(-1) as IPokemon).pokedex_id;
 
     if (lastPokemonGenerationId === pkmn.pokedex_id) {
@@ -434,7 +432,7 @@ export default async function PokemonDetailsPage({
                         {
                             ([prevPokemon, pkmn, nextPokemon].filter(Boolean) as IPokemon[]).map((item: IPokemon) => {
                                 if (!Object.keys(item).length) {
-                                    return (<li></li>)
+                                    return (<li key={pkmn.pokedex_id - 1}></li>)
                                 }
 
                                 const isCurrentPkmn = item.pokedex_id === (pkmn as IPokemon).pokedex_id;
