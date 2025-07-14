@@ -44,9 +44,12 @@ export interface IType {
     sprites: string;
 }
 
-type EffectivenessNameType = 'clean' | 'raw';
+//  type EffectivenessNameType = Record<'clean' | 'raw', string>
+
+
+// type EffectivenessNameType = 'clean' | 'raw';
 export interface IEffectiveness {
-    name: { [key: string]: { [key in EffectivenessNameType]: string } };
+    name: { [key: string]: Record<'clean' | 'raw', string>; } // [key in EffectivenessNameType]: string }
     multiplier: number;
     is_effective: boolean;
 }
