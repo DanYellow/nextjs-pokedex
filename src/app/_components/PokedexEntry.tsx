@@ -45,6 +45,7 @@ export default ({ id, name, sprite, listTypes: _listTypes }: { id: number, name:
                 `}
                 onMouseOver={() => setHasGenerateMarquee(true)}
                 onFocus={() => setHasGenerateMarquee(true)}
+                aria-label={`Voir fiche de ${name}`}
             >
                 <div className="flex @xs:flex-row flex-col gap-3 items-center relative inert:opacity-50">
                     {

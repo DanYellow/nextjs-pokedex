@@ -31,7 +31,7 @@ export default ({ isCurrentPkmn, isPreviousPkmn, name, pokedex_id, sprites, type
             className={`
                 pkmn-sibling ripple-effect h-full group-last:flex-row-reverse
                 flex gap-5 items-center group border-transparent
-                transition-colors border-2 border-solid rounded-lg p-2 outline-offset-2
+                transition-colors border-2 border-solid rounded-lg p-2 outline-offset-4
                 ${borderColor}
             `}
         >
@@ -44,8 +44,6 @@ export default ({ isCurrentPkmn, isPreviousPkmn, name, pokedex_id, sprites, type
                 width={175}
                 height={38}
                 loading="lazy"
-                placeholder="blur"
-                blurDataURL="https://cdn-images.welcometothejungle.com/HHp6EyGJi2h3pyvRe8jblEi03x7QxcagpLbzuXWweXY/rs:auto:70::/q:85/czM6Ly93dHRqLXByb2R1Y3Rpb24vdXBsb2Fkcy9vcmdhbml6YXRpb24vbG9nby80OTk5LzE1NTUzNC9jNDNkNWRhOC1jY2VkLTQ4NzMtODVmMi03ODkzODNjZjA0ODQucG5n"
             />
             <div>
                 <p className="text-sm">#{String(pokedex_id).padStart(4, '0')}</p>

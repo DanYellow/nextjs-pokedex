@@ -17,6 +17,7 @@ import { IPokemonExtraData } from "@/app/_types/Pokeapi";
 import Link from "next/link";
 import PokemonBodyStyle from "@/app/_components/PokemonBodyStyle";
 import IconType from "@/app/_components/IconType";
+import GenerationRange from "@/app/_components/GenerationRange";
 
 type Props = {
     params: Promise<{ id: string }>
@@ -29,8 +30,7 @@ const getPkmn = cache(async (id: Number) => {
 })
 
 export async function generateMetadata(
-    { params }: Props,
-    parent: ResolvingMetadata
+    { params }: Props
 ): Promise<Metadata> {
     const id = (await params).id
 
@@ -192,13 +192,14 @@ export default async function PokemonDetailsPage({
             <PokemonBodyStyle types={listPokemonTypes} />
             <header className="py-2 bg-slate-900 text-white sticky top-0 z-50">
                 <div className="max-w-6xl flex justify-between mx-auto pr-[max(env(safe-area-inset-right),_theme(space.4))] pl-[max(env(safe-area-inset-left),_theme(space.4))] flex-col sm:flex-row landscape:!flex-row gap-y-1" >
-                    <div className="flex flex-row sm:flex-col justify-between">
+                    <div className="flex flex-row sm:flex-col landscape:max-lg:flex-row gap-x-2 justify-between">
                         <h2 className="text-2xl">
                             Génération #{pkmn.generation}
                         </h2>
-                        <p className="py-0.5 px-2 rounded-md bg-slate-600 text-white inline-flex self-start">
-                            <span>{String(firstPokemonGenerationId).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} ➜ {String(lastPokemonGenerationId).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')}</span>
-                        </p>
+                        <GenerationRange
+                            firstPokemonGenerationNumber={firstPokemonGenerationId}
+                            lastPokemonGenerationNumber={lastPokemonGenerationId}
+                        />
                     </div>
                     <Link className="underline hocus:no-underline sm:self-end" href={`/?id=${pkmn.generation}#pkmn-${pkmn.pokedex_id}`}>
                         Retourner au Pokédex
@@ -256,7 +257,6 @@ export default async function PokemonDetailsPage({
                     </div>
                 </div>
                 <header className="main-infos border-b text-black pb-4 mb-3 top-0">
-
                     <div className="flex flex-row w-full overflow-hidden mt-2 min-h-9">
                         {pkmn.sexe === null || pkmn.sexe.male === 0 ? null : (
                             <div className="bar-sex-male only:rounded-md relative bg-sky-300 border-b-sky-700 border-b-4 border-solid px-2 py-1 rounded-l-md after:bg-sky-700 overflow-hidden" style={{ width: `${pkmn.sexe.male}%` }}>
