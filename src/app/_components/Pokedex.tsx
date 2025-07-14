@@ -11,22 +11,19 @@ import { useLayout } from '@/app/_contexts/LayoutContext';
 import pkdexStyle from "./pokedex.module.css";
 import { MAX_GENERATION } from "@/app/_utils";
 
-
 const DexLink = ({ generation, isLast }: { generation: number; isLast: boolean; }) => {
     const linkRef = useRef<HTMLAnchorElement>(null);
 
     const { layout } = useLayout();
 
     return (
-        <li className={`@container/pokemon ${layout === "grid" ? "col-span-2" : "col-auto"}`}>
+        <li className={`${layout === "grid" ? "col-span-2 sm:col-auto" : "col-auto"}`}>
             <Link
                 href={`?id=${generation}`}
                 className={`
-
                     block hocus:bg-gray-500 bg-gray-200 hocus:text-white
                     p-2 w-full h-full ${pkdexStyle["pkdex-link"]}
                     transition-colors overflow-hidden border-2 border-black rounded-md
-                    @sm/pokemon:after:!content-none
                     ${isLast ? "after:-scale-x-100" : ""}
                 `}
                 onMouseEnter={() => {
@@ -34,6 +31,7 @@ const DexLink = ({ generation, isLast }: { generation: number; isLast: boolean; 
                         linkRef.current.style.setProperty('--random-value', String(Math.floor(Math.random() * 50)))
                     }
                 }}
+                ref={linkRef}
             >
                 Aller à la <span className='font-bold text-lg text-wrap'>GÉNÉRATION #{generation}</span>
 
