@@ -29,7 +29,7 @@
                     60%
                 );
                 opacity: calc(1 - calc(calc(sibling-index() - 2) * 0.15));
-                z-index: calc(100 - sibling-index());
+                z-index: calc(10 - sibling-index());
             }
         }
     }
