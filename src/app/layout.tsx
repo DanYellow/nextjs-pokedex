@@ -5,7 +5,6 @@ import { Suspense } from 'react'
 import "./globals.css";
 import { NavigationEvents } from "@/app/_components/NavigationEvents";
 
-
 const DMSans = DM_Sans({
     variable: "--font-dm-sans",
     subsets: ["latin"],
