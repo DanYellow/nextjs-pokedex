@@ -3,6 +3,7 @@ import { DM_Sans } from "next/font/google";
 import { Suspense } from 'react'
 
 import "./globals.css";
+import "./properties.css";
 import { NavigationEvents } from "@/app/_components/NavigationEvents";
 
 const DMSans = DM_Sans({
