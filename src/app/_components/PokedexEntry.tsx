@@ -64,9 +64,30 @@ export default ({ id, name, sprite, listTypes: _listTypes }: { id: number, name:
                         height={38}
                         loading="lazy"
                     />
-                    <p className="group-hocus:pkmn-name group-[.selected]:pkmn-name @xs:text-left text-center whitespace-pre w-full">
-                        #{String(id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')}<br />{name}
-                    </p>
+                    <div>
+                        <p className="group-hocus:pkmn-name group-[.selected]:pkmn-name @xs:text-left text-center whitespace-pre w-full">
+                            #{String(id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')}<br />{name}
+                        </p>
+                        <ul className=" gap-1.5 mt-2 hidden @xs:flex">
+                            {listTypes.map((type) => {
+                                // const typeFrClean = type.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                                // const typeEnClean = typesEnglish[typeFrClean]
+                                return (
+                                    <li key={type} className="type-name py-0.5 px-1.5 text-sm rounded-md gap-1 flex flex-row" style={{ backgroundColor: `var(--type-${cleanString(type)})` }}>
+                                        <Image
+                                            className="h-5"
+                                            src={`https://raw.githubusercontent.com/Yarkis01/TyraDex/images/types/${type.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()}.png`}
+                                            alt={`icône type ${type}`}
+                                            width={20}
+                                            height={20}
+                                        />
+                                        {type}
+                                    </li>
+                                )
+                            })}
+                        </ul>
+                    </div>
+
                 </div>
             </a>
         </li>

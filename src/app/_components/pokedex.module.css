@@ -1,8 +1,3 @@
-@property --border-type-angle {
-    syntax: "<number>";
-    initial-value: 20;
-}
-
 .pkdex-link {
     --random-value: 10;
 
@@ -19,7 +14,7 @@
         right: 0;
     }
 
-    &:hover {
+    &:hover, &:focus {
         .generation-number {
             @supports (opacity: sibling-index()) {
                 transform: translateX(calc(calc(sibling-index() - 2) * -75%));
