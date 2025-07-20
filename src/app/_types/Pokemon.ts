@@ -1,7 +1,7 @@
 
 export interface IPokemonType {
-    name: string;
-    image: string;
+    readonly name: string;
+    readonly image: string;
 }
 
 export interface IPokemonAbilityComplete {
@@ -11,27 +11,27 @@ export interface IPokemonAbilityComplete {
 }
 
 export interface IPokemonCore {
-    pokedex_id: number;
-    name: {
+    readonly pokedex_id: number;
+    readonly name: {
         fr: string
     };
-    sprites: {
+    readonly sprites: {
         regular: string;
         shiny: string;
         gmax: string | null;
     };
-    types: IPokemonType[];
+    readonly types: IPokemonType[];
 }
 
 export interface IPokemon extends IPokemonCore {
-    generation: number;
-    category: string;
-    talents: { name: string; tc: boolean; }[];
-    height: string;
-    weight: string;
-    catch_rate: number;
-    sexe: { male: number; female: number; } | null;
-    resistances: { name: string; multiplier: number; }[]
+    readonly generation: number;
+    readonly category: string;
+    readonly talents: { name: string; tc: boolean; }[];
+    readonly height: string;
+    readonly weight: string;
+    readonly catch_rate: number;
+    readonly sexe: { male: number; female: number; } | null;
+    readonly resistances: { name: string; multiplier: number; }[]
 }
 
 export interface IPokemonError {
@@ -40,8 +40,8 @@ export interface IPokemonError {
 }
 
 export interface IType {
-    name: { [key: string]: string; };
-    sprites: string;
+    readonly name: { [key: string]: string; };
+    readonly sprites: string;
 }
 
 //  type EffectivenessNameType = Record<'clean' | 'raw', string>

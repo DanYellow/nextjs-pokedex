@@ -7,6 +7,6 @@ export const metadata: Metadata = {
 
 export default () => {
     return (
-        <p>Hello</p>
+        <p>Page non trouvée</p>
     )
 }

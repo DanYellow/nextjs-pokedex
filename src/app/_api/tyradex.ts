@@ -1,6 +1,6 @@
 import { cache } from 'react';
 
-import type { IPokemon, IPokemonType, IPokemonError, IType } from "@/app/_types/Pokemon";
+import type { IPokemon, IPokemonError, IType } from "@/app/_types/Pokemon";
 
 const serverErrorStartNumber = 400;
 
@@ -11,7 +11,6 @@ export const fetchPokemonForGeneration = cache(async (generation: number = 1) =>
 
         const res = await req.json();
         const error = res as IPokemonError
-
         if (error.status >= serverErrorStartNumber) {
             hasFoundGeneration = false;
             throw new Error("");
