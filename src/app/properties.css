@@ -4,8 +4,7 @@
     inherits: true;
 }
 
-
- @property --animation-tick {
+@property --animation-tick {
     syntax: "<number>";
     inherits: true;
     initial-value: 0;

@@ -57,7 +57,7 @@ if (typeof registerPaint !== "undefined") {
                 ctx.fillStyle = rippleColor;
                 let t = tick / speed;
 
-                ctx.globalAlpha = 1 - t * t;
+                ctx.globalAlpha = 1 - (t * t);
                 ctx.beginPath();
                 ctx.arc(
                     x,
