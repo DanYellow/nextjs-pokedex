@@ -58,6 +58,27 @@ export const capitalizeFirstLetter = (val: string) => {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 };
 
+export const typesEnglish: { [key: string]: string; } = {
+    "plante": "grass",
+    "insecte": "bug",
+    "tenebres": "dark",
+    "electrik": "electric",
+    "fee": "fairy",
+    "combat": "fighting",
+    "spectre": "ghost",
+    "sol": "ground",
+    "normal": "normal",
+    "glace": "ice",
+    "poison": "poison",
+    "roche": "rock",
+    "eau": "water",
+    "acier": "steel",
+    "psy": "psychic",
+    "feu": "fire",
+    "vol": "flying",
+    "dragon": "dragon",
+}
+
 // export const debounce = (callback: Function, wait: number) => {
 //     let timeoutId = null;
 //     return (...args) => {
@@ -68,7 +89,7 @@ export const capitalizeFirstLetter = (val: string) => {
 //     };
 // };
 
-export const clamp = (value: number, min: number, max:number) => {
+export const clamp = (value: number, min: number, max: number) => {
     return Math.min(Math.max(value, min), max);
 };
 

@@ -1,7 +1,6 @@
 import Image from "next/image";
 
-import { Metadata, ResolvingMetadata } from "next";
-import type { Viewport } from 'next';
+import { Metadata } from "next";
 
 import React, { cache, Suspense } from 'react';
 
@@ -138,7 +137,7 @@ export default async function PokemonDetailsPage({
             return;
         }
 
-        let sexLabel = value.includes("female") ? "female" : "male";
+        const sexLabel = value.includes("female") ? "female" : "male";
         return { key: sexLabel, sprite: value, name: key, is_shiny: key.includes("shiny") }
     }).filter(Boolean) as { key: string, sprite: string, name: string, is_shiny: boolean }[];
 
@@ -191,7 +190,7 @@ export default async function PokemonDetailsPage({
         <>
             <PokemonBodyStyle types={listPokemonTypes} />
             <header className="py-2 bg-slate-900 text-white sticky top-0 z-50">
-                <div className="max-w-6xl flex justify-between mx-auto pr-[max(env(safe-area-inset-right),_theme(space.4))] pl-[max(env(safe-area-inset-left),_theme(space.4))] flex-col sm:flex-row landscape:!flex-row gap-y-1" >
+                <div className="max-w-6xl flex justify-between mx-auto pr-[max(env(safe-area-inset-right),_theme(space.4))] pl-[max(env(safe-area-inset-left),_theme(space.4))] flex-col sm:flex-row landscape:!flex-row gap-y-1">
                     <div className="flex flex-row sm:flex-col landscape:max-lg:flex-row gap-x-2 justify-between">
                         <h2 className="text-2xl">
                             Génération #{pkmn.generation}
@@ -237,7 +236,7 @@ export default async function PokemonDetailsPage({
                             </h1>
                             <p className="text-sm -mt-1">{pkmn.category}</p>
                             <div className="@container">
-                                <ul className="flex gap-2 mt-2 flex-col @[10rem]:flex-row">
+                                <ul className="flex gap-1 mt-2 flex-col @[10rem]:flex-row">
                                     {pkmn.types.map(({ name, image }: IPokemonType) => (
                                         <li
                                             key={name}
@@ -372,7 +371,7 @@ export default async function PokemonDetailsPage({
                                         <p className={`${item.is_effective ? "font-bold" : ""}`}>
                                             x{item.multiplier}
                                             {item.is_effective && (
-                                                <span className={`ml-2 py-0.5 px-1.5 whitespace-nowrap text-white rounded-md text-xs align-super font-normal ${item.multiplier === 4 ? "bg-red-600" : "bg-slate-900"}`}>Double faiblesse</span>
+                                                <span className={`ml-6 py-0.5 px-1.5 block -mt-7 whitespace-nowrap text-white rounded-md text-xs align-super font-normal ${item.multiplier === 4 ? "bg-red-600" : "bg-slate-900"}`}>Double faiblesse</span>
                                             )}
                                         </p>
                                     </div>
