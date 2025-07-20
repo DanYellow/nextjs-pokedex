@@ -371,7 +371,7 @@ export default async function PokemonDetailsPage({
                                         <p className={`${item.is_effective ? "font-bold" : ""}`}>
                                             x{item.multiplier}
                                             {item.is_effective && (
-                                                <span className={`ml-6 py-0.5 px-1.5 block -mt-7 whitespace-nowrap text-white rounded-md text-xs align-super font-normal ${item.multiplier === 4 ? "bg-red-600" : "bg-slate-900"}`}>Double faiblesse</span>
+                                                <span className={`ml-6 py-0.5 px-1.5 block -mt-7 whitespace-nowrap text-white rounded-md text-xs font-normal ${item.multiplier === 4 ? "bg-red-600" : "bg-slate-900"}`}>Double faiblesse</span>
                                             )}
                                         </p>
                                     </div>

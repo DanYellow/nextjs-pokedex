@@ -1,9 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import type { IPokemonCore } from "@/app/_types/Pokemon";
-import { typesTextColorGroupHocus, typesBorderColor, cleanString } from "../_utils";
 import Link from "next/link";
+
+import type { IPokemonCore } from "@/app/_types/Pokemon";
+
+import { typesTextColorGroupHocus, typesBorderColor, cleanString } from "@/app/_utils";
+import { loadPokemonPage } from "@/app/_utils/rippleEffect";
 
 interface IPokemonSibling extends IPokemonCore {
     isCurrentPkmn: boolean;
@@ -23,7 +26,8 @@ export default ({ isCurrentPkmn, isPreviousPkmn, name, pokedex_id, sprites, type
             </div>
         )
     }
-    const borderColor = typesBorderColor[`${cleanString(types[0].name)}_${cleanString(types[1]?.name || types?.[0].name)}`]
+    const listTypes = types.map((item) => cleanString(item.name));
+    const borderColor = typesBorderColor[`${listTypes[0]}_${listTypes[1] || listTypes[0]}`]
 
     return (
         <Link
@@ -34,8 +38,9 @@ export default ({ isCurrentPkmn, isPreviousPkmn, name, pokedex_id, sprites, type
                 transition-colors border-2 border-solid rounded-lg p-2 outline-offset-4
                 ${borderColor}
             `}
+            onClick={(e) => loadPokemonPage(e, listTypes)}
         >
-            <p className={`group-hocus:scale-120 arrow ${isPreviousPkmn ? "-mr-3.5" : "-ml-3.5"} ${typesTextColorGroupHocus[cleanString(types[0].name)]}`}> {isPreviousPkmn ? "◄" : "►"}</p>
+            <p className={`group-hocus:scale-120 arrow ${isPreviousPkmn ? "-mr-3.5" : "-ml-3.5"} ${typesTextColorGroupHocus[listTypes[0]]}`}> {isPreviousPkmn ? "◄" : "►"}</p>
 
             <Image
                 className="w-12"

@@ -31,7 +31,7 @@ export function NavigationEvents() {
 
     useEffect(() => {
         if ('paintWorklet' in window.CSS) {
-            CSS.paintWorklet.addModule('./worklets/ripple.js');
+            CSS.paintWorklet.addModule('/worklets/ripple.js');
         }
     }, []);
 

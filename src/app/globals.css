@@ -381,8 +381,8 @@ details {
         content: "";
         position: absolute;
         inset: 0;
-        background-color: var(--color-slate-100);
-        z-index: -1;
+        background-color: transparent;
+        z-index: 0;
         box-sizing: content-box;
         overflow: hidden;
         border-radius: inherit;

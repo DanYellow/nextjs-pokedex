@@ -2,13 +2,17 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { loadPokemonPage } from "@/app/_utils/rippleEffect";
 
-import { cleanString, typesAnimatedBorderColor, NB_NUMBER_INTEGERS_PKMN_ID } from "@/app/_utils/index";
+import {
+    cleanString, typesAnimatedBorderColor,
+    NB_NUMBER_INTEGERS_PKMN_ID,
+} from "@/app/_utils/index";
 
 const TypeMarquee = ({ listTypes }: { listTypes: string[] }) => {
     return listTypes.map((type: string, typeIdx: number) => {
         return (
-            <div key={type} style={{ backgroundColor: `var(--type-${cleanString(type)})` }} className="marquee py-0.5 border-b border-solid border-white">
+            <div key={type} style={{ backgroundColor: `var(--type-${cleanString(type)})` }} className="marquee py-0.5 border-b border-solid border-white select-none">
                 {Array.from({ length: 7 }).map((_, idx) => {
                     return (
                         <p
@@ -46,6 +50,7 @@ export default ({ id, name, sprite, listTypes: _listTypes }: { id: number, name:
                 onMouseOver={() => setHasGenerateMarquee(true)}
                 onFocus={() => setHasGenerateMarquee(true)}
                 aria-label={`Voir fiche de ${name}`}
+                onClick={(e) => loadPokemonPage(e, listTypes)}
             >
                 <div className="flex @xs:flex-row flex-col gap-3 items-center relative inert:opacity-50">
                     {
@@ -89,7 +94,6 @@ export default ({ id, name, sprite, listTypes: _listTypes }: { id: number, name:
                             })}
                         </ul>
                     </div>
-
                 </div>
             </a>
         </li>
