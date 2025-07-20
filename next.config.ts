@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
                 protocol: 'https',
                 hostname: 'raw.githubusercontent.com',
                 port: '',
-                pathname: '/Yarkis01/TyraDex/images/sprites/**',
+                pathname: '/Yarkis01/TyraDex/images/**',
                 search: '',
             },
             {

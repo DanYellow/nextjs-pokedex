@@ -60,9 +60,11 @@ export default ({ id, name, sprite, listTypes: _listTypes }: { id: number, name:
                         className="@xs:max-w-20 group-[.selected]:scale-85 group-hocus:scale-85 transition-transform"
                         src={sprite}
                         alt={`sprite de ${name}`}
-                        width={175}
-                        height={38}
+                        width={110}
+                        height={110}
+                        placeholder="blur"
                         loading="lazy"
+                        blurDataURL="/images/loading.svg"
                     />
                     <div>
                         <p className="group-hocus:pkmn-name group-[.selected]:pkmn-name @xs:text-left text-center whitespace-pre w-full">
