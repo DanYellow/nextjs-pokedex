@@ -4,7 +4,7 @@ import { cleanString } from ".";
 const rippleEffectDuration = 300;
 export const rippleEffect = (e: MouseEvent<HTMLAnchorElement>, color = "#fff"): Promise<void> => {
     return new Promise((resolve) => {
-        if ("paintWorklet" in CSS === false) {
+        if ("paintWorklet" in window.CSS === false) {
             resolve();
         }
 

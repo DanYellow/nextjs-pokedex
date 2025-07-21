@@ -17,7 +17,6 @@ declare namespace CSS {
     function registerProperty(propertyDefinition: PropertyDefinition): undefined
 }
 
-
 export function NavigationEvents() {
     const params = useParams<{ id: string; }>()
 
