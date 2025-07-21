@@ -45,7 +45,7 @@ export default ({ id, name, sprite, listTypes: _listTypes }: { id: number, name:
                     hocus:scale-105 @xs:hocus:scale-100
                     hocus:relative ease-out rounded-md py-2 group block border-solid
                     border-transparent border-2 outline-offset-2 transition-transform ${listBorderClasses}
-                    ${window.location.hash === `#pkmn-${id}` ? "bg-slate-200" : ""}
+                    ${window.location.hash === `#pkmn-${id}` ? "selected" : ""}
                 `}
                 onMouseOver={() => setHasGenerateMarquee(true)}
                 onFocus={() => setHasGenerateMarquee(true)}
