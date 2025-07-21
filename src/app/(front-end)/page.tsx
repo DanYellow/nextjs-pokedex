@@ -9,7 +9,7 @@ import { IPokemon } from "@/app/_types/Pokemon";
 import { Props as PageProps } from "@/app/_types/Page";
 
 import GenerationDropdown from "@/app/_components/GenerationDropdown";
-import GenerationRange from "./_components/GenerationRange";
+import GenerationRange from "@/app/_components/GenerationRange";
 
 export async function generateMetadata(
     { searchParams }: PageProps

@@ -1,10 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans } from "next/font/google";
-import { Suspense } from 'react'
 
 import "./globals.css";
 import "./properties.css";
-import { NavigationEvents } from "@/app/_components/NavigationEvents";
 
 const DMSans = DM_Sans({
     variable: "--font-dm-sans",
@@ -37,10 +35,6 @@ export default function RootLayout({
                 style={{ fontFamily: `var(--font-dm-sans)` }}
             >
                 {children}
-
-                <Suspense fallback={null}>
-                    <NavigationEvents />
-                </Suspense>
             </body>
         </html>
     );
