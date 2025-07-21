@@ -6,6 +6,7 @@ export interface IPokemonExtraData {
     };
     stats: { base_stat: number; effort: number; stat: { name: string } }[];
     sprites: { other: { home: { [key: string]: string } } };
+    game_indices: { version: { name: string } }[];
 }
 
 export interface IPokemonSpecies {
@@ -14,7 +15,6 @@ export interface IPokemonSpecies {
     names: { language: { name: string; url: URL; }; name: string; }[];
     flavor_text_entries: { language: { name: string; url: URL; }; flavor_text: string; version: { name: string; } }[];
     pokedex_numbers: { entry_number: number; pokedex: { name: string; } }[];
-
 }
 
 // type RGB = `rgb(${number}, ${number}, ${number})`;

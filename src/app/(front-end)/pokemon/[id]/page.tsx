@@ -2,14 +2,15 @@ import Image from "next/image";
 
 import { Metadata } from "next";
 
-import React, { cache, Suspense } from 'react';
+import React, { cache } from 'react';
+import fs from "fs";
 
 import type { IPokemonAbilityComplete, IPokemonType, IPokemon, IPokemonError, IType, IEffectiveness } from "@/app/_types/Pokemon";
 import type { IPokemonSpecies, IStatComputed } from "@/app/_types/Pokeapi";
 
 import { fetchAllTypes, fetchPokemon, fetchPokemonForGeneration } from "@/app/_api/tyradex";
 import { fetchPokemonDetails, fetchAbilityData, fetchPokemonExternalData } from "@/app/_api/pokeapi";
-import { cleanString, NB_NUMBER_INTEGERS_PKMN_ID, getAbilityForLang, statistics, versionForName } from "@/app/_utils/index";
+import { cleanString, NB_NUMBER_INTEGERS_PKMN_ID, getAbilityForLang, statistics, versionForName, FRENCH_GAMES_NAME } from "@/app/_utils/index";
 
 import PokemonSibling from "@/app/_components/PokemonSibling";
 import { IPokemonExtraData } from "@/app/_types/Pokeapi";
@@ -94,6 +95,19 @@ export default async function PokemonDetailsPage({
                 </div>
             </>
         )
+    }
+
+    const listUploadedCovers = await fs.readdirSync("./public/uploads");
+
+    const getCoverForName = (name: string) => {
+        if (!name) {
+            return null;
+        }
+
+        return listUploadedCovers.find((item) => {
+            const filename = name.split(".").at(0);
+            return item.split(".").at(0) === filename;
+        }) || null;
     }
 
     pkmn = (pkmn as IPokemon);
@@ -185,6 +199,18 @@ export default async function PokemonDetailsPage({
         }
         return null;
     }).filter(Boolean) as unknown as IEffectiveness[];
+
+    const listGames = [...pkmnSpecies.flavor_text_entries, ...pkmnExtraData.game_indices].filter((value, index, self) =>
+        index === self.findIndex((t) => (
+            t.version.name === value.version.name
+        ))
+    )
+        .map((item) => ({
+            name: FRENCH_GAMES_NAME[item.version.name] || "Unknown",
+            key: item.version.name,
+            order: Object.keys(FRENCH_GAMES_NAME).findIndex((game) => item.version.name === game)
+        }))
+        .sort((a, b) => Number(a.order) - Number(b.order))
 
     return (
         <>
@@ -424,6 +450,23 @@ export default async function PokemonDetailsPage({
                             )
                         })}
                     </div>
+                </details>
+                <details className="mb-3">
+                    <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Apparitions ({listGames.length})</summary>
+                    <ol className="grid grid-cols-2 md:grid-cols-5 gap-x-2 gap-y-5 mt-3">
+                        {listGames.map((item) => (
+                            <li className="flex flex-col items-center" key={item.key}>
+                                <Image
+                                    width={200}
+                                    height={200}
+                                    src={`/uploads/${getCoverForName(item.key)}`}
+                                    alt={`jaquette de ${item.name}`}
+                                    className="w-full"
+                                />
+                                <p>{item.name}</p>
+                            </li>
+                        ))}
+                    </ol>
                 </details>
 
                 <nav className="text-black">

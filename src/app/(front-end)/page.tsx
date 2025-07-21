@@ -62,7 +62,7 @@ export default async function Home({ searchParams }: PageProps) {
                     <LayoutSwitch />
                 </div>
             </header>
-            <main className="pr-[max(env(safe-area-inset-right),_theme(space.4))] pl-[max(env(safe-area-inset-left),_theme(space.4))]">
+            <main className="pr-[max(env(safe-area-inset-right),_theme(space.4))] pl-[max(env(safe-area-inset-left),_theme(space.4))] mx-auto max-w-6xl mt-2 ">
                 {hasFoundGeneration && (<Pokedex data={(data as IPokemon[])} />)}
                 {!hasFoundGeneration ? (
                     <p>Impossible d'afficher cette génération, car elle n'existe pas.</p>

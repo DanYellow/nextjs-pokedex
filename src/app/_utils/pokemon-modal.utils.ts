@@ -63,10 +63,3 @@ export const getAbilityForLang = (ability: IAbility, lang = "fr") => {
 
     return { name: { fr: name, en: ability.name }, description, id: ability.id };
 }
-
-export const getExternalDataForLang = (externalData, lang = "fr") => {
-    return {
-        ...externalData,
-        flavor_text_entries: externalData.flavor_text_entries.filter((item) => item.language.name === lang),
-    };
-}
