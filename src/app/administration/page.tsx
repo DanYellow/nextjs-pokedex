@@ -5,7 +5,7 @@ import Form from 'next/form';
 
 const uploadDir = "./public/uploads";
 
-import { FRENCH_GAMES_NAME } from "@/app/_utils";
+import { FRENCH_GAMES_NAME, getCoverForName } from "@/app/_utils";
 import Image from "next/image";
 
 
@@ -17,13 +17,19 @@ export default async function Page() {
 
     const onSubmit = async (formData: FormData) => {
         'use server'
-        const game = formData.get("game");
+        const game = formData.get("game") as string;
         const file = formData.get("cover") as File;
 
         const ext = path.extname(file.name);
 
         const data = await file.arrayBuffer();
         const fileDestination = `${uploadDir}/${game}${ext}`;
+
+        const existingFile = getCoverForName(game, listUploadedFilesRaw);
+        if (existingFile) {
+            fs.unlink(`./public/uploads/${existingFile}`, () => {})
+        }
+
         await fs.appendFileSync(fileDestination, Buffer.from(data));
     }
 

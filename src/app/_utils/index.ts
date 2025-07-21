@@ -99,6 +99,17 @@ export const onTransitionsEnded = (node: Element) => {
     );
 }
 
+export const getCoverForName = (name: string, listFiles: string[]) => {
+    if (!name) {
+        return null;
+    }
+
+    return listFiles.find((item) => {
+        const filename = name.split(".").at(0);
+        return item.split(".").at(0) === filename;
+    }) || null;
+}
+
 export * from "./colors";
 export * from "./pokemon-modal.utils";
 export * from "./formsDictionary";

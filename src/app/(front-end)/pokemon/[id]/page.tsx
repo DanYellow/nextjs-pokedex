@@ -10,7 +10,7 @@ import type { IPokemonSpecies, IStatComputed } from "@/app/_types/Pokeapi";
 
 import { fetchAllTypes, fetchPokemon, fetchPokemonForGeneration } from "@/app/_api/tyradex";
 import { fetchPokemonDetails, fetchAbilityData, fetchPokemonExternalData } from "@/app/_api/pokeapi";
-import { cleanString, NB_NUMBER_INTEGERS_PKMN_ID, getAbilityForLang, statistics, versionForName, FRENCH_GAMES_NAME } from "@/app/_utils/index";
+import { cleanString, NB_NUMBER_INTEGERS_PKMN_ID, getAbilityForLang, statistics, versionForName, FRENCH_GAMES_NAME, getCoverForName } from "@/app/_utils/index";
 
 import PokemonSibling from "@/app/_components/PokemonSibling";
 import { IPokemonExtraData } from "@/app/_types/Pokeapi";
@@ -98,17 +98,6 @@ export default async function PokemonDetailsPage({
     }
 
     const listUploadedCovers = await fs.readdirSync("./public/uploads");
-
-    const getCoverForName = (name: string) => {
-        if (!name) {
-            return null;
-        }
-
-        return listUploadedCovers.find((item) => {
-            const filename = name.split(".").at(0);
-            return item.split(".").at(0) === filename;
-        }) || null;
-    }
 
     pkmn = (pkmn as IPokemon);
 
@@ -459,7 +448,7 @@ export default async function PokemonDetailsPage({
                                 <Image
                                     width={200}
                                     height={200}
-                                    src={`/uploads/${getCoverForName(item.key)}`}
+                                    src={`/uploads/${getCoverForName(item.key, listUploadedCovers)}`}
                                     alt={`jaquette de ${item.name}`}
                                     className="w-full"
                                 />
