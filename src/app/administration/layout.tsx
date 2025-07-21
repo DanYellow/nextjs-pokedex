@@ -1,7 +1,11 @@
-export default function BlogLayout({
+export default function AdministrationLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
-    return <div style={{ backgroundColor: "red" }}>{children}</div>
+    return (
+        <>
+            {children}
+        </>
+    )
 }

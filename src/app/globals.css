@@ -1,7 +1,7 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/forms";
 
 @config '../../tailwind.config.js';
-
 
 
 @layer base {
