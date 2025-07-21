@@ -15,13 +15,13 @@ export default () => {
     const searchParams = useSearchParams()
 
     return (
-        <select className={`${DMSans.variable}`} onChange={(e) => {
+        <select className={`${DMSans.variable} text-black`} onChange={(e) => {
             redirect(`/?id=${e.target.value}`)
         }} defaultValue={searchParams.get('id') || "1"}
         >
             {Array.from({ length: MAX_GENERATION }).map((_, idx) => {
                 return (
-                    <option className={`text-black`} value={idx + 1} key={idx + 1}>#{idx + 1}</option>
+                    <option className={`${DMSans.variable} text-black`} value={idx + 1} key={idx + 1}>#{idx + 1}</option>
                 )
             })}
         </select>
