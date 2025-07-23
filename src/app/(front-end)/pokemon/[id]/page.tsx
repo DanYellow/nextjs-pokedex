@@ -228,12 +228,11 @@ export default async function PokemonDetailsPage({
                     style={{
                         borderImage: `linear-gradient(to right, var(--type-${cleanString(listPokemonTypes[0])}) 0%, var(--type-${cleanString(listPokemonTypes[0])}) 50%, var(--type-${cleanString(listPokemonTypes?.[1] || listPokemonTypes[0])}) 50%, var(--type-${cleanString(listPokemonTypes?.[1] || listPokemonTypes[0])}) 100%) 1`
                     }}
-                    className="sticky1 top-0 px-4 bg-gray-50 pt-2 pb-3 border-black border-solid border-b">
+                    className="bg-gray-50 pt-2 pb-3 border-black border-solid border-b">
 
-                    <div className="flex flex-row gap-3 relative items-center">
+                    <div className="flex flex-col sm:flex-row gap-3 relative sm:items-center">
                         <div className="w-20">
                             <Image
-                                className="@xs:max-w-20 group-[.selected]:scale-85 group-hocus:scale-85 transition-transform"
                                 src={pkmn.sprites.regular}
                                 alt={`sprite de ${pkmn.name.fr}`}
                                 width={175}
@@ -345,14 +344,14 @@ export default async function PokemonDetailsPage({
 
                 <details className="mb-3">
                     <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Descriptions</summary>
-                    <dl>
+                    {pkmnSpecies.flavor_text_entries?.filter((item) => item.language.name === "fr").length ? (<dl>
                         {pkmnSpecies.flavor_text_entries?.filter((item) => item.language.name === "fr").map((item) => (
                             <React.Fragment key={item.version.name}>
                                 <dt className="font-bold">{versionForName[item.version.name]}</dt>
                                 <dd className="mb-2">{item.flavor_text}</dd>
                             </React.Fragment>
                         ))}
-                    </dl>
+                    </dl>) : (<p>{pkmn.name.fr} n'a pas de descriptions</p>)}
                 </details>
 
                 <details className="mb-3">
