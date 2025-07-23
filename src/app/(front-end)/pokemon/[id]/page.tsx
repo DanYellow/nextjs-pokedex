@@ -4,6 +4,7 @@ import { Metadata } from "next";
 
 import React, { cache } from 'react';
 import fs from "fs";
+import "core-js/proposals/array-grouping-v2";
 
 import type { IPokemonAbilityComplete, IPokemonType, IPokemon, IPokemonError, IType, IEffectiveness } from "@/app/_types/Pokemon";
 import type { IPokemonSpecies, IStatComputed } from "@/app/_types/Pokeapi";

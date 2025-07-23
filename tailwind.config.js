@@ -71,7 +71,7 @@ const typesClassesPlugin = plugin(({ theme, addComponents }) => {
             return {
                 name: `.border-animated-${item}`,
                 backgroundImage: `
-                linear-gradient(to right, rgb(255 255 255 / 1), rgb(255 255 255 / 1)),
+                linear-gradient(to right, rgb(245 244 244), rgb(245 244 244)),
                 conic-gradient(
                     from var(--border-type-angle),
                     ${theme(`colors.type_${item.split("_")[1]}`)} 0deg 180deg,
