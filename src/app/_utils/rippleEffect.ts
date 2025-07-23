@@ -33,6 +33,10 @@ export const rippleEffect = (e: MouseEvent<HTMLAnchorElement>, color = "#fff"): 
 }
 
 export const loadPokemonPage = async (e: MouseEvent<HTMLAnchorElement>, pkmnTypes: string[]) => {
+    if ("paintWorklet" in window.CSS === false) {
+        return;
+    }
+
     const $el = e.currentTarget;
     e.preventDefault();
 
