@@ -36,15 +36,14 @@ export default ({ id, name, sprite, listTypes: _listTypes }: { id: number, name:
     const [hasGenerateMarquee, setHasGenerateMarquee] = useState<boolean>(false);
 
     return (
-        <li className="@container/pokemon" >
+        <li className="@container/pokemon">
             <a href={`/pokemon/${id}`}
                 id={`pkmn-${id}`}
                 className={`
                     pokemon ripple-effect duration-150
                     border-type-animated
-                    hocus:scale-105 @xs:hocus:scale-100
                     hocus:relative ease-out rounded-md py-2 group block border-solid
-                    border-transparent border-2 outline-offset-2 transition-transform ${listBorderClasses}
+                    border-transparent border-2 outline-offset-2 transition-transform ${listBorderClasses} pokedex-item
                     ${window.location.hash === `#pkmn-${id}` ? "selected" : ""}
                 `}
                 onMouseOver={() => setHasGenerateMarquee(true)}

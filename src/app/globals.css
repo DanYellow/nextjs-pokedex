@@ -406,13 +406,15 @@ details {
     }
 }
 
+.arrow {
+    font-family: serif;
+    transition-property: scale, color;
+    transition-duration: var(--duration-150);
+    transform-origin: center;
+}
 
 @keyframes animate-in {
     0% {
-        opacity: 0;
-        transform: translateY(100%);
-    }
-    50% {
         opacity: 0;
         transform: translateY(100%);
     }
@@ -433,10 +435,19 @@ details {
     }
 }
 
-.arrow {
-    font-family: serif;
-    transition-property: scale, color;
-    transition-duration: var(--duration-150);
-    transform-origin: center;
+.pokedex-item {
+    @supports (animation-range: entry, exit) {
+        @container (width >= theme(--container-xs)) {
+            animation-duration: auto, auto;
+            animation-timing-function: linear, linear;
+            animation-delay: 0s, 0s;
+            animation-iteration-count: 1, 1;
+            animation-direction: normal, normal;
+            animation-fill-mode: forwards, forwards;
+            animation-play-state: running, running;
+            animation-name: animate-in, animate-out;
+            animation-timeline: view();
+            animation-range: entry, exit;
+        }
+    }
 }
-
