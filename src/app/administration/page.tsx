@@ -63,8 +63,8 @@ export default async function Page() {
             </Form>
 
             <p className="text-xl font-bold mt-3">Liste des jaquettes uploadées</p>
-            <ol className="grid grid-cols-3 md:grid-cols-5 gap-2">
-                {istUploadedFiles.map((item) => (
+            <ol className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                {listUploadedFiles.map((item) => (
                     <li className="flex flex-col items-center" key={item}>
                         <Image
                             width={250}

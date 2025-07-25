@@ -79,25 +79,10 @@ export const typesEnglish: { [key: string]: string; } = {
     "dragon": "dragon",
 }
 
-// export const debounce = (callback: Function, wait: number) => {
-//     let timeoutId = null;
-//     return (...args) => {
-//         window.clearTimeout(timeoutId);
-//         timeoutId = window.setTimeout(() => {
-//             callback(...args);
-//         }, wait);
-//     };
-// };
 
 export const clamp = (value: number, min: number, max: number) => {
     return Math.min(Math.max(value, min), max);
 };
-
-export const onTransitionsEnded = (node: Element) => {
-    return Promise.allSettled(
-        node.getAnimations().map(animation => animation.finished)
-    );
-}
 
 export const getCoverForName = (name: string, listFiles: string[]) => {
     if (!name) {
