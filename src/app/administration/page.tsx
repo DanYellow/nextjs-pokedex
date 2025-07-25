@@ -6,6 +6,8 @@ import { redirect } from 'next/navigation'
 
 import Form from 'next/form';
 
+import Uploader from "@/app/_components/Uploader";
+
 const uploadDir = "./public/uploads";
 
 import { FRENCH_GAMES_NAME, getCoverForName } from "@/app/_utils";
@@ -40,11 +42,12 @@ export default async function Page() {
     return (
         <>
             <Form action={onSubmit}>
-                <div className='flex items-stretch sm:items-center sm:flex-row flex-col gap-2 mb-3'>
+                <div className='flex items-stretch sm:items-center flex-col gap-2 mb-3'>
+                    <Uploader />
                     <div className="flex flex-col">
-                        <label htmlFor="pet-select">Choisir jeu :</label>
+                        <label htmlFor="cover-select">Choisir jeu :</label>
 
-                        <select id="pet-select" name="game" required>
+                        <select id="cover-select" name="game" required>
                             <option value="">-- --</option>
                             {Object.entries(FRENCH_GAMES_NAME).map(([key, value]) => (
                                 <option key={key} value={key}>
@@ -53,7 +56,8 @@ export default async function Page() {
                             ))}
                         </select>
                     </div>
-                    <label htmlFor="cover" className="text-sm
+
+                    {/* <label htmlFor="cover" className="text-sm
                                     py-2 px-4
                                     rounded-sm border-0
                                     bg-blue-700 hocus:bg-blue-950
@@ -61,7 +65,7 @@ export default async function Page() {
                                     mt-auto
                                 ">Sélectionner jaquette
                         <input type="file" className="w-0 h-0 file:hidden -z-50" required name="cover" id="cover" />
-                    </label>
+                    </label> */}
                 </div>
                 <button type="submit" className="bg-gray-200 hocus:bg-gray-600 hocus:text-white px-4 py-1 rounded-sm">Envoyer</button>
             </Form>
