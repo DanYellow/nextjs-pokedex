@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import style from "./uploader.module.css";
 
 const SCALE_CLASS = "scale-105";
-const Uploader = () => {
+const Uploader = ({ classNames = "" }: { classNames?: string }) => {
     const inputFile = useRef<HTMLInputElement>(null);
     const [image, setImage] = useState<File | null>(null);
 
@@ -40,13 +40,13 @@ const Uploader = () => {
 
     const deleteImage = (e: React.SyntheticEvent<HTMLButtonElement>) => {
         setImage(null);
-        if(inputFile.current) {
+        if (inputFile.current) {
             inputFile.current.files = null;
         }
     }
 
     return (
-        <div className="w-full">
+        <div className={`w-full ${classNames}`}>
             <div
                 className="w-full flex z-50 duration-1000 relative flex-col ease-in-out shadow-2xl transition-transform p-5 rounded-2xl items-stretch bg-slate-100 border-slate-600 border-dashed border-2"
                 onDragOver={dragOver}
@@ -61,7 +61,7 @@ const Uploader = () => {
                 <label htmlFor="cover" className="text-sm
                     py-2 px-4
                     rounded-sm border-0
-                    bg-blue-700 hocus:bg-blue-950
+                    bg-blue-700 hocus:bg-blue-950 focus-within:bg-blue-950
                     text-white text-center
                     mx-auto
                 ">
@@ -71,7 +71,7 @@ const Uploader = () => {
             </div>
             {image && (
                 <div className={`flex w-9/12 mx-auto flex-row -mt-5 pt-8 bg-slate-100 rounded-2xl px-5 py-2 gap-2 border border-slate-600 border-solid ${style.image}`}>
-                    <img className="size-15" src={URL.createObjectURL(image)} alt="" />
+                    <img className="size-15 object-contain" src={URL.createObjectURL(image)} alt="" />
                     <p>{image.name}</p>
                     <button type="button" onClick={deleteImage} className="ml-auto text-2xl">&#x2716;</button>
                 </div>
