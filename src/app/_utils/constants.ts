@@ -4,6 +4,7 @@ export const MAX_GENERATION: number = 9;
 
 export const FRENCH_GAMES_NAME: { [key: string]: string } = {
     red: "Pokémon Rouge",
+    test: "test",
     blue: "Pokémon Bleue",
     yellow: "Pokémon Jaune",
     gold: "Pokémon Or",

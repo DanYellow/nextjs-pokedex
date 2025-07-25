@@ -1,22 +1,25 @@
 import fs from "fs";
 import path from "path";
 
+import Image from "next/image";
+import { redirect } from 'next/navigation'
+
 import Form from 'next/form';
 
 const uploadDir = "./public/uploads";
 
 import { FRENCH_GAMES_NAME, getCoverForName } from "@/app/_utils";
-import Image from "next/image";
-
 
 export default async function Page() {
     const listUploadedFilesRaw = await fs.readdirSync("./public/uploads");
-    const istUploadedFiles = listUploadedFilesRaw
+
+    const listUploadedFiles = listUploadedFilesRaw
         .filter((item) => !item.includes(".gitignore"))
         .map((file) => `/uploads/${file}`);
 
     const onSubmit = async (formData: FormData) => {
         'use server'
+
         const game = formData.get("game") as string;
         const file = formData.get("cover") as File;
 
@@ -27,10 +30,11 @@ export default async function Page() {
 
         const existingFile = getCoverForName(game, listUploadedFilesRaw);
         if (existingFile) {
-            fs.unlink(`./public/uploads/${existingFile}`, () => {})
+            await fs.unlinkSync(`./public/uploads/${existingFile}`);
         }
 
         await fs.appendFileSync(fileDestination, Buffer.from(data));
+        redirect('/administration')
     }
 
     return (
