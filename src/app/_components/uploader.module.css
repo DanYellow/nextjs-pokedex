@@ -18,7 +18,10 @@
 .image {
     @starting-style {
         translate: 0 -100%;
+        opacity: 0.15;
     }
+
     transition: translate 350ms ease-in-out;
     translate: 0 0%;
+    opacity: 1;
 }

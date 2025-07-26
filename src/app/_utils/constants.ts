@@ -3,8 +3,8 @@ export const HTTP_NOT_FOUND_CODE_ERROR: number = 404;
 export const MAX_GENERATION: number = 9;
 
 export const FRENCH_GAMES_NAME: { [key: string]: string } = {
-    red: "Pokémon Rouge",
     test: "test",
+    red: "Pokémon Rouge",
     blue: "Pokémon Bleue",
     yellow: "Pokémon Jaune",
     gold: "Pokémon Or",
