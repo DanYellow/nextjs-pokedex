@@ -13,7 +13,7 @@ const imageValidator = (image: File, listAllowedMimeType = ["image/png", "image/
     if (
         !listAllowedMimeType.includes(image.type)
     ) {
-        return { message: "Format incorrect uploadé", type: "incorrect_format" };
+        return { message: "Fichier incorrect uploadé", type: "incorrect_format" };
     }
 
     const oneMo = 1024 * 1024;
@@ -79,7 +79,7 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
         folderDiv.current?.classList.remove(style["folder-oscillation"]);
         setErrorMessage(undefined);
 
-        if (e.dataTransfer.items && inputFile.current) {
+        if (e.dataTransfer.files.length && inputFile.current) {
             const file = e.dataTransfer.files[0];
             const errorMessage = imageValidator(file);
 
@@ -90,6 +90,9 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
                 inputFile.current.files = e.dataTransfer.files;
                 setImage(file);
             }
+        } else {
+            setUploadHasError(true);
+            setErrorMessage("Quelque chose d'incorrect a été déposé");
         }
     }
 
@@ -113,7 +116,7 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
     return (
         <div className={classNames}>
             <div
-                className={`duration-500 relative z-50 shadow-2xl transition-transform p-5 rounded-2xl bg-slate-100 aspect-[2/1] ${uploadHasError ? style["upload-error"] : ""} ${style["upload"]}`}
+                className={`duration-500 relative z-50 shadow-2xl transition-transform p-5 rounded-2xl bg-slate-100 border-slate-300 border-solid border aspect-[2/1] ${uploadHasError ? style["upload-error"] : ""}`}
                 onDragOver={dragOver}
                 onDragLeave={dragLeave}
                 onDrop={drop}
@@ -144,12 +147,12 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
                     </label>
                 </div>
                 {errorMessage && (
-                    <p className={`bg-red-700 px-5 py-2 my-3 text-white rounded-2xl relative ${style["message-error"]}`}>{errorMessage}</p>
+                    <p className={`bg-red-700 px-5 py-2 mt-3 text-white rounded-2xl relative ${style["message-error"]}`}>{errorMessage}</p>
                 )}
                 {image && (
-                    <div className="mt-8">
+                    <div className="mt-5">
                         <p className="font-bold text-xl text-slate-700">Fichiers uploadés</p>
-                        <div className={`flex shadow-2xl w-full mx-auto border border-slate-400 border-solid flex-row  bg-slate-100 rounded-2xl px-3 py-2 gap-2 ${style.image}`}>
+                        <div className={`flex shadow-lg w-full mx-auto border border-slate-300 border-solid flex-row  bg-slate-100 rounded-2xl px-3 py-2 gap-2 ${style.image}`}>
                             <img className="size-15 object-contain" src={URL.createObjectURL(image)} alt="" />
                             <div>
                                 <p>{image.name}</p>

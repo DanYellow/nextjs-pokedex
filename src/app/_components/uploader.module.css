@@ -49,11 +49,6 @@
     animation: horizontal-shaking 250ms linear 2;
 }
 
-.upload {
-    interpolate-size: allow-keywords;
-    transform: height 20s ease;
-}
-
 @keyframes oscillation {
     0% {
         transform: rotate(5deg);

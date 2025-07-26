@@ -4,14 +4,16 @@ import path from "path";
 import { Metadata } from "next";
 import Image from "next/image";
 import { redirect } from 'next/navigation'
-
 import Form from 'next/form';
 
 import Uploader from "@/app/_components/Uploader";
+import { FRENCH_GAMES_NAME, getCoverForName } from "@/app/_utils";
 
 const uploadDir = "./public/uploads";
 
-import { FRENCH_GAMES_NAME, getCoverForName } from "@/app/_utils";
+export const metadata: Metadata = {
+    title: 'Administration',
+}
 
 export default async function Page() {
     const listUploadedFilesRaw = await fs.readdirSync("./public/uploads");
