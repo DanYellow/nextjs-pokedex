@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 
+import { Metadata } from "next";
 import Image from "next/image";
 import { redirect } from 'next/navigation'
 
