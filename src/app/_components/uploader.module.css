@@ -47,3 +47,39 @@
 .upload-error {
     animation: horizontal-shaking 250ms linear 2;
 }
+
+.upload {
+    interpolate-size: allow-keywords;
+    transform: height 20s ease;
+}
+
+@keyframes oscillation {
+    0% {
+        transform: rotate(10deg) translateX(0);
+    }
+
+    5% {
+        transform: rotate(-10deg) translateX(1px);
+    }
+
+    10% {
+        transform: rotate(20deg) translateX(0);
+    }
+
+    15% {
+        transform: rotate(-5deg) translateX(-1px);
+    }
+
+    20% {
+        transform: rotate(0deg) translateX(0);
+    }
+
+    to {
+        transform: rotate(0deg);
+    }
+}
+
+.folder-oscillation {
+    --angle: 3.5deg;
+    animation: oscillation 3500ms ease-in-out infinite 1500ms;
+}
