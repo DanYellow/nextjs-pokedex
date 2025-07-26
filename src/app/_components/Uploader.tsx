@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import style from "./uploader.module.css";
 
-const SCALE_CLASS = "scale-100";
+const SCALE_CLASS = "scale-101";
 
 type ErrorMessageImage = {
     message?: string;
@@ -80,7 +80,6 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
         setErrorMessage(undefined);
 
         if (e.dataTransfer.items && inputFile.current) {
-            inputFile.current.files = e.dataTransfer.files;
             const file = e.dataTransfer.files[0];
             const errorMessage = imageValidator(file);
 
@@ -88,6 +87,7 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
                 setUploadHasError(true);
                 setErrorMessage(errorMessage.message);
             } else {
+                inputFile.current.files = e.dataTransfer.files;
                 setImage(file);
             }
         }

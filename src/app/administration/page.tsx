@@ -20,7 +20,7 @@ export default async function Page() {
         .map((file) => `/uploads/${file}`);
 
     const onSubmit = async (formData: FormData) => {
-        'use server'
+        'use server';
 
         const game = formData.get("game") as string;
         const file = formData.get("cover") as File;
@@ -36,7 +36,7 @@ export default async function Page() {
         }
 
         await fs.appendFileSync(fileDestination, Buffer.from(data));
-        redirect('/administration')
+        redirect('/administration');
     }
 
     return (

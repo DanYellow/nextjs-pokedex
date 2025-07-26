@@ -464,7 +464,7 @@ details {
     position: relative;
     height: var(--folder-height);
     width: var(--folder-width);
-    background-color: var(--color-slate-600);
+    background-color: var(--color-yellow-600);
     border-radius: 10px;
     border-top-left-radius: 0px;
     transform-origin: bottom right;
@@ -476,7 +476,7 @@ details {
     height: 15px;
     position: absolute;
     top: -10px;
-    background-color: var(--color-slate-600);
+    background-color: var(--color-yellow-600);
     border-radius: 5px;
 }
 
@@ -485,7 +485,7 @@ details {
     z-index: 101;
     height: var(--folder-height);
     width: 100px;
-    background-color: var(--color-slate-400);
+    background-color: var(--color-yellow-400);
     transform-origin: bottom left;
     border-bottom-left-radius: 10px;
     transition: all 0.3s ease;
@@ -498,7 +498,7 @@ details {
     top: 0%;
     right: 0%;
     width: calc(var(--folder-width) / 2);
-    background-color: var(--color-slate-400);
+    background-color: var(--color-yellow-400);
     border-bottom-right-radius: 10px;
     border-top-right-radius: 10px;
     transition: all 0.3s ease;
