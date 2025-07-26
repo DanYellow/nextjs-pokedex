@@ -60,7 +60,7 @@ export default async function Page() {
                 <button type="submit" className="bg-gray-200 hocus:bg-gray-600 hocus:text-white px-4 py-1 rounded-sm">Envoyer</button>
             </Form>
 
-            <p className="text-xl font-bold mt-3">Liste des jaquettes uploadées</p>
+            <p className="text-2xl font-bold mt-6">Liste des jaquettes uploadées</p>
             <ol className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
                 {listUploadedFiles.map((item) => (
                     <li className="flex flex-col items-center" key={item}>

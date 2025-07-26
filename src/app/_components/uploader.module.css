@@ -31,13 +31,13 @@
         transform: translateX(0);
     }
     25% {
-        transform: translateX(5px);
+        transform: translateX(var(--offset));
     }
     50% {
-        transform: translateX(-5px);
+        transform: translateX(calc(-1 * var(--offset)));
     }
     75% {
-        transform: translateX(5px);
+        transform: translateX(var(--offset));
     }
     100% {
         transform: translateX(0);
@@ -45,6 +45,7 @@
 }
 
 .upload-error {
+    --offset: 3px;
     animation: horizontal-shaking 250ms linear 2;
 }
 
@@ -55,23 +56,23 @@
 
 @keyframes oscillation {
     0% {
-        transform: rotate(10deg) translateX(0);
+        transform: rotate(5deg);
     }
 
     5% {
-        transform: rotate(-10deg) translateX(1px);
+        transform: rotate(-5deg);
     }
 
     10% {
-        transform: rotate(20deg) translateX(0);
+        transform: rotate(10deg);
     }
 
     15% {
-        transform: rotate(-5deg) translateX(-1px);
+        transform: rotate(-5deg);
     }
 
     20% {
-        transform: rotate(0deg) translateX(0);
+        transform: rotate(0deg);
     }
 
     to {
@@ -81,5 +82,5 @@
 
 .folder-oscillation {
     --angle: 3.5deg;
-    animation: oscillation 3500ms ease-in-out infinite 1500ms;
+    animation: oscillation 3500ms ease-in-out infinite 2500ms;
 }

@@ -442,7 +442,7 @@ export default async function PokemonDetailsPage({
                 </details>
                 <details className="mb-3">
                     <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Apparitions ({listGames.length})</summary>
-                    <ol className="grid grid-cols-2 md:grid-cols-5 gap-x-2 gap-y-5 mt-3">
+                    <ol className="grid grid-cols-2 md:grid-cols-5 gap-x-3 gap-y-6 mt-3">
                         {listGames.map((item) => (
                             <li className="flex flex-col items-center" key={item.key}>
                                 <Image
@@ -452,7 +452,7 @@ export default async function PokemonDetailsPage({
                                     alt={`jaquette de ${item.name}`}
                                     className="w-full"
                                 />
-                                <p>{item.name}</p>
+                                <p className="mt-1.5 px-3 py-0.5 text-sm rounded-lg bg-slate-200">{item.name}</p>
                             </li>
                         ))}
                     </ol>

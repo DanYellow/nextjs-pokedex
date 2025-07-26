@@ -17,7 +17,7 @@ const imageValidator = (image: File, listAllowedMimeType = ["image/png", "image/
     }
 
     const oneMo = 1024 * 1024;
-    const fileLimit = oneMo * maxSizeFactor; // 800kB
+    const fileLimit = oneMo * maxSizeFactor;
     if (image.size > fileLimit) {
         const limitHundred = Math.floor(maxSizeFactor * 1024 / 100) * 100;
         return {
@@ -44,6 +44,7 @@ const formatBytes = (bytes: number, decimals = 2) => {
 const Uploader = ({ classNames = "" }: { classNames?: string }) => {
     const inputFile = useRef<HTMLInputElement>(null);
     const folderDiv = useRef<HTMLDivElement>(null);
+    const dropzone = useRef<HTMLDivElement>(null);
 
     const [image, setImage] = useState<File | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
@@ -62,6 +63,10 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
     }
 
     const dragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        if (dropzone.current?.contains(e.relatedTarget as Node)) {
+            return;
+        }
         e.currentTarget.classList.remove(SCALE_CLASS);
         folderDiv.current?.classList.remove("open");
         folderDiv.current?.classList.remove(style["folder-oscillation"]);
@@ -113,6 +118,7 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
                 onDragLeave={dragLeave}
                 onDrop={drop}
                 onAnimationEnd={animationEnd}
+                ref={dropzone}
             >
                 <div className="bg-slate-200 w-full flex flex-col ease-in-out items-stretch p-5 border-slate-600 border-dashed border-2 rounded-2xl relative z-50">
                     <div className={`folder self-center scale-70`} ref={folderDiv}>
