@@ -93,7 +93,7 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
     const deleteImage = () => {
         setImage(null);
         if (inputFile.current) {
-            inputFile.current.files = null;
+            inputFile.current.value = "";
         }
     }
 
