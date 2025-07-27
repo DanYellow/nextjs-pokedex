@@ -440,7 +440,7 @@ export default async function PokemonDetailsPage({
                 </details>
                 <details className="mb-3">
                     <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Apparitions ({listGames.length})</summary>
-                    <ol className="grid grid-cols-2 md:grid-cols-5 gap-x-3 gap-y-6 mt-3">
+                    <ol className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-x-3 gap-y-6 mt-3">
                         {listGames.map((item) => (
                             <li className="flex flex-col items-center" key={item.key}>
                                 <Image

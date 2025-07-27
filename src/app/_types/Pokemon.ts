@@ -23,6 +23,12 @@ export interface IPokemonCore {
     readonly types: IPokemonType[];
 }
 
+export interface IEvolution {
+    pokedex_id: number;
+    name: string;
+    condition: string;
+}
+
 export interface IPokemon extends IPokemonCore {
     readonly generation: number;
     readonly category: string;
@@ -32,6 +38,10 @@ export interface IPokemon extends IPokemonCore {
     readonly catch_rate: number;
     readonly sexe: { male: number; female: number; } | null;
     readonly resistances: { name: string; multiplier: number; }[]
+    readonly evolution: {
+        readonly pre: IEvolution[] | null;
+        readonly next: IEvolution[] | null;
+    }
 }
 
 export interface IPokemonError {
