@@ -8,6 +8,7 @@ import Form from 'next/form';
 
 import Uploader from "@/app/_components/Uploader";
 import { FRENCH_GAMES_NAME, getCoverForName } from "@/app/_utils";
+import UploadedFiles from "@/app/_components/UploadedFiles";
 
 const uploadDir = "./public/uploads";
 
@@ -56,12 +57,11 @@ export default async function Page() {
         res.push(subArray.filter(Boolean))
     }
 
-
     return (
         <>
             <Form action={onSubmit}>
                 <div className='flex items-stretch sm:items-center flex-col gap-2 mb-3'>
-                    <Uploader classNames="mt-5 w-1/2" />
+                    <Uploader classNames="mt-5 md:w-1/2 w-full" />
                     <div className="flex flex-col">
                         <label htmlFor="cover-select">Choisir jeu :</label>
 
@@ -79,24 +79,7 @@ export default async function Page() {
             </Form>
 
             <p className="text-2xl font-bold mt-6">Liste des jaquettes uploadées</p>
-            <ol className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 mb-4">
-                {res.map((group, idx) => (
-                    <li className="flex flex-col items-center" key={idx}>
-                        <ol className="flex flex-col gap-3 mb-4">
-                            {group.map((item) => (
-                                <li key={item}>
-                                    <Image
-                                        width={250}
-                                        height={250}
-                                        src={item}
-                                        alt={`jaquette de ${item}`}
-                                    />
-                                </li>
-                            ))}
-                        </ol>
-                    </li>
-                ))}
-            </ol>
+            <UploadedFiles data={listUploadedFiles} />
         </>
     )
 }
