@@ -42,6 +42,21 @@ export default async function Page() {
         redirect('/administration');
     }
 
+    const res = []
+    let i = 0;
+    const NB_COLS = 5;
+    const NB_ITEMS_PER_COL = Math.ceil(listUploadedFiles.length / NB_COLS);
+    for (let index = 0; index < NB_COLS; index++) {
+        const subArray = []
+        for (let j = 0; j < NB_ITEMS_PER_COL; j++) {
+
+            subArray.push(listUploadedFiles?.[i]);
+            i++;
+        }
+        res.push(subArray.filter(Boolean))
+    }
+
+
     return (
         <>
             <Form action={onSubmit}>
@@ -65,14 +80,20 @@ export default async function Page() {
 
             <p className="text-2xl font-bold mt-6">Liste des jaquettes uploadées</p>
             <ol className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 mb-4">
-                {listUploadedFiles.map((item) => (
-                    <li className="flex flex-col items-center" key={item}>
-                        <Image
-                            width={250}
-                            height={250}
-                            src={item}
-                            alt={`jaquette de ${item}`}
-                        />
+                {res.map((group, idx) => (
+                    <li className="flex flex-col items-center" key={idx}>
+                        <ol className="flex flex-col gap-3 mb-4">
+                            {group.map((item) => (
+                                <li key={item}>
+                                    <Image
+                                        width={250}
+                                        height={250}
+                                        src={item}
+                                        alt={`jaquette de ${item}`}
+                                    />
+                                </li>
+                            ))}
+                        </ol>
                     </li>
                 ))}
             </ol>
