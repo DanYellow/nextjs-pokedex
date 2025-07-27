@@ -54,7 +54,6 @@ export async function generateMetadata(
             title: `#${String(id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} ${pkmn.name.fr}`,
             images: [pkmn.sprites.regular]
         },
-        // description: post.description,
     }
 }
 
@@ -72,7 +71,6 @@ export default async function PokemonDetailsPage({
             en: cleanString(item.name.en)
         },
     })) as IType[];
-
 
     if ((pkmn as IPokemonError).status) {
         return (

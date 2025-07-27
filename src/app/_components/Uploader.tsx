@@ -9,6 +9,7 @@ type ErrorMessageImage = {
     message?: string;
     type?: string;
 }
+
 const imageValidator = (image: File, listAllowedMimeType = ["image/png", "image/jpg", "image/jpeg", "image/avif"], maxSizeFactor = 0.8): ErrorMessageImage => {
     if (
         !listAllowedMimeType.includes(image.type)
@@ -87,6 +88,7 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
                 setUploadHasError(true);
                 setErrorMessage(errorMessage.message);
             } else {
+                dropzone.current?.classList.add(style["upload-success"]);
                 inputFile.current.files = e.dataTransfer.files;
                 setImage(file);
             }
@@ -99,6 +101,7 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
     const change = (e: React.SyntheticEvent<HTMLInputElement>) => {
         const file = e.currentTarget.files?.[0] || null;
         setImage(file);
+        dropzone.current?.classList.add(style["upload-success"]);
     }
 
     const deleteImage = () => {
@@ -110,34 +113,39 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
 
     const animationEnd = (e: React.SyntheticEvent<HTMLDivElement>) => {
         e.currentTarget.classList.remove(style["upload-error"]);
+        dropzone.current?.classList.remove(style["upload-success"]);
         setUploadHasError(false);
     }
 
     return (
         <div className={classNames}>
             <div
-                className={`duration-500 relative z-50 shadow-2xl transition-transform p-5 rounded-2xl bg-slate-100 border-slate-300 border-solid border aspect-[2/1] ${uploadHasError ? style["upload-error"] : ""}`}
+                className={`duration-500 relative z-50 shadow-2xl transition-transform p-5 rounded-2xl bg-slate-100 border-slate-300 border-solid border aspect-[2/1] transform-cpu backface-hidden ${uploadHasError ? style["upload-error"] : ""}`}
                 onDragOver={dragOver}
                 onDragLeave={dragLeave}
                 onDrop={drop}
                 onAnimationEnd={animationEnd}
                 ref={dropzone}
             >
-                <div className="bg-slate-200 w-full flex flex-col ease-in-out items-stretch p-5 border-slate-600 border-dashed border-2 rounded-2xl relative z-50">
+                <div className={`bg-slate-200 w-full flex flex-col ease-in-out items-stretch p-5 border-slate-600 border-dashed border-2 rounded-2xl relative z-50 overflow-hidden`}>
                     <div className={`folder self-center scale-70`} ref={folderDiv}>
                         <div className="folder-back"></div>
                         <div className="folder-front"></div>
                         <div className="folder-right"></div>
                     </div>
 
-                    <p className="text-center font-bold text-lg text-slate-600">Glissez-déposez votre image</p>
+                    <div className="text-center text-slate-600">
+                        <p className="font-bold text-lg">Glissez-déposez votre image</p>
+                        <p className="text-xs">(.jpg, .jpeg, .avif, .png)</p>
+                    </div>
 
                     <p className={`${style.separator} text-center my-4`}>
                         <span className="font-semibold text-slate-600 z-10 bg-slate-200 relative px-3">OU</span>
                     </p>
                     <label htmlFor="cover" className="text-sm
                         py-2 px-4
-                        rounded-sm border-0
+                        border-0
+                        rounded-2xl
                         bg-blue-700 hocus:bg-blue-950 focus-within:bg-blue-950
                         text-white text-center
                         mx-auto
@@ -147,7 +155,7 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
                     </label>
                 </div>
                 {errorMessage && (
-                    <p className={`bg-red-700 px-5 py-2 mt-3 text-white rounded-2xl relative ${style["message-error"]}`}>{errorMessage}</p>
+                    <p role="alert" className={`bg-red-700 px-5 py-2 mt-3 text-white rounded-2xl relative ${style["message-error"]}`}>{errorMessage}</p>
                 )}
                 {image && (
                     <div className="mt-5">
