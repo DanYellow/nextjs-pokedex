@@ -100,8 +100,16 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
 
     const change = (e: React.SyntheticEvent<HTMLInputElement>) => {
         const file = e.currentTarget.files?.[0] || null;
-        setImage(file);
-        dropzone.current?.classList.add(style["upload-success"]);
+        if (file) {
+            const errorMessage = imageValidator(file);
+            if (Object.keys(errorMessage).length) {
+                setUploadHasError(true);
+                setErrorMessage(errorMessage.message);
+            } else {
+                dropzone.current?.classList.add(style["upload-success"]);
+                setImage(file);
+            }
+        }
     }
 
     const deleteImage = () => {
@@ -149,6 +157,8 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
                         bg-blue-700 hocus:bg-blue-950 focus-within:bg-blue-950
                         text-white text-center
                         mx-auto
+                        w-fit
+                        block
                     ">
                         Sélectionnez un fichier
                         <input ref={inputFile} type="file" onChange={change} className="w-0 h-0 file:hidden -z-50" required name="cover" id="cover" accept=".jpg, .jpeg, .avif, .png" />

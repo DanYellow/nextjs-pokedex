@@ -61,7 +61,7 @@ export default async function Page() {
         <>
             <Form action={onSubmit}>
                 <div className='flex items-stretch sm:items-center flex-col gap-2 mb-3'>
-                    <Uploader classNames="mt-5 md:w-1/2 w-full" />
+                    <Uploader classNames="mt-5 md:w-2/3 lg:w-1/2 w-full" />
                     <div className="flex flex-col">
                         <label htmlFor="cover-select">Choisir jeu :</label>
 
