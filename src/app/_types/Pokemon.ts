@@ -5,9 +5,9 @@ export interface IPokemonType {
 }
 
 export interface IPokemonAbilityComplete {
-    name: { fr: string };
-    tc: boolean;
-    description: boolean;
+    readonly name: { fr: string };
+    readonly tc: boolean;
+    readonly description: boolean;
 }
 
 export interface IPokemonCore {
@@ -24,9 +24,9 @@ export interface IPokemonCore {
 }
 
 export interface IEvolution {
-    pokedex_id: number;
-    name: string;
-    condition: string;
+    readonly pokedex_id: number;
+    readonly name: string;
+    readonly condition: string;
 }
 
 export interface IPokemon extends IPokemonCore {
@@ -59,7 +59,7 @@ export interface IType {
 
 // type EffectivenessNameType = 'clean' | 'raw';
 export interface IEffectiveness {
-    name: { [key: string]: Record<'clean' | 'raw', string>; } // [key in EffectivenessNameType]: string }
-    multiplier: number;
-    is_effective: boolean;
+    readonly name: { [key: string]: Record<'clean' | 'raw', string>; } // [key in EffectivenessNameType]: string }
+    readonly multiplier: number;
+    readonly is_effective: boolean;
 }

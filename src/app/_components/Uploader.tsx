@@ -163,7 +163,7 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
                         <div className={`flex shadow-lg w-full mx-auto border border-slate-300 border-solid flex-row  bg-slate-100 rounded-2xl px-3 py-2 gap-2 ${style.image}`}>
                             <img className="size-15 object-contain" src={URL.createObjectURL(image)} alt="" />
                             <div>
-                                <p>{image.name}</p>
+                                <p className="text-sm sm:text-base">{image.name}</p>
                                 <p className="text-sm">{formatBytes(image.size)}</p>
                             </div>
                             <button type="button" onClick={deleteImage} className="ml-auto text-2xl hocus:text-blue-700">&#x2716;</button>
