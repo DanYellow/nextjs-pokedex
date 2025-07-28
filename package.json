@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@wavesurfer/react": "^1.0.11",
     "core-js": "^3.44.0",
     "next": "15.3.5",
     "react": "^19.0.0",

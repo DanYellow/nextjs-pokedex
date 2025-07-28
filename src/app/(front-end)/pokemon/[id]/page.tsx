@@ -19,6 +19,7 @@ import Link from "next/link";
 import PokemonBodyStyle from "@/app/_components/PokemonBodyStyle";
 import IconType from "@/app/_components/IconType";
 import GenerationRange from "@/app/_components/GenerationRange";
+import PokemonCry from "@/app/_components/PokemonCry";
 
 type Props = {
     params: Promise<{ id: string }>
@@ -338,6 +339,8 @@ export default async function PokemonDetailsPage({
                             </div>
                         </div>
                     </div>
+
+                    <PokemonCry color={`--dot-type-1-color`} link={pkmnExtraData.cries.latest} />
                 </header>
 
                 <details className="mb-3">
