@@ -130,7 +130,7 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
             }
         } else {
             requestAnimationFrame(deleteImageEnd);
-        }  
+        }
     }
 
     const deleteImage = (e: React.SyntheticEvent<HTMLButtonElement>) => {
@@ -149,14 +149,14 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
     return (
         <div className={classNames}>
             <div
-                className={`duration-500 relative z-50 shadow-2xl transition-transform p-5 rounded-2xl bg-slate-100 border-slate-300 border-solid border aspect-[2/1] transform-cpu backface-hidden ${uploadHasError ? style["upload-error"] : ""} dropzone`}
+                className={`duration-500 relative z-50 shadow-2xl transition-transform p-5 rounded-2xl bg-slate-100 border-slate-300 border-solid border aspect-[2/1] ${uploadHasError ? style["upload-error"] : ""}`}
                 onDragOver={dragOver}
                 onDragLeave={dragLeave}
                 onDrop={drop}
                 onAnimationEnd={animationEnd}
                 ref={dropzone}
             >
-                <div className={`bg-slate-200 w-full flex flex-col ease-in-out items-stretch p-5 border-slate-600 border-dashed border-2 rounded-2xl relative z-50 overflow-hidden`}>
+                <div className={`bg-slate-200 w-full flex flex-col ease-in-out p-5 border-slate-600 border-dashed border-2 rounded-2xl relative z-50 overflow-hidden`}>
                     <div className={`folder self-center scale-70`} ref={folderDiv}>
                         <div className="folder-back"></div>
                         <div className="folder-front"></div>
@@ -182,7 +182,7 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
                         block
                     ">
                         Sélectionnez un fichier
-                        <input ref={inputFile} type="file" onChange={change} className="w-0 h-0 file:hidden -z-50" required name="cover" id="cover" accept=".jpg, .jpeg, .avif, .png" />
+                        <input ref={inputFile} type="file" onChange={change} className="w-0 h-0 file:hidden contents" required name="cover" id="cover" accept=".jpg, .jpeg, .avif, .png" />
                     </label>
                 </div>
                 {errorMessage && (
