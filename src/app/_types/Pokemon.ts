@@ -40,6 +40,7 @@ export interface IPokemon extends IPokemonCore {
     readonly catch_rate: number;
     readonly sexe: { male: number; female: number; } | null;
     readonly resistances: { name: string; multiplier: number; }[]
+    readonly stats: { [key: string]: number }
     readonly evolution: {
         readonly pre: IEvolution[] | null;
         readonly next: IEvolution[] | null;

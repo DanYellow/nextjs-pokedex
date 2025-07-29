@@ -21,14 +21,13 @@ import IconType from "@/app/_components/IconType";
 import GenerationRange from "@/app/_components/GenerationRange";
 import PokemonCry from "@/app/_components/PokemonCry";
 
-
 type Props = {
     params: Promise<{ id: string }>
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
-const getPkmn = cache(async (id: number | string) => {
-    const res = await fetchPokemon(id)
+const getPkmn = cache(async (id: number | string, region: string | null = null) => {
+    const res = await fetchPokemon(id, region)
     return res
 })
 
@@ -121,6 +120,19 @@ export default async function PokemonDetailsPage({
         nextPokemon = await getPkmn(Number(pkmn.pokedex_id + 1)) as IPokemon;
     } else if (firstPokemonGenerationId === pkmn.pokedex_id && pkmn.generation > 1) {
         prevPokemon = await getPkmn(Number(pkmn.pokedex_id - 1)) as IPokemon;
+    }
+
+    const formsData = []
+    for (const form of (pkmn.formes || [])) {
+        const res = await getPkmn(Number(pkmn.pokedex_id), form.region) as IPokemon;
+        formsData.push({
+            region: form.region,
+            types: res.types,
+            name: res.name.fr,
+            talents: res.talents,
+            stats: res.stats,
+            resistances: res.resistances,
+        })
     }
 
     const listPokemonTypes = pkmn.types.map((item: { name: string }) => item.name)
@@ -303,7 +315,6 @@ export default async function PokemonDetailsPage({
                                 <p>Asexué</p>
                             </div>
                         ) : null}
-
                     </div>
                     <div className="md:hidden grid grid-flow-col">
                         {pkmn.sexe === null || pkmn.sexe.male === 0 ? null : (
@@ -414,7 +425,7 @@ export default async function PokemonDetailsPage({
                 <details className="mb-3">
                     <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Forme(s) régionale(s)</summary>
                     <ul className="flex flex-row flex-wrap gap-3 mt-2">
-                        {(pkmn.formes || []).map((item) => {
+                        {formsData.map((item) => {
                             const pkmnId = getPkmnIdFromURL(pkmnSpecies.varieties.find((variety) => variety.pokemon.name.includes(item.region))?.pokemon.url || "");
 
                             return (
@@ -426,7 +437,22 @@ export default async function PokemonDetailsPage({
                                         height={38}
                                         priority
                                     />
-                                    <p className="text-center px-2">{item.name.fr}</p>
+                                    <p className="text-center px-2">{item.name}</p>
+                                    <ul className="flex gap-1 flex-row justify-center">
+                                        {item.types.map(({ name, image }: IPokemonType) => (
+                                            <li
+                                                key={name}
+                                                className="py-0.5 px-2 rounded-md gap-1 flex items-center type-name w-fit"
+                                                aria-label="Type ${idx + 1} ${type.name}"
+                                                style={{
+                                                    backgroundColor: `var(--type-${cleanString(name)})`
+                                                }}
+                                            >
+                                                <img className="h-5" src={image} alt={`icône type ${name}`} />
+                                                {name}
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </li>
                             )
                         })}

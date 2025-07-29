@@ -23,6 +23,7 @@ export async function generateMetadata(
             title: "Erreur - Génération non trouvée",
         }
     }
+
     return {
         title: `Pokédex Génération #${id}`,
         openGraph: {
