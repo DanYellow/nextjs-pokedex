@@ -44,6 +44,14 @@ export interface IPokemon extends IPokemonCore {
         readonly pre: IEvolution[] | null;
         readonly next: IEvolution[] | null;
     }
+    readonly formes: {
+        readonly region: string;
+        readonly name: {
+            fr: string;
+            en: string;
+            jp: string;
+        };
+    }[];
 }
 
 export interface IPokemonError {

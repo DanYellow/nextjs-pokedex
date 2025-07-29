@@ -95,6 +95,10 @@ export const getCoverForName = (name: string, listFiles: string[]) => {
     }) || null;
 }
 
+export const getPkmnIdFromURL = (url: string) => {
+    return url.split("/").filter(Boolean).at(-1);
+};
+
 export * from "./colors";
 export * from "./pokemon-modal.utils";
 export * from "./formsDictionary";

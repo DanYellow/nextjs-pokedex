@@ -11,7 +11,7 @@ import type { IPokemonSpecies, IStatComputed } from "@/app/_types/Pokeapi";
 
 import { fetchAllTypes, fetchPokemon, fetchPokemonForGeneration } from "@/app/_api/tyradex";
 import { fetchPokemonDetails, fetchAbilityData, fetchPokemonExternalData } from "@/app/_api/pokeapi";
-import { cleanString, NB_NUMBER_INTEGERS_PKMN_ID, getAbilityForLang, statistics, versionForName, FRENCH_GAMES_NAME, getCoverForName, POKEDEX } from "@/app/_utils/index";
+import { cleanString, NB_NUMBER_INTEGERS_PKMN_ID, getAbilityForLang, statistics, versionForName, FRENCH_GAMES_NAME, getCoverForName, POKEDEX, getPkmnIdFromURL } from "@/app/_utils/index";
 
 import PokemonSibling from "@/app/_components/PokemonSibling";
 import { IPokemonExtraData } from "@/app/_types/Pokeapi";
@@ -342,7 +342,6 @@ export default async function PokemonDetailsPage({
                             </div>
                         </div>
                     </div>
-
                     <PokemonCry color={`--dot-type-1-color`} link={pkmnExtraData.cries.latest} />
                 </header>
 
@@ -409,9 +408,32 @@ export default async function PokemonDetailsPage({
                 </details>
 
                 <details className="mb-3">
+                    <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Forme(s)</summary>
+                    <ul className="flex flex-row flex-wrap gap-3 mt-2">
+                        {(pkmn.formes || []).map((item) => {
+                            const pkmnId = getPkmnIdFromURL(pkmnSpecies.varieties.find((variety) => variety.pokemon.name.includes(item.region))?.pokemon.url || "");
+
+                            return (
+                                <li key={item.region}>
+                                    <Image
+                                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pkmnId}.png`}
+                                        alt={`sprite de ${pkmn.name.fr}`}
+                                        width={175}
+                                        height={38}
+                                        priority
+                                    />
+                                    <p className="text-center px-2">{item.name.fr}</p>
+                                </li>
+                            )
+                        })}
+                    </ul>
+                </details>
+
+                <details className="mb-3">
                     <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Sprites</summary>
                     <div className="mt-3 grid gap-2 grid-flow-col-dense">
                         {Object.entries(groupedSprites).map(([key, _listSprites]) => {
+                            console.log(key)
                             let labelColorClass = key === "Femelle ♀" ? "bg-pink-300" : "bg-sky-300";
                             if (Object.entries(groupedSprites).length === 1) {
                                 labelColorClass = "no-dimorphism";
@@ -436,7 +458,7 @@ export default async function PokemonDetailsPage({
                                                     priority
                                                 />
                                                 {item.is_shiny && (
-                                                    <p className="text-center px-2 rounded-md">Chromatique
+                                                    <p className="text-center px-2">Chromatique
                                                         <span className="align-super sparkles">
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-5 inline">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"></path>
