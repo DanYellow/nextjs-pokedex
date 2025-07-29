@@ -65,4 +65,12 @@ export const POKEDEX: { [key: string]: string } = {
     "kalos-mountain": "Kalos (Monts)",
     "kalos-coastal": "Kalos (Côtes)",
     "crown-tundra": "Courroneige",
+    "original-melemele": "Ile Mele-Mele",
+    "updated-melemele": "Ile Mele-Mele (USUL)",
+    "original-akala": "Ile d'Akala",
+    "updated-akala": "Ile d'Akala (USUL)",
+    "original-ulaula": "Ile d'Ula-Ula",
+    "updated-ulaula": "Ile d'Ula-Ula (USUL)",
+    "original-poni": "Ile de Poni",
+    "updated-poni": "Ile de Poni (USUL)",
 }

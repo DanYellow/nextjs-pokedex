@@ -13,7 +13,9 @@ export interface IPokemonAbilityComplete {
 export interface IPokemonCore {
     readonly pokedex_id: number;
     readonly name: {
-        fr: string
+        fr: string;
+        en: string;
+        jp: string;
     };
     readonly sprites: {
         regular: string;

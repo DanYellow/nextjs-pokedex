@@ -21,6 +21,7 @@ import IconType from "@/app/_components/IconType";
 import GenerationRange from "@/app/_components/GenerationRange";
 import PokemonCry from "@/app/_components/PokemonCry";
 
+
 type Props = {
     params: Promise<{ id: string }>
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
@@ -248,10 +249,11 @@ export default async function PokemonDetailsPage({
                                     </span>
                                 )}
                             </h1>
+                            <p className="text-sm -mt-2">en : {pkmn.name.en} | jp: {pkmn.name.jp}</p>
 
-                            <p className="text-sm -mt-1">{pkmn.category}</p>
+                            <p className="text-sm mt-1">{pkmn.category}</p>
                             <div className="@container">
-                                <ul className="flex gap-1 mt-2 flex-col @[10rem]:flex-row">
+                                <ul className="flex gap-1 flex-col @[10rem]:flex-row">
                                     {pkmn.types.map(({ name, image }: IPokemonType) => (
                                         <li
                                             key={name}
