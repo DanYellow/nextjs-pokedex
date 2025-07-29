@@ -11,7 +11,7 @@ import type { IPokemonSpecies, IStatComputed } from "@/app/_types/Pokeapi";
 
 import { fetchAllTypes, fetchPokemon, fetchPokemonForGeneration } from "@/app/_api/tyradex";
 import { fetchPokemonDetails, fetchAbilityData, fetchPokemonExternalData } from "@/app/_api/pokeapi";
-import { cleanString, NB_NUMBER_INTEGERS_PKMN_ID, getAbilityForLang, statistics, versionForName, FRENCH_GAMES_NAME, getCoverForName } from "@/app/_utils/index";
+import { cleanString, NB_NUMBER_INTEGERS_PKMN_ID, getAbilityForLang, statistics, versionForName, FRENCH_GAMES_NAME, getCoverForName, POKEDEX } from "@/app/_utils/index";
 
 import PokemonSibling from "@/app/_components/PokemonSibling";
 import { IPokemonExtraData } from "@/app/_types/Pokeapi";
@@ -248,6 +248,7 @@ export default async function PokemonDetailsPage({
                                     </span>
                                 )}
                             </h1>
+
                             <p className="text-sm -mt-1">{pkmn.category}</p>
                             <div className="@container">
                                 <ul className="flex gap-1 mt-2 flex-col @[10rem]:flex-row">
@@ -396,6 +397,14 @@ export default async function PokemonDetailsPage({
                         })}
                     </ul>
                 </details>
+                <details className="mb-3">
+                    <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Numéros de Pokédex régionaux</summary>
+                    <ul className="columns-2 md:columns-3">
+                        {pkmnSpecies.pokedex_numbers.filter((item) => !["melemele", "akala", "ulaula", "poni"].some((region) => item.pokedex.name.includes(region))).map((item, idx) => (
+                            <li className="list-disc list-inside" key={idx}>{POKEDEX[item.pokedex.name] || item.pokedex.name} : {String(item.entry_number).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')}</li>
+                        ))}
+                    </ul>
+                </details>
 
                 <details className="mb-3">
                     <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Sprites</summary>
@@ -458,6 +467,21 @@ export default async function PokemonDetailsPage({
                         ))}
                     </ol>
                 </details>
+
+                <div>
+                    <p className="font-bold">Notes</p>
+                    <ul className="list-disc list-inside">
+                        <li>RSE : (Pokémon) Rubis / Saphir / Émeraude</li>
+                        <li>NB : (Pokémon) Noir / Blanc</li>
+                        <li>N2B2 : (Pokémon) Noir 2 / Blanc 2</li>
+                        <li>ROSA : (Pokémon) Rubis Oméga / Saphir Alpha</li>
+                        <li>SL : (Pokémon) Soleil / Lune</li>
+                        <li>USUL : (Pokémon) Ultra-Soleil / Ultra-Lune</li>
+                        <li>DEPS : (Pokémon) Diamant Écarlate / Perle Scintillante</li>
+                        <li>EB : (Pokémon) Épée / Bouclier</li>
+                        <li>PLA : Pokémon Légendes Arceus</li>
+                    </ul>
+                </div>
 
                 <nav className="text-black">
                     <ul className="my-3 py-3 grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-6 justify-center" data-list-siblings-pokemon>
