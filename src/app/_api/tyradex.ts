@@ -22,7 +22,7 @@ export const fetchPokemonForGeneration = cache(async (generation: number = 1) =>
     }
 })
 
-export const fetchPokemon = async (pkmnId: number, region: string | null = null) => {
+export const fetchPokemon = async (pkmnId: number | string, region: string | null = null) => {
     try {
         const regionName = region ? `/${region}` : "";
         const req: { status: number, json: () => Promise<IPokemon | IPokemonError> } = await fetch(`https://tyradex.vercel.app/api/v1/pokemon/${pkmnId}${regionName}`);

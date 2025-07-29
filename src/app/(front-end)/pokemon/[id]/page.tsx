@@ -27,8 +27,8 @@ type Props = {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
-const getPkmn = cache(async (id: Number) => {
-    const res = await fetchPokemon(Number(id))
+const getPkmn = cache(async (id: number | string) => {
+    const res = await fetchPokemon(id)
     return res
 })
 
@@ -37,7 +37,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
     const id = (await params).id
 
-    let pkmn = await getPkmn(Number(id))
+    let pkmn = await getPkmn(id)
 
     if (pkmn === null || (pkmn as IPokemonError).status) {
         return {
@@ -48,12 +48,12 @@ export async function generateMetadata(
     pkmn = (pkmn as IPokemon);
 
     return {
-        title: `#${String(id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} ${pkmn.name.fr}`,
+        title: `#${String(pkmn.pokedex_id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} ${pkmn.name.fr}`,
         icons: {
             icon: [{ rel: "icon", url: pkmn.sprites.regular }]
         },
         openGraph: {
-            title: `#${String(id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} ${pkmn.name.fr}`,
+            title: `#${String(pkmn.pokedex_id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} ${pkmn.name.fr}`,
             images: [pkmn.sprites.regular]
         },
     }
@@ -63,7 +63,8 @@ export default async function PokemonDetailsPage({
     params,
 }: Props) {
     const { id } = await params;
-    let pkmn = await getPkmn(Number(id));
+
+    let pkmn = await getPkmn(id);
 
     const listAllTypes = await fetchAllTypes();
     const listTypes = listAllTypes.map((item) => ({
@@ -107,8 +108,8 @@ export default async function PokemonDetailsPage({
 
     const { data: pokedex } = await fetchPokemonForGeneration(pkmn.generation);
 
-    const pkmnExtraData = await fetchPokemonDetails(Number(id)) as IPokemonExtraData;
-    const pkmnSpecies = await fetchPokemonExternalData(Number(id)) as IPokemonSpecies;
+    const pkmnExtraData = await fetchPokemonDetails(Number(pkmn.pokedex_id)) as IPokemonExtraData;
+    const pkmnSpecies = await fetchPokemonExternalData(Number(pkmn.pokedex_id)) as IPokemonSpecies;
 
     let prevPokemon = (pokedex as IPokemon[]).find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id - 1) || {};
     let nextPokemon = (pokedex as IPokemon[]).find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id + 1) || null;
@@ -245,7 +246,7 @@ export default async function PokemonDetailsPage({
                         </div>
                         <div className="grow">
                             <h1 className="text-2xl font-bold">
-                                #{String(id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} {pkmn.name.fr}
+                                #{String(pkmn.pokedex_id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} {pkmn.name.fr}
                                 {(pkmnSpecies.is_legendary || pkmnSpecies.is_mythical) && (
                                     <span className={`py-0.5 ml-1.5 px-1.5 whitespace-nowrap text-black rounded-md text-xs align-super font-normal ${pkmnSpecies.is_legendary ? "bg-amber-400" : "bg-slate-400"}`}>
                                         {pkmnSpecies.is_legendary ? "Pokémon Légendaire" : "Pokémon Fabuleux"}
@@ -411,7 +412,7 @@ export default async function PokemonDetailsPage({
                 </details>
 
                 <details className="mb-3">
-                    <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Forme(s)</summary>
+                    <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Forme(s) régionale(s)</summary>
                     <ul className="flex flex-row flex-wrap gap-3 mt-2">
                         {(pkmn.formes || []).map((item) => {
                             const pkmnId = getPkmnIdFromURL(pkmnSpecies.varieties.find((variety) => variety.pokemon.name.includes(item.region))?.pokemon.url || "");
@@ -430,17 +431,18 @@ export default async function PokemonDetailsPage({
                             )
                         })}
                     </ul>
+                    {(pkmn.formes || []).length === 0 && <p>{pkmn.name.fr} n'a pas de formes régionales</p>}
                 </details>
 
                 <details className="mb-3">
                     <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Sprites</summary>
                     <div className="mt-3 grid gap-2 grid-flow-col-dense">
                         {Object.entries(groupedSprites).map(([key, _listSprites]) => {
-                            console.log(groupedSprites)
                             let labelColorClass = key === "Femelle ♀" ? "bg-pink-300" : "bg-sky-300";
                             if (Object.entries(groupedSprites).length === 1 && !isOneSex) {
                                 labelColorClass = "no-dimorphism";
                             }
+
                             return (
                                 <div className="flex flex-col items-center" key={key}>
                                     {pkmn.sexe !== null && (
