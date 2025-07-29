@@ -3,6 +3,8 @@ import { DM_Sans } from "next/font/google";
 
 import "./globals.css";
 import "./properties.css";
+import "flag-icons/css/flag-icons.min.css";
+
 
 const DMSans = DM_Sans({
     variable: "--font-dm-sans",

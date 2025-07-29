@@ -265,7 +265,7 @@ export default async function PokemonDetailsPage({
                                     </span>
                                 )}
                             </h1>
-                            <p className="text-sm -mt-2">en : {pkmn.name.en} | jp: {pkmn.name.jp}</p>
+                            <p className="text-sm -mt-2"><span className="inline-flex size-4 border mr-0.5 aspect-square border-black rounded-full overflow-hidden"><span className="fi fi-gb fis"></span></span> {pkmn.name.en} | <span className="inline-flex size-4 border aspect-square border-black rounded-full overflow-hidden mr-0.5"><span className="fi fi-jp fis"></span></span> {pkmn.name.jp}</p>
 
                             <p className="text-sm mt-1">{pkmn.category}</p>
                             <div className="@container">
@@ -415,7 +415,7 @@ export default async function PokemonDetailsPage({
                 </details>
                 <details className="mb-3">
                     <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Numéros de Pokédex régionaux</summary>
-                    <ul className="columns-2 md:columns-3">
+                    <ul className="columns-1 d:columns-3">
                         {pkmnSpecies.pokedex_numbers.filter((item) => !["melemele", "akala", "ulaula", "poni"].some((region) => item.pokedex.name.includes(region))).map((item, idx) => (
                             <li className="list-disc list-inside" key={idx}>{POKEDEX[item.pokedex.name] || item.pokedex.name} : {String(item.entry_number).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')}</li>
                         ))}
