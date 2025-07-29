@@ -102,6 +102,9 @@ export default async function PokemonDetailsPage({
 
     pkmn = (pkmn as IPokemon);
 
+    const maxPercentage = 100;
+    const isOneSex = pkmn.sexe?.female === maxPercentage || pkmn.sexe?.male === maxPercentage;
+
     const { data: pokedex } = await fetchPokemonForGeneration(pkmn.generation);
 
     const pkmnExtraData = await fetchPokemonDetails(Number(id)) as IPokemonExtraData;
@@ -433,16 +436,16 @@ export default async function PokemonDetailsPage({
                     <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Sprites</summary>
                     <div className="mt-3 grid gap-2 grid-flow-col-dense">
                         {Object.entries(groupedSprites).map(([key, _listSprites]) => {
-                            console.log(key)
+                            console.log(groupedSprites)
                             let labelColorClass = key === "Femelle ♀" ? "bg-pink-300" : "bg-sky-300";
-                            if (Object.entries(groupedSprites).length === 1) {
+                            if (Object.entries(groupedSprites).length === 1 && !isOneSex) {
                                 labelColorClass = "no-dimorphism";
                             }
                             return (
                                 <div className="flex flex-col items-center" key={key}>
                                     {pkmn.sexe !== null && (
                                         <p className={`text-center py-0.5 px-2.5 w-fit rounded-lg ${labelColorClass}`}>
-                                            {Object.entries(groupedSprites).length === 1 ? "Mâle ♂ / Femelle ♀" : key}
+                                            {(Object.entries(groupedSprites).length === 1 && !isOneSex) ? "Mâle ♂ / Femelle ♀" : key}
                                         </p>
                                     )}
                                     <ul
@@ -474,6 +477,7 @@ export default async function PokemonDetailsPage({
                         })}
                     </div>
                 </details>
+
                 <details className="mb-3">
                     <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Apparitions ({listGames.length})</summary>
                     <ol className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-x-3 gap-y-6 mt-3">
