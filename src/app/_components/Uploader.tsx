@@ -42,6 +42,16 @@ const formatBytes = (bytes: number, decimals = 2) => {
     return `${String(parseFloat((bytes / Math.pow(k, i)).toFixed(dm))).replace(".", ",")} ${sizes[i]}`;
 }
 
+let animation: Animation;
+
+const keyframes = [{ height: "0" }, { height: "0", opacity: 0, }];
+
+const timingProps: OptionalEffectTiming = {
+    duration: 75,
+    iterations: 1,
+    fill: "forwards",
+};
+
 const Uploader = ({ classNames = "" }: { classNames?: string }) => {
     const inputFile = useRef<HTMLInputElement>(null);
     const folderDiv = useRef<HTMLDivElement>(null);
@@ -112,11 +122,22 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
         }
     }
 
-    const deleteImage = () => {
-        setImage(null);
-        if (inputFile.current) {
-            inputFile.current.value = "";
-        }
+    const deleteImageEnd = () => {
+        if (animation.playState === "finished") {
+            if (inputFile.current) {
+                setImage(null);
+                inputFile.current.value = "";
+            }
+        } else {
+            requestAnimationFrame(deleteImageEnd);
+        }  
+    }
+
+    const deleteImage = (e: React.SyntheticEvent<HTMLButtonElement>) => {
+        keyframes[0] = { height: `${(e.target as HTMLElement).closest("div")?.offsetHeight}px` };
+        animation = (e.target as HTMLElement).closest("div")?.animate(keyframes, timingProps) as Animation;
+
+        requestAnimationFrame(deleteImageEnd);
     }
 
     const animationEnd = (e: React.SyntheticEvent<HTMLDivElement>) => {
@@ -128,7 +149,7 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
     return (
         <div className={classNames}>
             <div
-                className={`duration-500 relative z-50 shadow-2xl transition-transform p-5 rounded-2xl bg-slate-100 border-slate-300 border-solid border aspect-[2/1] transform-cpu backface-hidden ${uploadHasError ? style["upload-error"] : ""}`}
+                className={`duration-500 relative z-50 shadow-2xl transition-transform p-5 rounded-2xl bg-slate-100 border-slate-300 border-solid border aspect-[2/1] transform-cpu backface-hidden ${uploadHasError ? style["upload-error"] : ""} dropzone`}
                 onDragOver={dragOver}
                 onDragLeave={dragLeave}
                 onDrop={drop}
@@ -170,7 +191,7 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
                 {image && (
                     <div className="mt-5">
                         <p className="font-bold text-xl text-slate-700">Fichiers uploadés</p>
-                        <div className={`flex shadow-lg w-full mx-auto border border-slate-300 border-solid flex-row  bg-slate-100 rounded-2xl px-3 py-2 gap-2 ${style.image}`}>
+                        <div onAnimationEnd={deleteImageEnd} className={`flex shadow-lg w-full mx-auto border border-slate-300 border-solid flex-row bg-slate-100 rounded-2xl px-3 py-2 gap-2 ${style.image}`}>
                             <img className="size-15 object-contain" src={URL.createObjectURL(image)} alt="" />
                             <div>
                                 <p className="text-sm sm:text-base">{image.name}</p>
@@ -184,6 +205,5 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
         </div>
     )
 }
-
 
 export default Uploader;
