@@ -20,7 +20,7 @@ import PokemonBodyStyle from "@/app/_components/PokemonBodyStyle";
 import IconType from "@/app/_components/IconType";
 import GenerationRange from "@/app/_components/GenerationRange";
 import PokemonCry from "@/app/_components/PokemonCry";
-import { formatStatistics } from "./utils";
+import { formatEffectiveness, formatStatistics } from "./utils";
 
 type PageProps = {
     params: Promise<{ id: string }>
@@ -168,31 +168,7 @@ export default async function PokemonDetailsPage({
 
     const { listStatistics, totalBaseStat } = formatStatistics((pkmnExtraData as IPokemonExtraData).stats);
 
-    const effectiveDamageMultiplier = 2;
-    const superEffectiveDamageMultiplier = 4;
-    const listEffectiveness = pkmn.resistances.map((item) => {
-        let type = listTypes.find(
-            (type) => cleanString(type.name.fr) === cleanString(item.name)
-        );
-
-        if (type) {
-            return {
-                name: {
-                    fr: {
-                        clean: cleanString(item.name),
-                        raw: item.name,
-                    },
-                    en: {
-                        clean: cleanString(type.name.en),
-                        raw: type.name.en,
-                    },
-                },
-                multiplier: item.multiplier,
-                is_effective: (item.multiplier === effectiveDamageMultiplier || item.multiplier === superEffectiveDamageMultiplier)
-            };
-        }
-        return null;
-    }).filter(Boolean) as unknown as IEffectiveness[];
+    const listEffectiveness = formatEffectiveness(pkmn.resistances, listTypes);
 
     const listGames = [...pkmnSpecies.flavor_text_entries, ...pkmnExtraData.game_indices].filter((value, index, self) =>
         index === self.findIndex((t) => (

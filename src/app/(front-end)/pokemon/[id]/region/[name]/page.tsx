@@ -1,5 +1,5 @@
-import { fetchPokemon, fetchPokemonDetails } from "@/app/_api";
-import { IPokemon, IPokemonError, IPokemonType } from "@/app/_types/Pokemon";
+import { fetchAllTypes, fetchPokemon, fetchPokemonDetails } from "@/app/_api";
+import { IPokemon, IPokemonError, IPokemonType, IType } from "@/app/_types/Pokemon";
 import Image from "next/image";
 import React, { cache } from "react";
 
@@ -8,7 +8,9 @@ import PokemonPage from "@/app/(front-end)/pokemon/[id]/page";
 import { cleanString, NB_NUMBER_INTEGERS_PKMN_ID } from "@/app/_utils";
 import { Metadata } from "next";
 import { IPokemonExtraData } from "@/app/_types/Pokeapi";
-import { formatStatistics } from "../../utils";
+import { formatEffectiveness, formatStatistics } from "../../utils";
+import PokemonCry from "@/app/_components/PokemonCry";
+import IconType from "@/app/_components/IconType";
 
 type PageProps = {
     params: Promise<{ id: string, name: string }>;
@@ -56,6 +58,15 @@ async function RegionPage({
 
     let pkmn = await getPkmn(id, name);
 
+    const listAllTypes = await fetchAllTypes();
+    const listTypes = listAllTypes.map((item) => ({
+        ...item,
+        name: {
+            fr: cleanString(item.name.fr),
+            en: cleanString(item.name.en)
+        },
+    })) as IType[];
+
     if (pkmn === null || (pkmn as IPokemonError).status) {
         return {
             title: "Erreur",
@@ -68,6 +79,7 @@ async function RegionPage({
     const listPokemonTypes = pkmn.types.map((item: { name: string }) => item.name);
 
     const { listStatistics, totalBaseStat } = formatStatistics((pkmnExtraData as IPokemonExtraData).stats);
+    const listEffectiveness = formatEffectiveness(pkmn.resistances, listTypes);
 
     return (
         <>
@@ -121,6 +133,35 @@ async function RegionPage({
                         </div>
                     </div>
                 </div>
+                <header className="main-infos border-b text-black pb-4 mb-3 top-0">
+                    <PokemonCry color={`--dot-type-1-color`} link={pkmnExtraData.cries.latest} />
+                </header>
+
+                <details className="mb-3 @container/sensibilities">
+                    <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Sensibilités</summary>
+                    <ul className="grid grid-cols-1 @md/sensibilities:grid-cols-2 @xl/sensibilities:grid-cols-3 gap-3 mt-3">
+                        {listEffectiveness.map((item) => {
+                            return (
+                                <li className="flex gap-3" key={item.name.fr.clean}>
+                                    <IconType type={{ fr: item.name.fr.clean, en: item.name.en.clean }} />
+                                    <div>
+                                        <p className={`-ml-2 py-0.5 px-2 rounded-md gap-1 flex items-center type-name w-fit bg-[var(--type-${item.name.fr.clean})]`} style={{
+                                            backgroundColor: `var(--type-${item.name.fr.clean})`
+                                        }}>{item.name.fr.raw}
+                                        </p>
+                                        <p className={`${item.is_effective ? "font-bold" : ""}`}>
+                                            x{item.multiplier}
+                                            {item.is_effective && (
+                                                <span className={`ml-6 py-0.5 px-1.5 block -mt-7 whitespace-nowrap text-white rounded-md text-xs font-normal ${item.multiplier === 4 ? "bg-red-600" : "bg-slate-900"}`}>Double faiblesse</span>
+                                            )}
+                                        </p>
+                                    </div>
+                                </li>
+                            )
+                        })}
+                    </ul>
+                </details>
+
                 <details className="mb-3">
                     <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Statistiques de base</summary>
                     <div className="grid gap-y-1.5 grid-cols-[1fr_max-content] sm:grid-cols-[max-content_max-content_1fr] grid-rows-[max-content] items-center pt-3 relative">

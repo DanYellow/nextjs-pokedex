@@ -1,5 +1,6 @@
 import { IStatComputed } from "@/app/_types/Pokeapi";
-import { statistics } from "@/app/_utils";
+import { IEffectiveness, IType } from "@/app/_types/Pokemon";
+import { cleanString, statistics } from "@/app/_utils";
 
 export const formatStatistics = (stats: { base_stat: number; effort: number; stat: { name: string } }[]) => {
     const listStatistics: IStatComputed[] = [];
@@ -18,4 +19,37 @@ export const formatStatistics = (stats: { base_stat: number; effort: number; sta
     });
 
     return { listStatistics, totalBaseStat };
+}
+
+export const formatEffectiveness = (
+    listResistances: { name: string; multiplier: number; }[],
+    listTypes: IType[]
+): IEffectiveness[] => {
+    const effectiveDamageMultiplier = 2;
+    const superEffectiveDamageMultiplier = 4;
+    const listEffectiveness = listResistances.map((item) => {
+        let type = listTypes.find(
+            (type) => cleanString(type.name.fr) === cleanString(item.name)
+        );
+
+        if (type) {
+            return {
+                name: {
+                    fr: {
+                        clean: cleanString(item.name),
+                        raw: item.name,
+                    },
+                    en: {
+                        clean: cleanString(type.name.en),
+                        raw: type.name.en,
+                    },
+                },
+                multiplier: item.multiplier,
+                is_effective: (item.multiplier === effectiveDamageMultiplier || item.multiplier === superEffectiveDamageMultiplier)
+            };
+        }
+        return null;
+    }).filter(Boolean) as unknown as IEffectiveness[];
+
+    return listEffectiveness;
 }
