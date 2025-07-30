@@ -8,7 +8,7 @@ async function Page() {
                 width={439}
                 height={321}
                 alt="Chargement"
-                className="block mx-auto scale-50"
+                className="block mx-auto scale-40"
             />
         </div>
     )

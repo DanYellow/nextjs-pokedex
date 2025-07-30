@@ -1,11 +1,11 @@
-import { fetchAllTypes, fetchPokemon, fetchPokemonDetails } from "@/app/_api";
-import { IPokemon, IPokemonError, IPokemonType, IType } from "@/app/_types/Pokemon";
+import { fetchAbilityData, fetchAllTypes, fetchPokemon, fetchPokemonDetails } from "@/app/_api";
+import { IPokemon, IPokemonAbilityComplete, IPokemonError, IPokemonType, IType } from "@/app/_types/Pokemon";
 import Image from "next/image";
 import React, { cache } from "react";
 
 import Modal from "@/app/(front-end)/pokemon/[id]/region/[name]/modal";
 import PokemonPage from "@/app/(front-end)/pokemon/[id]/page";
-import { cleanString, NB_NUMBER_INTEGERS_PKMN_ID } from "@/app/_utils";
+import { cleanString, getAbilityForLang, NB_NUMBER_INTEGERS_PKMN_ID } from "@/app/_utils";
 import { Metadata } from "next";
 import { IPokemonExtraData } from "@/app/_types/Pokeapi";
 import { formatEffectiveness, formatStatistics } from "../../utils";
@@ -74,12 +74,45 @@ async function RegionPage({
     }
 
     pkmn = (pkmn as IPokemon);
+
+    const maxPercentage = 100;
+    const isOneSex = pkmn.sexe?.female === maxPercentage || pkmn.sexe?.male === maxPercentage;
+
+
     const pkmnExtraData = await fetchPokemonDetails(Number(queryId)) as IPokemonExtraData;
 
     const listPokemonTypes = pkmn.types.map((item: { name: string }) => item.name);
 
+    const listSprites = Object.entries(pkmnExtraData.sprites.other.home).map(([key, value]) => {
+        if (value === null) {
+            return;
+        }
+
+        const sexLabel = value.includes("female") ? "female" : "male";
+        return { key: sexLabel, sprite: value, name: key, is_shiny: key.includes("shiny") }
+    }).filter(Boolean) as { key: string, sprite: string, name: string, is_shiny: boolean }[];
+
+    const groupedSprites = Object.groupBy(listSprites, ({ key }) =>
+        key === "female" ? "Femelle ♀" : "Mâle ♂"
+    );
+
     const { listStatistics, totalBaseStat } = formatStatistics((pkmnExtraData as IPokemonExtraData).stats);
     const listEffectiveness = formatEffectiveness(pkmn.resistances, listTypes);
+
+    const listAbilitiesDescriptions: { name: { fr: string; } }[] = [];
+    for (const ability of (pkmnExtraData?.abilities || [])) {
+        const abilityData = await fetchAbilityData(ability.ability.url);
+        listAbilitiesDescriptions.push(getAbilityForLang(abilityData));
+    };
+
+    const listKnownAbilities: string[] = listAbilitiesDescriptions.map((item) => cleanString(item.name.fr.toLowerCase().replace("-", "")));
+
+    const listTalents = (pkmn?.talents || [])
+        .filter((item) => listKnownAbilities.includes(cleanString(item.name.toLowerCase().replace("-", ""))))
+        .map((item) => ({
+            ...item,
+            ...listAbilitiesDescriptions.find((description) => cleanString(description.name.fr.toLowerCase().replace("-", "")) === cleanString(item.name.toLowerCase().replace("-", "")))
+        })) as unknown as IPokemonAbilityComplete[];
 
     return (
         <>
@@ -134,6 +167,74 @@ async function RegionPage({
                     </div>
                 </div>
                 <header className="main-infos border-b text-black pb-4 mb-3 top-0">
+                    <div className="flex flex-row w-full overflow-hidden mt-2 min-h-9">
+                        {pkmn.sexe === null || pkmn.sexe.male === 0 ? null : (
+                            <div className="bar-sex-male only:rounded-md relative bg-sky-300 border-b-sky-700 border-b-4 border-solid px-2 py-1 rounded-l-md after:bg-sky-700 overflow-hidden" style={{ width: `${pkmn.sexe.male}%` }}>
+                                <div className="hidden md:block text-black">
+                                    <p className="whitespace-nowrap" id="sex-male">Mâle ♂</p>
+                                    <p className="text-xs" aria-labelledby="sex-male">{pkmn.sexe.male}%</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {pkmn.sexe === null || pkmn.sexe.female === 0 ? null : (
+                            <div className="bar-sex-female only:rounded-md relative bg-pink-300 border-b-pink-700 border-b-4 border-solid px-2 py-1 rounded-r-md after:bg-pink-700 overflow-hidden" style={{ width: `${pkmn.sexe.female}%` }}>
+                                <div className="hidden md:block text-black">
+                                    <p className="whitespace-nowrap" id="sex-female">Femelle ♀</p>
+                                    <p className="text-xs" aria-labelledby="sex-female">{pkmn.sexe.female}%</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {(pkmn.sexe === null) ? (
+                            <div
+                                className="bg-slate-300 border-b-slate-700 border-b-4 border-solid px-2 py-1 w-full rounded-md h-14"
+                            >
+                                <p>Asexué</p>
+                            </div>
+                        ) : null}
+                    </div>
+                    <div className="md:hidden grid grid-flow-col">
+                        {pkmn.sexe === null || pkmn.sexe.male === 0 ? null : (
+                            <div>
+                                <p className="whitespace-nowrap">Mâle ♂</p>
+                                <p className="text-xs">{pkmn.sexe.male}%</p>
+                            </div>
+                        )}
+                        {pkmn.sexe === null || pkmn.sexe.female === 0 ? null : (
+                            <div className="text-right">
+                                <p className="whitespace-nowrap">Femelle ♀</p>
+                                <p className="text-xs">{pkmn.sexe.female}%</p>
+                            </div>
+                        )}
+                    </div>
+                    <div className="flex flex-col md:flex-row gap-3 mt-2 items-stretch md:items-start">
+                        <ul className="shrink-0 bg-slate-200 rounded-md px-2 py-3">
+                            <li><span className="font-bold">Masse : </span>{pkmn.weight}</li>
+                            <li><span className="font-bold">Taille : </span>{pkmn.height}</li>
+                            <li><span className="font-bold">Taux de capture : </span>{pkmn.catch_rate}</li>
+                        </ul>
+                        <div className="grow bg-slate-200 rounded-md px-2 py-3 self-stretch">
+                            <p className="font-bold">Talents</p>
+                            <div className="flex flex-col gap-y-2">
+                                {listTalents.map((item) => (
+                                    <details key={item.name.fr} className="mb-1.5">
+                                        <summary
+                                            className="hover:marker:text-[color:--type-vol]"
+                                        >
+                                            <p className="inline-flex gap-1.5 items-start">
+                                                {item.name.fr}
+                                                {item.tc ? (<span className="py-0.5 px-1.5 whitespace-nowrap bg-slate-900 text-white rounded-md text-xs align-super font-normal">Talent caché</span>) : null}
+                                            </p>
+                                        </summary>
+                                        <p className="ml-4">
+                                            {item.description}
+                                        </p>
+                                    </details>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
                     <PokemonCry color={`--dot-type-1-color`} link={pkmnExtraData.cries.latest} />
                 </header>
 
@@ -176,6 +277,52 @@ async function RegionPage({
                         ))}
                         <p className="mt-8 px-3 py-2 h-full font-bold rounded-tl-lg border-t-2 border-t-solid border-black" aria-label="Total statistique de Hypnomade : 483">Total</p>
                         <p className="mt-8 px-3 py-2 h-full rounded-tr-lg sm:col-span-2 border-t-2 border-black" aria-hidden="true">{totalBaseStat}</p>
+                    </div>
+                </details>
+
+                <details className="mb-3">
+                    <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Sprites</summary>
+                    <div className="mt-3 grid gap-2 grid-flow-col-dense">
+                        {Object.entries(groupedSprites).map(([key, _listSprites]) => {
+                            let labelColorClass = key === "Femelle ♀" ? "bg-pink-300" : "bg-sky-300";
+                            if (Object.entries(groupedSprites).length === 1 && !isOneSex) {
+                                labelColorClass = "no-dimorphism";
+                            }
+
+                            return (
+                                <div className="flex flex-col items-center" key={key}>
+                                    {pkmn.sexe !== null && (
+                                        <p className={`text-center py-0.5 px-2.5 w-fit rounded-lg ${labelColorClass}`}>
+                                            {(Object.entries(groupedSprites).length === 1 && !isOneSex) ? "Mâle ♂ / Femelle ♀" : key}
+                                        </p>
+                                    )}
+                                    <ul
+                                        className="flex flex-col gap-3 mt-2"
+                                    >
+                                        {_listSprites.map((item) => (
+                                            <li key={item.name}>
+                                                <Image
+                                                    src={item.sprite}
+                                                    alt={`sprite de ${pkmn.name.fr}`}
+                                                    width={175}
+                                                    height={38}
+                                                    priority
+                                                />
+                                                {item.is_shiny && (
+                                                    <p className="text-center px-2">Chromatique
+                                                        <span className="align-super sparkles">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-5 inline">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"></path>
+                                                            </svg>
+                                                        </span>
+                                                    </p>
+                                                )}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )
+                        })}
                     </div>
                 </details>
             </Modal>
