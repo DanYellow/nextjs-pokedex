@@ -1,6 +1,7 @@
 import { IStatComputed } from "@/app/_types/Pokeapi";
-import { IEffectiveness, IType } from "@/app/_types/Pokemon";
+import { IEffectiveness, IPokemon, IPokemonForm, IType } from "@/app/_types/Pokemon";
 import { cleanString, statistics } from "@/app/_utils";
+import { getPkmn } from "./page";
 
 export const formatStatistics = (stats: { base_stat: number; effort: number; stat: { name: string } }[]) => {
     const listStatistics: IStatComputed[] = [];
@@ -52,4 +53,18 @@ export const formatEffectiveness = (
     }).filter(Boolean) as unknown as IEffectiveness[];
 
     return listEffectiveness;
+}
+
+export const getRegionalForms = async (pokedex_id: number, listForms: IPokemonForm[]) => {
+    const formsData = []
+    for (const form of listForms) {
+        const res = await getPkmn(Number(pokedex_id), form.region) as IPokemon;
+        formsData.push({
+            region: form.region,
+            types: res.types,
+            name: res.name.fr,
+        })
+    }
+
+    return formsData;
 }

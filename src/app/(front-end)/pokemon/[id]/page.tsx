@@ -20,14 +20,14 @@ import PokemonBodyStyle from "@/app/_components/PokemonBodyStyle";
 import IconType from "@/app/_components/IconType";
 import GenerationRange from "@/app/_components/GenerationRange";
 import PokemonCry from "@/app/_components/PokemonCry";
-import { formatEffectiveness, formatStatistics } from "./utils";
+import { formatEffectiveness, formatStatistics, getRegionalForms } from "./utils";
 
 type PageProps = {
     params: Promise<{ id: string }>
     searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
-const getPkmn = cache(async (id: number | string, region: string | null = null) => {
+export const getPkmn = cache(async (id: number | string, region: string | null = null) => {
     const res = await fetchPokemon(id, region)
     return res
 })
@@ -123,19 +123,8 @@ export default async function PokemonDetailsPage({
         prevPokemon = await getPkmn(Number(pkmn.pokedex_id - 1)) as IPokemon;
     }
 
-    const formsData = []
-    for (const form of (pkmn.formes || [])) {
-        const res = await getPkmn(Number(pkmn.pokedex_id), form.region) as IPokemon;
-        formsData.push({
-            region: form.region,
-            types: res.types,
-            name: res.name.fr,
-            talents: res.talents,
-            stats: res.stats,
-            resistances: res.resistances,
-        })
-    }
-
+    const formsData = await getRegionalForms(Number(pkmn.pokedex_id), (pkmn.formes || []))
+    console.log(formsData)
     const listPokemonTypes = pkmn.types.map((item: { name: string }) => item.name)
 
     const listAbilitiesDescriptions: { name: { fr: string; } }[] = [];

@@ -8,7 +8,7 @@ import PokemonPage from "@/app/(front-end)/pokemon/[id]/page";
 import { cleanString, getAbilityForLang, NB_NUMBER_INTEGERS_PKMN_ID } from "@/app/_utils";
 import { Metadata } from "next";
 import { IPokemonExtraData } from "@/app/_types/Pokeapi";
-import { formatEffectiveness, formatStatistics } from "../../utils";
+import { formatEffectiveness, formatStatistics, getRegionalForms } from "../../utils";
 import PokemonCry from "@/app/_components/PokemonCry";
 import IconType from "@/app/_components/IconType";
 
@@ -113,6 +113,8 @@ async function RegionPage({
             ...item,
             ...listAbilitiesDescriptions.find((description) => cleanString(description.name.fr.toLowerCase().replace("-", "")) === cleanString(item.name.toLowerCase().replace("-", "")))
         })) as unknown as IPokemonAbilityComplete[];
+
+    const formsData = await getRegionalForms(Number(pkmn.pokedex_id), (pkmn.formes || []))
 
     return (
         <>
@@ -325,6 +327,41 @@ async function RegionPage({
                         })}
                     </div>
                 </details>
+
+                <nav className="text-black">
+                    <ul className="my-3 py-3 grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-6 justify-center" data-list-siblings-pokemon>
+                        {/* {
+                            (formsData.filter(Boolean) as IPokemon[]).map((item: IPokemon) => {
+                                if (!Object.keys(item).length) {
+                                    return (<li key={pkmn.pokedex_id - 1}></li>)
+                                }
+
+                                const isCurrentPkmn = item.pokedex_id === (pkmn as IPokemon).pokedex_id;
+                                const isPreviousPkmn = item.pokedex_id < (pkmn as IPokemon).pokedex_id
+                                const listClasses = [
+                                    "group",
+                                    ...[isCurrentPkmn ? ["hidden", "sm:[display:revert]", "font-bold", "text-center"] : ""],
+                                ].flat()
+
+                                return (
+                                    <li
+                                        key={item.pokedex_id}
+                                        className={listClasses.join(" ")}
+                                    >
+                                        <PokemonSibling
+                                            isCurrentPkmn={isCurrentPkmn}
+                                            isPreviousPkmn={isPreviousPkmn}
+                                            name={item.name}
+                                            pokedex_id={item.pokedex_id}
+                                            sprites={item.sprites}
+                                            types={item.types}
+                                        />
+                                    </li>
+                                )
+                            })
+                        } */}
+                    </ul>
+                </nav>
             </Modal>
         </>
     )

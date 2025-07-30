@@ -31,6 +31,16 @@ export interface IEvolution {
     readonly condition: string;
 }
 
+export interface IPokemonForm {
+    readonly region: string;
+    readonly name: {
+        fr: string;
+        en: string;
+        jp: string;
+    };
+
+}
+
 export interface IPokemon extends IPokemonCore {
     readonly generation: number;
     readonly category: string;
@@ -45,14 +55,7 @@ export interface IPokemon extends IPokemonCore {
         readonly pre: IEvolution[] | null;
         readonly next: IEvolution[] | null;
     }
-    readonly formes: {
-        readonly region: string;
-        readonly name: {
-            fr: string;
-            en: string;
-            jp: string;
-        };
-    }[];
+    readonly formes: IPokemonForm[];
 }
 
 export interface IPokemonError {
