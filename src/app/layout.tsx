@@ -33,6 +33,7 @@ export default function RootLayout({
     return (
         <html lang="fr">
             <body
+                id="modal-container"
                 className={`${DMSans.variable} antialiased bg-gray-50`}
                 style={{ fontFamily: `var(--font-dm-sans)` }}
             >

@@ -126,7 +126,7 @@ html {
 }
 
 body {
-    transition: background-image 350ms;
+    transition: background 350ms;
 }
 
 body.bg-dots {

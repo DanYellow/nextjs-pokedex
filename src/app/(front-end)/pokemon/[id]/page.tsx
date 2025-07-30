@@ -21,9 +21,9 @@ import IconType from "@/app/_components/IconType";
 import GenerationRange from "@/app/_components/GenerationRange";
 import PokemonCry from "@/app/_components/PokemonCry";
 
-type Props = {
+type PageProps = {
     params: Promise<{ id: string }>
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+    searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 const getPkmn = cache(async (id: number | string, region: string | null = null) => {
@@ -32,7 +32,7 @@ const getPkmn = cache(async (id: number | string, region: string | null = null) 
 })
 
 export async function generateMetadata(
-    { params }: Props
+    { params }: PageProps
 ): Promise<Metadata> {
     const id = (await params).id
 
@@ -60,10 +60,11 @@ export async function generateMetadata(
 
 export default async function PokemonDetailsPage({
     params,
-}: Props) {
+}: PageProps) {
     const { id } = await params;
 
     let pkmn = await getPkmn(id);
+    console.log(await params)
 
     const listAllTypes = await fetchAllTypes();
     const listTypes = listAllTypes.map((item) => ({
