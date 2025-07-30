@@ -20,6 +20,7 @@ import PokemonBodyStyle from "@/app/_components/PokemonBodyStyle";
 import IconType from "@/app/_components/IconType";
 import GenerationRange from "@/app/_components/GenerationRange";
 import PokemonCry from "@/app/_components/PokemonCry";
+import { formatStatistics } from "./utils";
 
 type PageProps = {
     params: Promise<{ id: string }>
@@ -64,7 +65,6 @@ export default async function PokemonDetailsPage({
     const { id } = await params;
 
     let pkmn = await getPkmn(id);
-    console.log(await params)
 
     const listAllTypes = await fetchAllTypes();
     const listTypes = listAllTypes.map((item) => ({
@@ -166,20 +166,7 @@ export default async function PokemonDetailsPage({
         key === "female" ? "Femelle ♀" : "Mâle ♂"
     );
 
-    const listStatistics: IStatComputed[] = [];
-    const alpha: number = 0.45;
-    let totalBaseStat = 0;
-
-    (pkmnExtraData as IPokemonExtraData).stats.forEach((item) => {
-        listStatistics.push({
-            transparentColor: `rgb(from ${statistics[item.stat.name].color} r g b / ${alpha})`,
-            color: statistics[item.stat.name].color,
-            name: statistics[item.stat.name].name,
-            value: item.base_stat,
-            ariaLabel: `${statistics[item.stat.name].name} de base ${item.base_stat}`,
-        })
-        totalBaseStat += item.base_stat;
-    });
+    const { listStatistics, totalBaseStat } = formatStatistics((pkmnExtraData as IPokemonExtraData).stats);
 
     const effectiveDamageMultiplier = 2;
     const superEffectiveDamageMultiplier = 4;
@@ -424,36 +411,38 @@ export default async function PokemonDetailsPage({
                 </details>
 
                 <details className="mb-3">
-                    <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Forme(s) régionale(s)</summary>
+                    <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Formes régionales ({formsData.length})</summary>
                     <ul className="flex flex-row flex-wrap gap-3 mt-2">
                         {formsData.map((item) => {
                             const pkmnId = getPkmnIdFromURL(pkmnSpecies.varieties.find((variety) => variety.pokemon.name.includes(item.region))?.pokemon.url || "");
 
                             return (
                                 <li key={item.region}>
-                                    <Image
-                                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pkmnId}.png`}
-                                        alt={`sprite de ${pkmn.name.fr}`}
-                                        width={175}
-                                        height={38}
-                                        priority
-                                    />
-                                    <p className="text-center px-2">{item.name}</p>
-                                    <ul className="flex gap-1 flex-row justify-center">
-                                        {item.types.map(({ name, image }: IPokemonType) => (
-                                            <li
-                                                key={name}
-                                                className="py-0.5 px-2 rounded-md gap-1 flex items-center type-name w-fit"
-                                                aria-label="Type ${idx + 1} ${type.name}"
-                                                style={{
-                                                    backgroundColor: `var(--type-${cleanString(name)})`
-                                                }}
-                                            >
-                                                <img className="h-5" src={image} alt={`icône type ${name}`} />
-                                                {name}
-                                            </li>
-                                        ))}
-                                    </ul>
+                                    <Link href={`/pokemon/${pkmn.pokedex_id}/region/${item.region}?id=${pkmnId}`}>
+                                        <Image
+                                            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pkmnId}.png`}
+                                            alt={`sprite de ${pkmn.name.fr}`}
+                                            width={175}
+                                            height={38}
+                                            priority
+                                        />
+                                        <p className="text-center px-2">{item.name}</p>
+                                        <ul className="flex gap-1 flex-row justify-center">
+                                            {item.types.map(({ name, image }: IPokemonType) => (
+                                                <li
+                                                    key={name}
+                                                    className="py-0.5 px-2 rounded-md gap-1 flex items-center type-name w-fit"
+                                                    aria-label="Type ${idx + 1} ${type.name}"
+                                                    style={{
+                                                        backgroundColor: `var(--type-${cleanString(name)})`
+                                                    }}
+                                                >
+                                                    <img className="h-5" src={image} alt={`icône type ${name}`} />
+                                                    {name}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </Link>
                                 </li>
                             )
                         })}
