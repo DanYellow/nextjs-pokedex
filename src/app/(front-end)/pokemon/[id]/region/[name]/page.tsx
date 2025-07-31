@@ -13,6 +13,7 @@ import PokemonCry from "@/app/_components/PokemonCry";
 import IconType from "@/app/_components/IconType";
 import Link from "next/link";
 import PokemonForm from "@/app/_components/PokemonForm";
+import PokemonBodyStyle from "@/app/_components/PokemonBodyStyle";
 
 type PageProps = {
     params: Promise<{ id: string, name: string }>;
@@ -126,6 +127,7 @@ async function RegionPage({
     return (
         <>
             <PokemonPage params={params} />
+            <PokemonBodyStyle regionalTypes={listPokemonTypes} />
             <Modal>
                 <div
                     style={{
@@ -244,11 +246,11 @@ async function RegionPage({
                             </div>
                         </div>
                     </div>
-                    <PokemonCry color={`--dot-type-1-color`} link={pkmnExtraData.cries.latest} />
+                    <PokemonCry isModal color={`--modal-border-color`} link={pkmnExtraData.cries.latest} />
                 </header>
 
                 <details className="mb-3 @container/sensibilities">
-                    <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Sensibilités</summary>
+                    <summary className="hover:marker:text-[color:var(--modal-border-color)] font-bold text-xl">Sensibilités</summary>
                     <ul className="grid grid-cols-1 @md/sensibilities:grid-cols-2 @xl/sensibilities:grid-cols-3 gap-3 mt-3">
                         {listEffectiveness.map((item) => {
                             return (
@@ -273,7 +275,7 @@ async function RegionPage({
                 </details>
 
                 <details className="mb-3">
-                    <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Statistiques de base</summary>
+                    <summary className="hover:marker:text-[color:var(--modal-border-color)] font-bold text-xl">Statistiques de base</summary>
                     <div className="grid gap-y-1.5 grid-cols-[1fr_max-content] sm:grid-cols-[max-content_max-content_1fr] grid-rows-[max-content] items-center pt-3 relative">
                         {listStatistics.map((item) => (
                             <React.Fragment key={item.name}>
@@ -290,7 +292,7 @@ async function RegionPage({
                 </details>
 
                 <details className="mb-3">
-                    <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Sprites</summary>
+                    <summary className="hover:marker:text-[color:var(--modal-border-color)] font-bold text-xl">Sprites</summary>
                     <div className="mt-3 grid gap-2 grid-flow-col-dense">
                         {Object.entries(groupedSprites).map(([key, _listSprites]) => {
                             let labelColorClass = key === "Femelle ♀" ? "bg-pink-300" : "bg-sky-300";
@@ -337,7 +339,7 @@ async function RegionPage({
 
                 <nav className="text-black">
                     <p className="font-bold text-xl">Autres formes</p>
-                    <ul className="flex flex-row flex-wrap gap-3 mt-2">
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
                         {
                             (formsData.filter(Boolean)).map((item) => {
                                 const pkmnFormId = getPkmnIdFromURL(pkmnSpecies.varieties.find((variety) => variety.pokemon.name.includes(item.region))?.pokemon.url || "");

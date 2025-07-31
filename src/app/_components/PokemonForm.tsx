@@ -23,7 +23,7 @@ const PokemonForm = ({ region, name, pokedex_id, form_id, listTypes, sprites }: 
     }
 
     return (
-        <Link href={url} className="bg-slate-100 block rounded-xl p-3 hocus:bg-transparent transition-colors">
+        <Link href={url} className="bg-slate-100 rounded-xl p-3 hocus:bg-transparent transition-colors flex flex-col items-center">
             <Image
                 src={sprites.regular}
                 alt={`sprite de ${name}`}

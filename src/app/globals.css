@@ -104,6 +104,9 @@
     --darken-bg-color: lch(from var(--dot-type-1-color) calc(l - 20) c h);
     --lighter-bg-color: lch(from var(--dot-type-1-color) calc(l + 20) c h);
 
+    --darken-modal-color: lch(from var(--modal-border-color) calc(l - 20) c h);
+    --lighter-modal-color: lch(from var(--modal-border-color) calc(l + 20) c h);
+
     --folder-height: 90px;
     --folder-width: 120px;
 }
@@ -122,6 +125,10 @@ html {
 
     &:has(.bg-dots) {
         scrollbar-color: var(--darken-bg-color) var(--lighter-bg-color);
+
+        dialog {
+            scrollbar-color: var(--darken-modal-color) var(--lighter-modal-color);
+        }
     }
 }
 
