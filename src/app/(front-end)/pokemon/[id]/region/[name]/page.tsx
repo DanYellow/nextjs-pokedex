@@ -12,6 +12,7 @@ import { formatEffectiveness, formatStatistics, getRegionalForms } from "../../u
 import PokemonCry from "@/app/_components/PokemonCry";
 import IconType from "@/app/_components/IconType";
 import Link from "next/link";
+import PokemonForm from "@/app/_components/PokemonForm";
 
 type PageProps = {
     params: Promise<{ id: string, name: string }>;
@@ -115,7 +116,10 @@ async function RegionPage({
             ...listAbilitiesDescriptions.find((description) => cleanString(description.name.fr.toLowerCase().replace("-", "")) === cleanString(item.name.toLowerCase().replace("-", "")))
         })) as unknown as IPokemonAbilityComplete[];
 
-    const formsData = await getRegionalForms(Number(pkmn.pokedex_id), [{ region: "", name: {fr: "", en: "", jp: ""} }, ...(pkmn.formes || [])])
+    const formsData = await getRegionalForms(
+        Number(pkmn.pokedex_id),
+        [{ region: "", name: {fr: "", en: "", jp: ""} }, ...(pkmn.formes || [])
+    ]);
 
     return (
         <>
@@ -339,34 +343,15 @@ async function RegionPage({
                                     url += `/region/${item.region}?id=${pkmn.pokedex_id}`;
                                 }
                                 return (
-                                    <li
-                                        key={item.region}
-                                    >
-                                        <Link href={url} className="bg-slate-100 block rounded-xl p-3 hocus:bg-transparent transition-colors">
-                                            <Image
-                                                src={item.sprites.regular}
-                                                alt={`sprite de ${item.name}`}
-                                                width={175}
-                                                height={38}
-                                                priority
-                                            />
-                                            <p className="text-center px-2">{item.name}</p>
-                                            <ul className="flex gap-1 flex-row justify-center">
-                                                {item.types.map(({ name, image }: IPokemonType) => (
-                                                    <li
-                                                        key={name}
-                                                        className="py-0.5 px-2 rounded-md gap-1 flex items-center type-name w-fit"
-                                                        aria-label="Type ${idx + 1} ${type.name}"
-                                                        style={{
-                                                            backgroundColor: `var(--type-${cleanString(name)})`
-                                                        }}
-                                                    >
-                                                        <img className="h-5" src={image} alt={`icône type ${name}`} />
-                                                        {name}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </Link>
+                                    <li key={item.region}>
+                                        <PokemonForm
+                                            region={item.region}
+                                            name={item.name}
+                                            listTypes={item.types}
+                                            pokedex_id={pkmn.pokedex_id}
+                                            form_id={pkmn.pokedex_id}
+                                            sprites={item.sprites}
+                                        />
                                     </li>
                                 )
                             })

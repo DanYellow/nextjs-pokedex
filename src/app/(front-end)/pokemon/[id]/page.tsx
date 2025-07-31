@@ -21,6 +21,7 @@ import IconType from "@/app/_components/IconType";
 import GenerationRange from "@/app/_components/GenerationRange";
 import PokemonCry from "@/app/_components/PokemonCry";
 import { formatEffectiveness, formatStatistics, getRegionalForms } from "./utils";
+import PokemonForm from "@/app/_components/PokemonForm";
 
 type PageProps = {
     params: Promise<{ id: string }>
@@ -386,35 +387,18 @@ export default async function PokemonDetailsPage({
                     <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Formes régionales ({formsData.length})</summary>
                     <ul className="flex flex-row flex-wrap gap-3 mt-2">
                         {formsData.map((item) => {
-                            const pkmnId = getPkmnIdFromURL(pkmnSpecies.varieties.find((variety) => variety.pokemon.name.includes(item.region))?.pokemon.url || "");
+                            const pkmnFormId = getPkmnIdFromURL(pkmnSpecies.varieties.find((variety) => variety.pokemon.name.includes(item.region))?.pokemon.url || "");
 
                             return (
                                 <li key={item.region}>
-                                    <Link href={`/pokemon/${pkmn.pokedex_id}/region/${item.region}?id=${pkmnId}`} className="bg-slate-100 block rounded-xl p-3 hocus:bg-transparent transition-colors">
-                                        <Image
-                                            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pkmnId}.png`}
-                                            alt={`sprite de ${pkmn.name.fr}`}
-                                            width={175}
-                                            height={38}
-                                            priority
-                                        />
-                                        <p className="text-center px-2">{item.name}</p>
-                                        <ul className="flex gap-1 flex-row justify-center">
-                                            {item.types.map(({ name, image }: IPokemonType) => (
-                                                <li
-                                                    key={name}
-                                                    className="py-0.5 px-2 rounded-md gap-1 flex items-center type-name w-fit"
-                                                    aria-label="Type ${idx + 1} ${type.name}"
-                                                    style={{
-                                                        backgroundColor: `var(--type-${cleanString(name)})`
-                                                    }}
-                                                >
-                                                    <img className="h-5" src={image} alt={`icône type ${name}`} />
-                                                    {name}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </Link>
+                                    <PokemonForm
+                                        region={item.region}
+                                        name={item.name}
+                                        listTypes={item.types}
+                                        pokedex_id={pkmn.pokedex_id}
+                                        form_id={Number(pkmnFormId)}
+                                        sprites={item.sprites}
+                                    />
                                 </li>
                             )
                         })}

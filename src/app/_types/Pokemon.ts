@@ -38,7 +38,6 @@ export interface IPokemonForm {
         en: string;
         jp: string;
     };
-
 }
 
 export interface IPokemon extends IPokemonCore {

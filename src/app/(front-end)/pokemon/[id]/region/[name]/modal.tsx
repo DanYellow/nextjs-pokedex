@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
-
 const Modal = ({ children }: { children: React.ReactNode }) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -12,6 +11,10 @@ const Modal = ({ children }: { children: React.ReactNode }) => {
             dialogRef.current?.showModal();
         }
     }, []);
+
+    if (typeof window !== "object") {
+        return null;
+    }
 
 
     return createPortal(
