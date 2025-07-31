@@ -9,6 +9,7 @@ async function Page() {
                 height={321}
                 alt="Chargement"
                 className="block mx-auto scale-40"
+                unoptimized
             />
         </div>
     )

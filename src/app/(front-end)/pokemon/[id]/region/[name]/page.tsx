@@ -3,7 +3,7 @@ import { IPokemon, IPokemonAbilityComplete, IPokemonError, IPokemonType, IType }
 import Image from "next/image";
 import React, { cache } from "react";
 
-import Modal from "@/app/(front-end)/pokemon/[id]/region/[name]/modal";
+import ModalWrapper from "@/app/(front-end)/pokemon/[id]/region/[name]/modal-wrapper";
 import PokemonPage from "@/app/(front-end)/pokemon/[id]/page";
 import { cleanString, getAbilityForLang, getPkmnIdFromURL, NB_NUMBER_INTEGERS_PKMN_ID } from "@/app/_utils";
 import { Metadata } from "next";
@@ -11,7 +11,6 @@ import { IPokemonExtraData, IPokemonSpecies } from "@/app/_types/Pokeapi";
 import { formatEffectiveness, formatStatistics, getRegionalForms } from "../../utils";
 import PokemonCry from "@/app/_components/PokemonCry";
 import IconType from "@/app/_components/IconType";
-import Link from "next/link";
 import PokemonForm from "@/app/_components/PokemonForm";
 import PokemonBodyStyle from "@/app/_components/PokemonBodyStyle";
 
@@ -21,8 +20,9 @@ type PageProps = {
 }
 
 const getPkmn = cache(async (id: number | string, region: string | null = null) => {
-    const res = await fetchPokemon(id, region)
-    return res
+    const res = await fetchPokemon(id, region);
+
+    return res;
 })
 
 export async function generateMetadata(
@@ -87,7 +87,6 @@ async function RegionPage({
     ])
 
     const listPokemonTypes = pkmn.types.map((item: { name: string }) => item.name);
-
     const listSprites = Object.entries(pkmnExtraData.sprites.other.home).map(([key, value]) => {
         if (value === null) {
             return;
@@ -128,7 +127,7 @@ async function RegionPage({
         <>
             <PokemonPage params={params} />
             <PokemonBodyStyle regionalTypes={listPokemonTypes} />
-            <Modal>
+            <ModalWrapper>
                 <div
                     style={{
                         borderImage: `linear-gradient(to right, var(--type-${cleanString(listPokemonTypes[0])}) 0%, var(--type-${cleanString(listPokemonTypes[0])}) 50%, var(--type-${cleanString(listPokemonTypes?.[1] || listPokemonTypes[0])}) 50%, var(--type-${cleanString(listPokemonTypes?.[1] || listPokemonTypes[0])}) 100%) 1`
@@ -360,7 +359,7 @@ async function RegionPage({
                         }
                     </ul>
                 </nav>
-            </Modal>
+            </ModalWrapper>
         </>
     )
 }
