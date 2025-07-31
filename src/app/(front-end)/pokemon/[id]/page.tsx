@@ -106,10 +106,17 @@ export default async function PokemonDetailsPage({
     const maxPercentage = 100;
     const isOneSex = pkmn.sexe?.female === maxPercentage || pkmn.sexe?.male === maxPercentage;
 
-    const { data: pokedex } = await fetchPokemonForGeneration(pkmn.generation);
+    // const { data: pokedex } = await fetchPokemonForGeneration(pkmn.generation);
 
-    const pkmnExtraData = await fetchPokemonDetails(Number(pkmn.pokedex_id)) as IPokemonExtraData;
-    const pkmnSpecies = await fetchPokemonExternalData(Number(pkmn.pokedex_id)) as IPokemonSpecies;
+    const [{ data: pokedex }, pkmnExtraData, pkmnSpecies]: [{ data: IPokemon[] }, IPokemonExtraData, IPokemonSpecies] = await Promise.all([
+        fetchPokemonForGeneration(pkmn.generation) as Promise<{ data: IPokemon[] }>,
+        fetchPokemonDetails(Number(pkmn.pokedex_id)) as Promise<IPokemonExtraData>,
+        fetchPokemonExternalData(Number(pkmn.pokedex_id)) as Promise<IPokemonSpecies>
+    ])
+    // https://stackoverflow.com/questions/64928212/how-to-use-promise-allsettled-with-typescript
+
+    // const pkmnExtraData = await fetchPokemonDetails(Number(pkmn.pokedex_id)) as IPokemonExtraData;
+    // const pkmnSpecies = await fetchPokemonExternalData(Number(pkmn.pokedex_id)) as IPokemonSpecies;
 
     let prevPokemon = (pokedex as IPokemon[]).find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id - 1) || {};
     let nextPokemon = (pokedex as IPokemon[]).find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id + 1) || null;
@@ -124,7 +131,7 @@ export default async function PokemonDetailsPage({
     }
 
     const formsData = await getRegionalForms(Number(pkmn.pokedex_id), (pkmn.formes || []))
-    console.log(formsData)
+
     const listPokemonTypes = pkmn.types.map((item: { name: string }) => item.name)
 
     const listAbilitiesDescriptions: { name: { fr: string; } }[] = [];
@@ -383,7 +390,7 @@ export default async function PokemonDetailsPage({
 
                             return (
                                 <li key={item.region}>
-                                    <Link href={`/pokemon/${pkmn.pokedex_id}/region/${item.region}?id=${pkmnId}`}>
+                                    <Link href={`/pokemon/${pkmn.pokedex_id}/region/${item.region}?id=${pkmnId}`} className="bg-slate-100 block rounded-xl p-3 hocus:bg-transparent transition-colors">
                                         <Image
                                             src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pkmnId}.png`}
                                             alt={`sprite de ${pkmn.name.fr}`}

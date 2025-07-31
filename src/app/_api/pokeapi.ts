@@ -1,6 +1,6 @@
 import type { IPokemonExtraData, IPokemonSpecies } from "@/app/_types/Pokeapi";
 
-export const fetchPokemonDetails = async (pkmnId: number) => {
+export const fetchPokemonDetails = async (pkmnId: number): Promise<IPokemonExtraData | {}> => {
     try {
         const req: { json: () => Promise<IPokemonExtraData> } = await fetch(`https://pokeapi.co/api/v2/pokemon/${pkmnId}`);
         return req.json();
@@ -9,7 +9,7 @@ export const fetchPokemonDetails = async (pkmnId: number) => {
     }
 }
 
-export const fetchPokemonExternalData = async (pkmnId: number) => {
+export const fetchPokemonExternalData = async (pkmnId: number): Promise<IPokemonSpecies | {}> => {
     try {
         const req: { json: () => Promise<IPokemonSpecies> } = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pkmnId}`);
         return req.json();

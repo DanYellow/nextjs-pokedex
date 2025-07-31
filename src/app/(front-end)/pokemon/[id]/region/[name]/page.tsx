@@ -11,10 +11,11 @@ import { IPokemonExtraData } from "@/app/_types/Pokeapi";
 import { formatEffectiveness, formatStatistics, getRegionalForms } from "../../utils";
 import PokemonCry from "@/app/_components/PokemonCry";
 import IconType from "@/app/_components/IconType";
+import Link from "next/link";
 
 type PageProps = {
     params: Promise<{ id: string, name: string }>;
-    searchParams?: { [key: string]: string | string[] | undefined };
+    searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 const getPkmn = cache(async (id: number | string, region: string | null = null) => {
@@ -54,7 +55,7 @@ async function RegionPage({
     searchParams
 }: PageProps) {
     const { id, name } = await params;
-    const { id: queryId } = await searchParams;
+    const { id: queryId } = await searchParams!;
 
     let pkmn = await getPkmn(id, name);
 
@@ -114,7 +115,7 @@ async function RegionPage({
             ...listAbilitiesDescriptions.find((description) => cleanString(description.name.fr.toLowerCase().replace("-", "")) === cleanString(item.name.toLowerCase().replace("-", "")))
         })) as unknown as IPokemonAbilityComplete[];
 
-    const formsData = await getRegionalForms(Number(pkmn.pokedex_id), (pkmn.formes || []))
+    const formsData = await getRegionalForms(Number(pkmn.pokedex_id), [{ region: "", name: {fr: "", en: "", jp: ""} }, ...(pkmn.formes || [])])
 
     return (
         <>
@@ -329,37 +330,47 @@ async function RegionPage({
                 </details>
 
                 <nav className="text-black">
-                    <ul className="my-3 py-3 grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-6 justify-center" data-list-siblings-pokemon>
-                        {/* {
-                            (formsData.filter(Boolean) as IPokemon[]).map((item: IPokemon) => {
-                                if (!Object.keys(item).length) {
-                                    return (<li key={pkmn.pokedex_id - 1}></li>)
+                    <p className="font-bold text-xl">Autres formes</p>
+                    <ul className="flex flex-row flex-wrap gap-3 mt-2">
+                        {
+                            (formsData.filter(Boolean)).map((item) => {
+                                let url = `/pokemon/${pkmn.pokedex_id}`
+                                if (item.region) {
+                                    url += `/region/${item.region}?id=${pkmn.pokedex_id}`;
                                 }
-
-                                const isCurrentPkmn = item.pokedex_id === (pkmn as IPokemon).pokedex_id;
-                                const isPreviousPkmn = item.pokedex_id < (pkmn as IPokemon).pokedex_id
-                                const listClasses = [
-                                    "group",
-                                    ...[isCurrentPkmn ? ["hidden", "sm:[display:revert]", "font-bold", "text-center"] : ""],
-                                ].flat()
-
                                 return (
                                     <li
-                                        key={item.pokedex_id}
-                                        className={listClasses.join(" ")}
+                                        key={item.region}
                                     >
-                                        <PokemonSibling
-                                            isCurrentPkmn={isCurrentPkmn}
-                                            isPreviousPkmn={isPreviousPkmn}
-                                            name={item.name}
-                                            pokedex_id={item.pokedex_id}
-                                            sprites={item.sprites}
-                                            types={item.types}
-                                        />
+                                        <Link href={url} className="bg-slate-100 block rounded-xl p-3 hocus:bg-transparent transition-colors">
+                                            <Image
+                                                src={item.sprites.regular}
+                                                alt={`sprite de ${item.name}`}
+                                                width={175}
+                                                height={38}
+                                                priority
+                                            />
+                                            <p className="text-center px-2">{item.name}</p>
+                                            <ul className="flex gap-1 flex-row justify-center">
+                                                {item.types.map(({ name, image }: IPokemonType) => (
+                                                    <li
+                                                        key={name}
+                                                        className="py-0.5 px-2 rounded-md gap-1 flex items-center type-name w-fit"
+                                                        aria-label="Type ${idx + 1} ${type.name}"
+                                                        style={{
+                                                            backgroundColor: `var(--type-${cleanString(name)})`
+                                                        }}
+                                                    >
+                                                        <img className="h-5" src={image} alt={`icône type ${name}`} />
+                                                        {name}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </Link>
                                     </li>
                                 )
                             })
-                        } */}
+                        }
                     </ul>
                 </nav>
             </Modal>

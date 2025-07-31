@@ -59,10 +59,15 @@ export const getRegionalForms = async (pokedex_id: number, listForms: IPokemonFo
     const formsData = []
     for (const form of listForms) {
         const res = await getPkmn(Number(pokedex_id), form.region) as IPokemon;
+        const imageFile = form.region ? `regular_${form.region}` : "regular";
+
         formsData.push({
             region: form.region,
             types: res.types,
             name: res.name.fr,
+            sprites: {
+                regular: `https://raw.githubusercontent.com/Yarkis01/TyraDex/images/sprites/${pokedex_id}/${imageFile}.png`
+            }
         })
     }
 
