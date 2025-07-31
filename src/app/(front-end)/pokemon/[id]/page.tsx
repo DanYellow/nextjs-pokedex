@@ -107,17 +107,12 @@ export default async function PokemonDetailsPage({
     const maxPercentage = 100;
     const isOneSex = pkmn.sexe?.female === maxPercentage || pkmn.sexe?.male === maxPercentage;
 
-    // const { data: pokedex } = await fetchPokemonForGeneration(pkmn.generation);
-
     const [{ data: pokedex }, pkmnExtraData, pkmnSpecies]: [{ data: IPokemon[] }, IPokemonExtraData, IPokemonSpecies] = await Promise.all([
         fetchPokemonForGeneration(pkmn.generation) as Promise<{ data: IPokemon[] }>,
         fetchPokemonDetails(Number(pkmn.pokedex_id)) as Promise<IPokemonExtraData>,
         fetchPokemonExternalData(Number(pkmn.pokedex_id)) as Promise<IPokemonSpecies>
     ])
     // https://stackoverflow.com/questions/64928212/how-to-use-promise-allsettled-with-typescript
-
-    // const pkmnExtraData = await fetchPokemonDetails(Number(pkmn.pokedex_id)) as IPokemonExtraData;
-    // const pkmnSpecies = await fetchPokemonExternalData(Number(pkmn.pokedex_id)) as IPokemonSpecies;
 
     let prevPokemon = (pokedex as IPokemon[]).find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id - 1) || {};
     let nextPokemon = (pokedex as IPokemon[]).find((item: IPokemon) => item?.pokedex_id === (pkmn as IPokemon).pokedex_id + 1) || null;

@@ -1,13 +1,13 @@
-import { fetchAbilityData, fetchAllTypes, fetchPokemon, fetchPokemonDetails } from "@/app/_api";
+import { fetchAbilityData, fetchAllTypes, fetchPokemon, fetchPokemonDetails, fetchPokemonExternalData } from "@/app/_api";
 import { IPokemon, IPokemonAbilityComplete, IPokemonError, IPokemonType, IType } from "@/app/_types/Pokemon";
 import Image from "next/image";
 import React, { cache } from "react";
 
 import Modal from "@/app/(front-end)/pokemon/[id]/region/[name]/modal";
 import PokemonPage from "@/app/(front-end)/pokemon/[id]/page";
-import { cleanString, getAbilityForLang, NB_NUMBER_INTEGERS_PKMN_ID } from "@/app/_utils";
+import { cleanString, getAbilityForLang, getPkmnIdFromURL, NB_NUMBER_INTEGERS_PKMN_ID } from "@/app/_utils";
 import { Metadata } from "next";
-import { IPokemonExtraData } from "@/app/_types/Pokeapi";
+import { IPokemonExtraData, IPokemonSpecies } from "@/app/_types/Pokeapi";
 import { formatEffectiveness, formatStatistics, getRegionalForms } from "../../utils";
 import PokemonCry from "@/app/_components/PokemonCry";
 import IconType from "@/app/_components/IconType";
@@ -80,8 +80,10 @@ async function RegionPage({
     const maxPercentage = 100;
     const isOneSex = pkmn.sexe?.female === maxPercentage || pkmn.sexe?.male === maxPercentage;
 
-
-    const pkmnExtraData = await fetchPokemonDetails(Number(queryId)) as IPokemonExtraData;
+    const [pkmnExtraData, pkmnSpecies]: [IPokemonExtraData, IPokemonSpecies] = await Promise.all([
+        fetchPokemonDetails(Number(queryId)) as Promise<IPokemonExtraData>,
+        fetchPokemonExternalData(Number(pkmn.pokedex_id)) as Promise<IPokemonSpecies>
+    ])
 
     const listPokemonTypes = pkmn.types.map((item: { name: string }) => item.name);
 
@@ -118,8 +120,8 @@ async function RegionPage({
 
     const formsData = await getRegionalForms(
         Number(pkmn.pokedex_id),
-        [{ region: "", name: {fr: "", en: "", jp: ""} }, ...(pkmn.formes || [])
-    ]);
+        [{ region: "", name: { fr: "", en: "", jp: "" } }, ...(pkmn.formes || [])
+        ]);
 
     return (
         <>
@@ -144,11 +146,11 @@ async function RegionPage({
                         <div className="grow">
                             <h1 className="text-2xl font-bold">
                                 #{String(pkmn.pokedex_id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} {pkmn.name.fr}
-                                {/* {(pkmnSpecies.is_legendary || pkmnSpecies.is_mythical) && (
+                                {(pkmnSpecies.is_legendary || pkmnSpecies.is_mythical) && (
                                     <span className={`py-0.5 ml-1.5 px-1.5 whitespace-nowrap text-black rounded-md text-xs align-super font-normal ${pkmnSpecies.is_legendary ? "bg-amber-400" : "bg-slate-400"}`}>
                                         {pkmnSpecies.is_legendary ? "Pokémon Légendaire" : "Pokémon Fabuleux"}
                                     </span>
-                                )} */}
+                                )}
                             </h1>
                             <p className="text-sm -mt-2"><span className="inline-flex size-4 border mr-0.5 aspect-square border-black rounded-full overflow-hidden"><span className="fi fi-gb fis"></span></span> {pkmn.name.en} | <span className="inline-flex size-4 border aspect-square border-black rounded-full overflow-hidden mr-0.5"><span className="fi fi-jp fis"></span></span> {pkmn.name.jp}</p>
 
@@ -338,10 +340,8 @@ async function RegionPage({
                     <ul className="flex flex-row flex-wrap gap-3 mt-2">
                         {
                             (formsData.filter(Boolean)).map((item) => {
-                                let url = `/pokemon/${pkmn.pokedex_id}`
-                                if (item.region) {
-                                    url += `/region/${item.region}?id=${pkmn.pokedex_id}`;
-                                }
+                                const pkmnFormId = getPkmnIdFromURL(pkmnSpecies.varieties.find((variety) => variety.pokemon.name.includes(item.region))?.pokemon.url || "");
+
                                 return (
                                     <li key={item.region}>
                                         <PokemonForm
@@ -349,7 +349,7 @@ async function RegionPage({
                                             name={item.name}
                                             listTypes={item.types}
                                             pokedex_id={pkmn.pokedex_id}
-                                            form_id={pkmn.pokedex_id}
+                                            form_id={Number(pkmnFormId)}
                                             sprites={item.sprites}
                                         />
                                     </li>
