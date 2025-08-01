@@ -126,7 +126,7 @@ async function RegionPage({
 
     const PkmnFormContent = ({ pipContent = null }: { pipContent?: ReactNode }) => (
         <>
-
+            <PokemonBodyStyle regionalTypes={listPokemonTypes} />
             <div
                 style={{
                     borderImage: `linear-gradient(to right, var(--type-${cleanString(listPokemonTypes[0])}) 0%, var(--type-${cleanString(listPokemonTypes[0])}) 50%, var(--type-${cleanString(listPokemonTypes?.[1] || listPokemonTypes[0])}) 50%, var(--type-${cleanString(listPokemonTypes?.[1] || listPokemonTypes[0])}) 100%) 1`
@@ -367,7 +367,6 @@ async function RegionPage({
     return (
         <>
             <PokemonPage params={params} />
-            <PokemonBodyStyle regionalTypes={listPokemonTypes} />
             <ModalWrapper>
                 <PkmnFormContent pipContent={foo} />
             </ModalWrapper>

@@ -68,36 +68,33 @@ const ButtonPictureInPicture = ({ pipContent }: { pipContent: ReactNode }) => { 
                 }
             });
 
-            const pipDiv = pipWindow.document.createElement("div") as HTMLDivElement;
-            pipDiv.setAttribute("id", "pip-root");
-            pipDiv.classList.add(...["px-6", "bg-gray-50", "pb-2", "min-h-screen"])
-            pipWindow.document.body.append(pipDiv);
+            pipWindow.document.body.classList.add("bg-dots");
+
+            const pipContainer = pipWindow.document.createElement("div") as HTMLDivElement;
+            pipWindow.document.documentElement.style = document.documentElement.style.cssText;
+
+            pipContainer.setAttribute("id", "pip-root");
+            pipWindow.document.body.append(pipContainer);
 
             const PIP_ROOT = createRoot(
                 pipWindow.document.getElementById("pip-root")
             );
 
             PIP_ROOT.render(
-                <div className='sm:max-w-4xl w-full my-auto mx-auto'>
+                <div className='sm:max-w-4xl w-full bg-gray-50 min-h-screen px-6 my-auto mx-auto border-x-solid border-x border-x-(color:--modal-border-color)'>
                     {pipContent}
                 </div>
             );
 
-            // const dialog = pipWindow.document.querySelector("dialog");
-            // dialog.classList.add("center-dialog");
             modal.close();
 
             // const closeModalBtn = pipWindow.document.querySelector("[data-close-modal]");
             // closeModalBtn.addEventListener("click", handlePipClose);
 
             pipWindow.addEventListener("pagehide", () => {
-                const dialog = pipWindow.document.querySelector("dialog");
-                if (dialog) {
-                    pipIndicator.setAttribute("hidden", "");
-                    closeModalBtn.removeEventListener("click", handlePipClose)
-                    dialog.classList.remove("center-dialog");
-                    dialog.close();
-                    document.body.append(dialog);
+                if (modal) {
+                    // pipIndicator.setAttribute("hidden", "");
+                    // closeModalBtn.removeEventListener("click", handlePipClose)
                 }
                 modal.showModal();
             });
