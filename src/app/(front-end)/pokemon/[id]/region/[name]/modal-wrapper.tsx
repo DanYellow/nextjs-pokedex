@@ -16,9 +16,8 @@ const Modal = ({ children }: { children: React.ReactNode }) => {
         return null;
     }
 
-
     return createPortal(
-        <dialog ref={dialogRef} className={`sm:max-w-4xl w-full mx-auto my-auto px-6 pb-2 rounded-4xl backdrop:bg-slate-400/50 overscroll-y-contain bg-gray-50 border-solid border-2 border-(color:--modal-border-color)`}>
+        <dialog ref={dialogRef} className={`sm:max-w-4xl w-full mx-auto my-auto px-6 pb-2 rounded-4xl backdrop:bg-slate-400/50 overscroll-y-contain bg-gray-50 border-solid border-2 border-(color:--dot-type-1-pip-color)`}>
             {children}
         </dialog>,
         document.getElementById('modal-container')!

@@ -12,6 +12,7 @@ const PokemonCry = ({ color, link, isModal = false }: { color: string; link: URL
     }, [])
 
     const playerRef = useRef<HTMLDivElement>(null);
+    console.log(playerRef)
     const hexaLightColor = `lch(from ${baseColor} calc(l + 35) c h)`;
     const hexaDarkColor = `lch(from ${baseColor} calc(l - 55) c h)`;
 

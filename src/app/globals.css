@@ -104,8 +104,8 @@
     --darken-bg-color: lch(from var(--dot-type-1-color) calc(l - 20) c h);
     --lighter-bg-color: lch(from var(--dot-type-1-color) calc(l + 20) c h);
 
-    --darken-modal-color: lch(from var(--modal-border-color) calc(l - 20) c h);
-    --lighter-modal-color: lch(from var(--modal-border-color) calc(l + 20) c h);
+    --darken-modal-color: lch(from var(--dot-type-1-pip-color) calc(l - 20) c h);
+    --lighter-modal-color: lch(from var(--dot-type-1-pip-color) calc(l + 20) c h);
 
     --folder-height: 90px;
     --folder-width: 120px;
@@ -127,29 +127,50 @@ html {
         scrollbar-color: var(--darken-bg-color) var(--lighter-bg-color);
 
         dialog {
-            scrollbar-color: var(--darken-modal-color) var(--lighter-modal-color);
+            scrollbar-color: var(--darken-modal-color)
+                var(--lighter-modal-color);
         }
+    }
+
+    &:has(.pip-dots) {
+        scrollbar-gutter: stable;
+        scrollbar-color: var(--darken-modal-color) var(--lighter-modal-color);
     }
 }
 
 body {
     transition: background 350ms;
-}
-
-body.bg-dots {
-    background-image: radial-gradient(
-            rgb(from var(--dot-type-1-color) r g b / var(--dot-alpha))
-                var(--dot-size),
-            transparent var(--dot-size)
-        ),
-        radial-gradient(
-            rgb(from var(--dot-type-2-color) r g b / var(--dot-alpha))
-                var(--dot-size),
-            transparent var(--dot-size)
-        );
     background-size: 20px 20px, 20px 20px;
     background-position: 0 0, 10px 10px;
     background-repeat: repeat, repeat;
+}
+
+body {
+    &.bg-dots {
+        background-image: radial-gradient(
+                rgb(from var(--dot-type-1-color) r g b / var(--dot-alpha))
+                    var(--dot-size),
+                transparent var(--dot-size)
+            ),
+            radial-gradient(
+                rgb(from var(--dot-type-2-color) r g b / var(--dot-alpha))
+                    var(--dot-size),
+                transparent var(--dot-size)
+            );
+    }
+
+    &.pip-dots {
+        background-image: radial-gradient(
+                rgb(from var(--dot-type-1-pip-color) r g b / var(--dot-alpha))
+                    var(--dot-size),
+                transparent var(--dot-size)
+            ),
+            radial-gradient(
+                rgb(from var(--dot-type-2-pip-color) r g b / var(--dot-alpha))
+                    var(--dot-size),
+                transparent var(--dot-size)
+            );
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {

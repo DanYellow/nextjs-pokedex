@@ -15,7 +15,8 @@ export default ({ types, regionalTypes }: { types?: string[], regionalTypes?: st
             }
 
             if (regionalTypes) {
-                r.style.setProperty('--modal-border-color', `var(--type-${cleanString(regionalTypes[0])})`);
+                r.style.setProperty('--dot-type-1-pip-color', `var(--type-${cleanString(regionalTypes[0])})`);
+                r.style.setProperty('--dot-type-2-pip-color', `var(--type-${cleanString(regionalTypes?.[1] || regionalTypes[0])})`);
             }
         }
     }, []);

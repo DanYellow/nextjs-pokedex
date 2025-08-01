@@ -124,7 +124,7 @@ async function RegionPage({
         [{ region: "", name: { fr: "", en: "", jp: "" } }, ...(pkmn.formes || [])
         ]);
 
-    const PkmnFormContent = ({ pipContent = null }: { pipContent?: ReactNode }) => (
+    const PkmnForm = ({ pipContent = null }: { pipContent?: ReactNode }) => (
         <>
             <PokemonBodyStyle regionalTypes={listPokemonTypes} />
             <div
@@ -245,11 +245,11 @@ async function RegionPage({
                         </div>
                     </div>
                 </div>
-                {/* <PokemonCry isModal color={`--modal-border-color`} link={pkmnExtraData.cries.latest} /> */}
+                {pipContent && <PokemonCry isModal color={`--dot-type-1-pip-color`} link={pkmnExtraData.cries.latest} />}
             </header>
 
             <details className="mb-3 @container/sensibilities">
-                <summary className="hover:marker:text-[color:var(--modal-border-color)] font-bold text-xl">Sensibilités</summary>
+                <summary className="hover:marker:text-[color:var(--dot-type-1-pip-color)] font-bold text-xl">Sensibilités</summary>
                 <ul className="grid grid-cols-1 @md/sensibilities:grid-cols-2 @xl/sensibilities:grid-cols-3 gap-3 mt-3">
                     {listEffectiveness.map((item) => {
                         return (
@@ -274,7 +274,7 @@ async function RegionPage({
             </details>
 
             <details className="mb-3">
-                <summary className="hover:marker:text-[color:var(--modal-border-color)] font-bold text-xl">Statistiques de base</summary>
+                <summary className="hover:marker:text-[color:var(--dot-type-1-pip-color)] font-bold text-xl">Statistiques de base</summary>
                 <div className="grid gap-y-1.5 grid-cols-[1fr_max-content] sm:grid-cols-[max-content_max-content_1fr] grid-rows-[max-content] items-center pt-3 relative">
                     {listStatistics.map((item) => (
                         <React.Fragment key={item.name}>
@@ -291,7 +291,7 @@ async function RegionPage({
             </details>
 
             <details className="mb-3">
-                <summary className="hover:marker:text-[color:var(--modal-border-color)] font-bold text-xl">Sprites</summary>
+                <summary className="hover:marker:text-[color:var(--dot-type-1-pip-color)] font-bold text-xl">Sprites</summary>
                 <div className="mt-3 grid gap-2 grid-flow-col-dense">
                     {Object.entries(groupedSprites).map(([key, _listSprites]) => {
                         let labelColorClass = key === "Femelle ♀" ? "bg-pink-300" : "bg-sky-300";
@@ -362,13 +362,13 @@ async function RegionPage({
         </>
     )
 
-    const foo = (<PkmnFormContent />)
+    const pkmnFormComponent = (<PkmnForm />)
 
     return (
         <>
             <PokemonPage params={params} />
             <ModalWrapper>
-                <PkmnFormContent pipContent={foo} />
+                <PkmnForm pipContent={pkmnFormComponent} />
             </ModalWrapper>
         </>
     )

@@ -54,12 +54,12 @@ const ButtonPictureInPicture = ({ pipContent }: { pipContent: ReactNode }) => { 
                     const cssRules = [...styleSheet.cssRules]
                         .map((rule) => rule.cssText)
                         .join("");
-                    const style = document.createElement("style") as HTMLStyleElement;
+                    const style = document.createElement("style");
 
                     style.textContent = cssRules;
                     pipWindow.document.head.appendChild(style);
                 } catch (_e) {
-                    const link = document.createElement("link") as HTMLLinkElement;
+                    const link = document.createElement("link");
                     link.rel = "stylesheet";
                     link.type = styleSheet.type;
                     link.media = styleSheet.media;
@@ -68,10 +68,11 @@ const ButtonPictureInPicture = ({ pipContent }: { pipContent: ReactNode }) => { 
                 }
             });
 
-            pipWindow.document.body.classList.add("bg-dots");
+            pipWindow.document.body.classList.add("pip-dots");
 
             const pipContainer = pipWindow.document.createElement("div") as HTMLDivElement;
-            pipWindow.document.documentElement.style = document.documentElement.style.cssText;
+            pipWindow.document.documentElement.style.cssText = document.documentElement.style.cssText;
+            // pipWindow.document.documentElement.style.cssText += "scrollbar-color: var(--darken-modal-color) var(--lighter-modal-color)";
 
             pipContainer.setAttribute("id", "pip-root");
             pipWindow.document.body.append(pipContainer);
@@ -81,7 +82,7 @@ const ButtonPictureInPicture = ({ pipContent }: { pipContent: ReactNode }) => { 
             );
 
             PIP_ROOT.render(
-                <div className='sm:max-w-4xl w-full bg-gray-50 min-h-screen px-6 my-auto mx-auto border-x-solid border-x border-x-(color:--modal-border-color)'>
+                <div className='sm:max-w-4xl w-full bg-gray-50 min-h-screen px-6 pb-4 my-auto mx-auto border-x-solid border-x border-x-(color:--dot-type-1-pip-color)'>
                     {pipContent}
                 </div>
             );
@@ -105,7 +106,7 @@ const ButtonPictureInPicture = ({ pipContent }: { pipContent: ReactNode }) => { 
     return (
         <button
             type="button"
-            className="rounded-sm absolute px-1.5 right-0 top-0 hocus:text-(color:--modal-border-color) toggle-pip-btn grid overflow-x-clip whitespace-nowrap group-picture-in-picture:hidden"
+            className="rounded-sm absolute px-1.5 right-0 top-0 hocus:text-(color:--dot-type-1-pip-color) toggle-pip-btn grid overflow-x-clip whitespace-nowrap group-picture-in-picture:hidden"
             onClick={togglePictureInPicture}
         >
             <svg fill="none" style={{ scale: 0.75, translate: "10% 0" }} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
