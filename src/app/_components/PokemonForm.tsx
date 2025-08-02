@@ -4,6 +4,7 @@ import { IPokemonForm, IPokemonType } from "@/app/_types/Pokemon";
 import Image from "next/image";
 import Link from "next/link";
 import { cleanString } from "../_utils";
+import { loadPokemonPage } from "../_utils/rippleEffect";
 
 
 interface IPokemonFormComplete extends Omit<IPokemonForm, "name"> {
@@ -23,7 +24,11 @@ const PokemonForm = ({ region, name, pokedex_id, form_id, listTypes, sprites }: 
     }
 
     return (
-        <Link href={url} className="bg-slate-100 rounded-xl p-3 hocus:bg-transparent transition-colors flex flex-col items-center">
+        <Link
+            href={url}
+            className="bg-slate-100 rounded-xl p-3 hocus:bg-transparent transition-colors flex flex-col items-center ripple-effect"
+            onClick={(e) => loadPokemonPage(e, listTypes.map((item) => item.name))}
+        >
             <Image
                 src={sprites.regular}
                 alt={`sprite de ${name}`}
