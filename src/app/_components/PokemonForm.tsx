@@ -1,11 +1,11 @@
 "use client";
 
-import { IPokemonForm, IPokemonType } from "@/app/_types/Pokemon";
 import Image from "next/image";
 import Link from "next/link";
-import { cleanString } from "../_utils";
-import { loadPokemonPage } from "../_utils/rippleEffect";
 
+import { IPokemonForm, IPokemonType } from "@/app/_types/Pokemon";
+import { cleanString, typesAnimatedBorderColor } from "../_utils";
+import { loadPokemonPage } from "../_utils/rippleEffect";
 
 interface IPokemonFormComplete extends Omit<IPokemonForm, "name"> {
     pokedex_id: number;
@@ -23,11 +23,23 @@ const PokemonForm = ({ region, name, pokedex_id, form_id, listTypes, sprites }: 
         url += `/region/${region}?id=${form_id}`;
     }
 
+    const listTypesString = listTypes.map((item) => cleanString(item.name));
+    const listBorderClasses = typesAnimatedBorderColor[`${listTypesString[0]}_${listTypesString?.[1] || listTypesString[0]}`]
+
+    const isCurrentURL = (`${window.location.pathname}${window.location.search}` === url)
+
     return (
         <Link
             href={url}
-            className="bg-slate-100 rounded-xl p-3 hocus:bg-transparent transition-colors flex flex-col items-center ripple-effect"
-            onClick={(e) => loadPokemonPage(e, listTypes.map((item) => item.name))}
+            className={`
+                bg-slate-100 rounded-xl p-3 ${isCurrentURL ? "selected" : ""}
+                hocus:bg-transparent transition-colors
+                flex flex-col items-center ${listBorderClasses}
+                ripple-effect border-transparent border-solid border-2 border-type-animated
+                inert:opacity-65
+            `}
+            onClick={(e) => loadPokemonPage(e, listTypesString)}
+            inert={isCurrentURL}
         >
             <Image
                 src={sprites.regular}

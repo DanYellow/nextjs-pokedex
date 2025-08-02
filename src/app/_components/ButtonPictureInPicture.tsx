@@ -72,7 +72,6 @@ const ButtonPictureInPicture = ({ pipContent }: { pipContent: ReactNode }) => { 
 
             const pipContainer = pipWindow.document.createElement("div") as HTMLDivElement;
             pipWindow.document.documentElement.style.cssText = document.documentElement.style.cssText;
-            // pipWindow.document.documentElement.style.cssText += "scrollbar-color: var(--darken-modal-color) var(--lighter-modal-color)";
 
             pipContainer.setAttribute("id", "pip-root");
             pipWindow.document.body.append(pipContainer);
