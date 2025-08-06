@@ -1,7 +1,7 @@
 import { fetchAbilityData, fetchAllTypes, fetchPokemon, fetchPokemonDetails, fetchPokemonExternalData } from "@/app/_api";
 import { IPokemon, IPokemonAbilityComplete, IPokemonError, IPokemonType, IType } from "@/app/_types/Pokemon";
 import Image from "next/image";
-import React, { cache, cloneElement, ReactNode } from "react";
+import React, { cache, ReactNode } from "react";
 
 import ModalWrapper from "@/app/(front-end)/pokemon/[id]/region/[name]/modal-wrapper";
 import PokemonPage from "@/app/(front-end)/pokemon/[id]/page";
@@ -52,6 +52,7 @@ export async function generateMetadata(
         },
     }
 }
+
 
 async function RegionPage({
     params,
@@ -125,7 +126,7 @@ async function RegionPage({
         ]);
 
     const PkmnForm = ({ pipContent = null }: { pipContent?: ReactNode }) => (
-        <>
+        <div className="contents">
             <PokemonBodyStyle regionalTypes={listPokemonTypes} />
             <div
                 style={{
@@ -245,7 +246,7 @@ async function RegionPage({
                         </div>
                     </div>
                 </div>
-                {pipContent && <PokemonCry isModal color={`--dot-type-1-pip-color`} link={pkmnExtraData.cries.latest} />}
+                {/* <PokemonCry isModal color={`--dot-type-1-pip-color`} link={pkmnExtraData.cries.latest} /> */}
             </header>
 
             <details className="mb-3 @container/sensibilities">
@@ -335,10 +336,9 @@ async function RegionPage({
                     })}
                 </div>
             </details>
-
             <nav className="text-black">
                 <p className="font-bold text-xl">Autres formes</p>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+                <ul className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2">
                     {
                         (formsData.filter(Boolean)).map((item) => {
                             const pkmnFormId = getPkmnIdFromURL(pkmnSpecies.varieties.find((variety) => variety.pokemon.name.includes(item.region))?.pokemon.url || "");
@@ -359,7 +359,7 @@ async function RegionPage({
                     }
                 </ul>
             </nav>
-        </>
+        </div>
     )
 
     const pkmnFormComponent = (<PkmnForm />)
