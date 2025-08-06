@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname, useSearchParams  } from 'next/navigation'
 
 import { IPokemonForm, IPokemonType } from "@/app/_types/Pokemon";
 import { cleanString, typesAnimatedBorderColor } from "../_utils";
@@ -23,10 +24,13 @@ const PokemonForm = ({ region, name, pokedex_id, form_id, listTypes, sprites }: 
         url += `/region/${region}?id=${form_id}`;
     }
 
+    const pathname = usePathname();
+    const searchParams = useSearchParams()
+
     const listTypesString = listTypes.map((item) => cleanString(item.name));
     const listBorderClasses = typesAnimatedBorderColor[`${listTypesString[0]}_${listTypesString?.[1] || listTypesString[0]}`]
 
-    const isCurrentURL = (`${window.location.pathname}${window.location.search}` === url)
+    const isCurrentURL = (`${pathname}?${searchParams.toString()}` === url)
 
     return (
         <Link
