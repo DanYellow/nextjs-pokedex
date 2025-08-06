@@ -37,8 +37,9 @@ export const loadPokemonPage = async (e: MouseEvent<HTMLAnchorElement>, pkmnType
         return;
     }
 
-    const $el = e.currentTarget;
     e.preventDefault();
+    
+    const $el = e.currentTarget;
 
     const href = $el.href;
 

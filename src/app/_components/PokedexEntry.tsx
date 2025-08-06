@@ -40,7 +40,7 @@ export default ({ id, name, sprite, listTypes: _listTypes }: { id: number, name:
             <a href={`/pokemon/${id}`}
                 id={`pkmn-${id}`}
                 className={`
-                    pokemon ripple-effect duration-150
+                    ripple-effect duration-150
                     border-type-animated
                     hocus:relative ease-out rounded-md py-2 group block border-solid
                     border-transparent border-2 outline-offset-2 transition-transform ${listBorderClasses} pokedex-item
