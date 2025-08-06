@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useSearchParams, useRouter } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 
 import { IPokemonForm, IPokemonType } from "@/app/_types/Pokemon";
 import { cleanString, typesAnimatedBorderColor } from "../_utils";
@@ -30,33 +30,35 @@ const PokemonForm = ({ region, name, pokedex_id, form_id, listTypes, sprites }: 
 
     const pathname = usePathname();
     const searchParams = useSearchParams()
-    const router = useRouter()
-    const { onClose } = useModal();
+    const { closeModal, openModal } = useModal();
 
     const listTypesString = listTypes.map((item) => cleanString(item.name));
     const listBorderClasses = typesAnimatedBorderColor[`${listTypesString[0]}_${listTypesString?.[1] || listTypesString[0]}`]
 
     const isCurrentURL = (`${pathname}?${searchParams.toString()}` === url);
+    const isNormalForm = (!url.includes("?"));
 
-    const CustomTag = isCurrentURL ? (
+    const CustomTag = isCurrentURL || isNormalForm ? (
+        ({ children, className }: { children: ReactNode, className: string }) => (
+            <button type="button" className={className} onClick={() => {
+                    closeModal();
+                    history.pushState({}, "", `/pokemon/${pokedex_id}`);
+                }}
+                inert={isCurrentURL}
+            >
+                {children}
+            </button>
+        )
+    ) : (
         ({ children, className }: { children: ReactNode, className: string }) => (
             <Link
                 href={url}
                 className={className}
                 onClick={(e) => loadPokemonPage(e, listTypesString)}
-                inert={isCurrentURL}
+
             >{children}</Link>
         )
-    ) : (
-        ({ children, className }: { children: ReactNode, className: string }) => (
-            <button type="button" className={className} onClick={() => {
-                onClose();
-                history.pushState({}, "", `/pokemon/${pokedex_id}`);
-            }}
-            >
-                {children}
-            </button>
-        )
+
     )
 
     return (

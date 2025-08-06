@@ -1,14 +1,16 @@
 "use client";
 
 import ClientOnlyPortal from "@/app/_components/ClientOnlyPortal";
-import { Children, isValidElement, useContext, useRef, createContext } from "react";
+import { useContext, useRef, createContext } from "react";
 
 interface IModalContext {
-    onClose: () => void;
+    closeModal: () => void;
+    openModal: () => void;
 }
 
 const ModalContext = createContext<IModalContext>({
-    onClose: () => { }
+    closeModal: () => { },
+    openModal: () => { },
 });
 
 const Modal = ({ children }: { children: React.ReactNode }) => {
@@ -26,8 +28,14 @@ const Modal = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
+    const onOpen = () => {
+        if (!dialogRef.current?.open) {
+            dialogRef.current?.showModal();
+        }
+    }
+
     return (
-        <ModalContext value={{ onClose }}>
+        <ModalContext value={{ closeModal: onClose, openModal: onOpen }}>
             <ClientOnlyPortal selector="#modal-container" onReady={onPortalReady}>
                 <dialog
                     ref={dialogRef}
