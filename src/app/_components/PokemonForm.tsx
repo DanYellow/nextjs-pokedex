@@ -7,9 +7,9 @@ import { usePathname, useSearchParams } from 'next/navigation'
 import { IPokemonForm, IPokemonType } from "@/app/_types/Pokemon";
 import { cleanString, typesAnimatedBorderColor } from "../_utils";
 import { loadPokemonPage } from "../_utils/rippleEffect";
-import React, { ReactNode, useEffect } from "react";
-import { useModal } from "../(front-end)/pokemon/[id]/region/[name]/modal-wrapper";
+import React, { ReactNode } from "react";
 import { useNavigation } from "../_contexts/NavigationContext";
+import { useModal } from "../_contexts/ModalContext";
 
 interface IPokemonFormComplete extends Omit<IPokemonForm, "name"> {
     pokedex_id: number;
@@ -32,8 +32,8 @@ const PokemonForm = ({ region, name, pokedex_id, form_id, listTypes, sprites, is
 
     const pathname = usePathname();
     const searchParams = useSearchParams()
-    const { closeModal, openModal } = useModal();
-    const { previousURL } = useNavigation()
+    const { setIsModalOpen } = useModal();
+    const { previousURL, setPreviousURL } = useNavigation()
 
     const listTypesString = listTypes.map((item) => cleanString(item.name));
     const listBorderClasses = typesAnimatedBorderColor[`${listTypesString[0]}_${listTypesString?.[1] || listTypesString[0]}`]
@@ -46,11 +46,12 @@ const PokemonForm = ({ region, name, pokedex_id, form_id, listTypes, sprites, is
         ({ children, className }: { children: ReactNode, className: string }) => (
             <button type="button" className={className} onClick={() => {
                 if (isModal) {
-                    closeModal();
+                    setIsModalOpen(false);
+                    setPreviousURL(`${document.location.pathname}${document.location.search}`);
                     history.pushState({}, "", `/pokemon/${pokedex_id}`);
                 } else {
-
-                    openModal();
+                    setIsModalOpen(true);
+                    history.pushState({}, "", previousURL);
                 }
             }}
                 inert={isCurrentURL && isModal}
@@ -67,7 +68,6 @@ const PokemonForm = ({ region, name, pokedex_id, form_id, listTypes, sprites, is
 
             >{children}</Link>
         )
-
     )
 
     return (
