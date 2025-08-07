@@ -7,7 +7,7 @@ export default ({ type }: { type: { fr: string; en: string; } }) => {
 
     useEffect(() => {
         (async () => {
-            const svgTypeIconReq = await fetch(`http://localhost:3000/images/types-icons/${type.en}.svg`);
+            const svgTypeIconReq = await fetch(`/images/types-icons/${type.en}.svg`);
             const parser = new DOMParser();
             const svgTypeIcon = parser.parseFromString(
                 await svgTypeIconReq.text(),
