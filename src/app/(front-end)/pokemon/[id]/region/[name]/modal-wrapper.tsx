@@ -1,7 +1,8 @@
 "use client";
 
 import ClientOnlyPortal from "@/app/_components/ClientOnlyPortal";
-import { useContext, useRef, createContext } from "react";
+import { useNavigation } from "@/app/_contexts/NavigationContext";
+import { useContext, useRef, createContext, useState, useEffect } from "react";
 
 interface IModalContext {
     closeModal: () => void;
@@ -15,6 +16,7 @@ const ModalContext = createContext<IModalContext>({
 
 const Modal = ({ children }: { children: React.ReactNode }) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
+    const { setPreviousURL } = useNavigation();
 
     const onPortalReady = () => {
         if (!dialogRef.current?.open) {
@@ -22,13 +24,28 @@ const Modal = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
+    // useEffect(() => {
+    //     if (dialogRef.current?.open) {
+    //         dialogRef.current?.close();
+    //     }
+    //     console.log("previousURL", previousURL)
+    //     window.previousURL = previousURL;
+    // }, [previousURL])
+
+    // useEffect(() => {
+    //     console.log("modal")
+    // }, [])
+
     const onClose = () => {
         if (dialogRef.current?.open) {
+            setPreviousURL(`${document.location.pathname}${document.location.search}`);
             dialogRef.current?.close();
         }
     }
 
     const onOpen = () => {
+                            console.log("onOpen")
+        dialogRef.current?.showModal();
         if (!dialogRef.current?.open) {
             dialogRef.current?.showModal();
         }

@@ -10,7 +10,7 @@ export default function ClientOnlyPortal({ children, selector, onReady }: {child
         setIsMounted(true);
         setTimeout(() => {
             onReady?.();
-        }, 150)
+        }, 100)
     }, [selector]);
 
     return isMounted ? createPortal(children, ref.current!) : null;

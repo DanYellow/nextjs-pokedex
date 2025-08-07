@@ -7,8 +7,9 @@ import { usePathname, useSearchParams } from 'next/navigation'
 import { IPokemonForm, IPokemonType } from "@/app/_types/Pokemon";
 import { cleanString, typesAnimatedBorderColor } from "../_utils";
 import { loadPokemonPage } from "../_utils/rippleEffect";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { useModal } from "../(front-end)/pokemon/[id]/region/[name]/modal-wrapper";
+import { useNavigation } from "../_contexts/NavigationContext";
 
 interface IPokemonFormComplete extends Omit<IPokemonForm, "name"> {
     pokedex_id: number;
@@ -19,9 +20,10 @@ interface IPokemonFormComplete extends Omit<IPokemonForm, "name"> {
         regular: string;
     };
     handleCloseModal?: () => void;
+    isModal: boolean;
 }
 
-const PokemonForm = ({ region, name, pokedex_id, form_id, listTypes, sprites }: IPokemonFormComplete) => {
+const PokemonForm = ({ region, name, pokedex_id, form_id, listTypes, sprites, isModal = false }: IPokemonFormComplete) => {
 
     let url = `/pokemon/${pokedex_id}`
     if (region) {
@@ -31,20 +33,27 @@ const PokemonForm = ({ region, name, pokedex_id, form_id, listTypes, sprites }: 
     const pathname = usePathname();
     const searchParams = useSearchParams()
     const { closeModal, openModal } = useModal();
+    const { previousURL } = useNavigation()
 
     const listTypesString = listTypes.map((item) => cleanString(item.name));
     const listBorderClasses = typesAnimatedBorderColor[`${listTypesString[0]}_${listTypesString?.[1] || listTypesString[0]}`]
 
     const isCurrentURL = (`${pathname}?${searchParams.toString()}` === url);
     const isNormalForm = (!url.includes("?"));
+    const isOpenedInModal = previousURL === url;
 
-    const CustomTag = isCurrentURL || isNormalForm ? (
+    const CustomTag = (isCurrentURL || isNormalForm || isOpenedInModal && !isModal) ? (
         ({ children, className }: { children: ReactNode, className: string }) => (
             <button type="button" className={className} onClick={() => {
+                if (isModal) {
                     closeModal();
                     history.pushState({}, "", `/pokemon/${pokedex_id}`);
-                }}
-                inert={isCurrentURL}
+                } else {
+
+                    openModal();
+                }
+            }}
+                inert={isCurrentURL && isModal}
             >
                 {children}
             </button>

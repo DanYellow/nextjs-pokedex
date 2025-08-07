@@ -352,6 +352,7 @@ async function RegionPage({
                                         pokedex_id={pkmn.pokedex_id}
                                         form_id={Number(pkmnFormId)}
                                         sprites={item.sprites}
+                                        isModal
                                     />
                                 </li>
                             )
