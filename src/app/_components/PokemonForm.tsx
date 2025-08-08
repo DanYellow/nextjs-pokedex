@@ -38,7 +38,7 @@ const PokemonForm = ({ region, name, pokedex_id, form_id, listTypes, sprites, is
     const listTypesString = listTypes.map((item) => cleanString(item.name));
     const listBorderClasses = typesAnimatedBorderColor[`${listTypesString[0]}_${listTypesString?.[1] || listTypesString[0]}`]
 
-    const isCurrentURL = (`${pathname}?${searchParams.toString()}` === url);
+    const isCurrentURL = searchParams ? (`${pathname}?${searchParams.toString()}` === url) : false;
     const isNormalForm = (!url.includes("?"));
     const isOpenedInModal = previousURL === url;
 

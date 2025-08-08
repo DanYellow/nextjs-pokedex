@@ -1,7 +1,9 @@
-import { fetchAbilityData, fetchAllTypes, fetchPokemon, fetchPokemonDetails, fetchPokemonExternalData } from "@/app/_api";
-import { IPokemon, IPokemonAbilityComplete, IPokemonError, IPokemonType, IType } from "@/app/_types/Pokemon";
 import Image from "next/image";
 import React, { cache, ReactNode } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+
+import { fetchAbilityData, fetchAllTypes, fetchPokemon, fetchPokemonDetails, fetchPokemonExternalData } from "@/app/_api";
+import { IPokemon, IPokemonAbilityComplete, IPokemonError, IPokemonType, IType } from "@/app/_types/Pokemon";
 
 import ModalWrapper from "@/app/(front-end)/pokemon/[id]/region/[name]/modal-wrapper";
 import PokemonPage from "@/app/(front-end)/pokemon/[id]/page";
@@ -246,7 +248,9 @@ async function RegionPage({
                         </div>
                     </div>
                 </div>
-                {/* <PokemonCry isModal color={`--dot-type-1-pip-color`} link={pkmnExtraData.cries.latest} /> */}
+                <ErrorBoundary fallback={<div></div>}>
+                    <PokemonCry isModal color={`--dot-type-1-pip-color`} link={pkmnExtraData.cries.latest} />
+                </ErrorBoundary>
             </header>
 
             <details className="mb-3 @container/sensibilities">
