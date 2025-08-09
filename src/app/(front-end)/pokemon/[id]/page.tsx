@@ -22,6 +22,7 @@ import GenerationRange from "@/app/_components/GenerationRange";
 import PokemonCry from "@/app/_components/PokemonCry";
 import { formatEffectiveness, formatStatistics, getRegionalForms } from "./utils";
 import PokemonForm from "@/app/_components/PokemonForm";
+import GameCover from "@/app/_components/GameCover";
 
 type PageProps = {
     params: Promise<{ id: string }>
@@ -447,23 +448,20 @@ export default async function PokemonDetailsPage({
                     </div>
                 </details>
 
-                <details className="mb-3">
-                    <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Apparitions ({listGames.length})</summary>
+                {/* <details className="mb-3">
+                    <summary className="hover:marker:text-[color:var(--dot-type-1-color)] font-bold text-xl">Apparitions ({listGames.length})</summary> */}
                     <ol className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-x-3 gap-y-6 mt-3">
                         {listGames.map((item) => (
                             <li className="flex flex-col items-center" key={item.key}>
-                                <Image
-                                    width={200}
-                                    height={200}
+                                <GameCover
                                     src={`/uploads/${getCoverForName(item.key, listUploadedCovers)}`}
                                     alt={`jaquette de ${item.name}`}
-                                    className="w-full"
                                 />
                                 <p className="mt-1.5 px-3 py-0.5 text-sm rounded-lg bg-slate-200">{item.name}</p>
                             </li>
                         ))}
                     </ol>
-                </details>
+                {/* </details> */}
 
                 <div>
                     <p className="font-bold">Notes</p>
@@ -477,6 +475,7 @@ export default async function PokemonDetailsPage({
                         <li>DEPS : (Pokémon) Diamant Écarlate / Perle Scintillante</li>
                         <li>EB : (Pokémon) Épée / Bouclier</li>
                         <li>PLA : Pokémon Légendes Arceus</li>
+                        <li>SV : (Pokémon) Scarlet / Violet</li>
                     </ul>
                 </div>
 
