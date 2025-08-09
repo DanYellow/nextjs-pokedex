@@ -20,11 +20,10 @@ interface IPokemonFormComplete extends Omit<IPokemonForm, "name"> {
         regular: string;
     };
     handleCloseModal?: () => void;
-    isModal: boolean;
+    isModal?: boolean;
 }
 
 const PokemonForm = ({ region, name, pokedex_id, form_id, listTypes, sprites, isModal = false }: IPokemonFormComplete) => {
-
     let url = `/pokemon/${pokedex_id}`
     if (region) {
         url += `/region/${region}?id=${form_id}`;
@@ -66,7 +65,9 @@ const PokemonForm = ({ region, name, pokedex_id, form_id, listTypes, sprites, is
                 className={className}
                 onClick={(e) => loadPokemonPage(e, listTypesString)}
 
-            >{children}</Link>
+            >
+                {children}
+            </Link>
         )
     )
 

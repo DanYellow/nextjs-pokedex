@@ -46,8 +46,8 @@ export default ({ isCurrentPkmn, isPreviousPkmn, name, pokedex_id, sprites, type
                 className="w-12"
                 src={sprites.regular}
                 alt={`sprite de ${name.fr}`}
-                width={175}
-                height={38}
+                width={64}
+                height={64}
                 loading="lazy"
             />
             <div>

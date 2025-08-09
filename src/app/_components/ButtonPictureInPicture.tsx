@@ -4,6 +4,11 @@ import { createRoot } from 'react-dom/client';
 
 import { ReactNode, useEffect, useState } from "react";
 
+declare global {
+  interface Window {
+    documentPictureInPicture?: any;
+  }
+}
 
 const ButtonPictureInPicture = ({ pipContent }: { pipContent: ReactNode }) => { // { modal }: { modal: HTMLDialogElement }
     const [modal, setModal] = useState<HTMLDialogElement | null>(null);
@@ -34,7 +39,7 @@ const ButtonPictureInPicture = ({ pipContent }: { pipContent: ReactNode }) => { 
                 lockAspectRatio: true,
                 copyStyleSheets: true,
             };
-            const pipWindow = await documentPictureInPicture.requestWindow(
+            const pipWindow = await window.documentPictureInPicture.requestWindow(
                 pipOptions
             );
 
@@ -62,8 +67,8 @@ const ButtonPictureInPicture = ({ pipContent }: { pipContent: ReactNode }) => { 
                     const link = document.createElement("link");
                     link.rel = "stylesheet";
                     link.type = styleSheet.type;
-                    link.media = styleSheet.media;
-                    link.href = styleSheet.href;
+                    link.media = styleSheet.media.mediaText;
+                    link.href = styleSheet.href as string;
                     pipWindow.document.head.appendChild(link);
                 }
             });

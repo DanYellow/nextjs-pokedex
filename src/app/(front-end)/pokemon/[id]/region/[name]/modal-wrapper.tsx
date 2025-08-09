@@ -1,14 +1,13 @@
 "use client";
 
+import { useRef, useEffect } from "react";
+
 import ClientOnlyPortal from "@/app/_components/ClientOnlyPortal";
 import { useModal } from "@/app/_contexts/ModalContext";
-import { useNavigation } from "@/app/_contexts/NavigationContext";
-import { useRef, useEffect } from "react";
 
 const Modal = ({ children }: { children: React.ReactNode }) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const { setIsModalOpen, isModalOpen } = useModal();
-    const { setPreviousURL } = useNavigation();
 
     const onPortalReady = () => {
         if (!dialogRef.current?.open) {
