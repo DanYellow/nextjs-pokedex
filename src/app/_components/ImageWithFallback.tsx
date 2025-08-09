@@ -10,7 +10,12 @@ const ImageWithFallback = ({ src, alt, fallbackSrc = "/images/missing-cover.png"
         <Image
             src={imageHasError ? fallbackSrc : src}
             alt={alt}
-            onError={() => setImageHasError(true)}
+            onError={() => {
+                if (imageHasError) {
+                    return;
+                }
+                setImageHasError(true);
+            }}
             {...rest}
         />
     );
