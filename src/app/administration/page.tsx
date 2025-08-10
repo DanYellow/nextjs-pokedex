@@ -2,9 +2,10 @@ import fs from "fs";
 import path from "path";
 
 import { Metadata } from "next";
-import Image from "next/image";
 import { redirect } from 'next/navigation'
 import Form from 'next/form';
+import { cookies } from 'next/headers'
+
 
 import Uploader from "@/app/_components/Uploader";
 import { FRENCH_GAMES_NAME, getCoverForName } from "@/app/_utils";
@@ -17,6 +18,8 @@ export const metadata: Metadata = {
 }
 
 export default async function Page() {
+    const cookie = (await cookies()).get('session')?.value
+
     const listUploadedFilesRaw = await fs.readdirSync("./public/uploads");
 
     const listUploadedFiles = listUploadedFilesRaw
