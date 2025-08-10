@@ -29,7 +29,7 @@ const Modal = ({ children }: { children: React.ReactNode }) => {
         <ClientOnlyPortal selector="#modal-container" onReady={onPortalReady}>
             <dialog
                 ref={dialogRef}
-                className={`sm:max-w-4xl w-full mx-auto my-auto px-6 pb-2 rounded-4xl backdrop:bg-slate-400/50 overscroll-y-contain bg-gray-50 border-solid border-2 border-(color:--modal-border-color)`}
+                className={`sm:max-w-4xl w-full mx-auto my-auto px-6 pb-2 rounded-4xl backdrop:bg-slate-400/50 overscroll-y-contain bg-gray-50 border-solid border-2 border-l-(color:--dot-type-1-pip-color) border-t-(color:--dot-type-1-pip-color) border-r-(color:--dot-type-2-pip-color) border-b-(color:--dot-type-2-pip-color)`}
             >
                 {children}
             </dialog>
