@@ -13,6 +13,7 @@ import { Metadata } from 'next';
 //     title: 'Connexion',
 // }
 
+import PasswordInput from '@/app/_components/PasswordInput';
 
 
 export default function LoginPage() {
@@ -42,7 +43,7 @@ export default function LoginPage() {
                 </div>
                 <div className='flex flex-col'>
                     <label htmlFor="password">Mot de passe</label>
-                    <input className='rounded-md' type="password" name="password" />
+                    <PasswordInput className='rounded-md w-full' name="password" />
                     {state?.errors?.password && (
                         <div className='flex flex-row gap-2 bg-red-100 text-red-800 px-2.5 py-1.75'>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
