@@ -7,7 +7,7 @@ const serverErrorStartNumber = 400;
 export const fetchPokemonForGeneration = cache(async (generation: number = 1) => {
     let hasFoundGeneration = true;
     try {
-        const req: { status: number, json: () => Promise<IPokemon[] | IPokemonError> } = await fetch(`https://tyradex.vercel.app/api/v1/gen/${generation}`);
+        const req: { status: number, json: () => Readonly<Promise<IPokemon[] | IPokemonError>> } = await fetch(`https://tyradex.vercel.app/api/v1/gen/${generation}`);
 
         const res = await req.json();
         const error = res as IPokemonError;
@@ -25,7 +25,7 @@ export const fetchPokemonForGeneration = cache(async (generation: number = 1) =>
 export const fetchPokemon = async (pkmnId: number | string, region: string | null = null) => {
     try {
         const regionName = region ? `/${region}` : "";
-        const req: { status: number, json: () => Promise<IPokemon | IPokemonError> } = await fetch(`https://tyradex.vercel.app/api/v1/pokemon/${pkmnId}${regionName}`);
+        const req: { status: number, json: () => Readonly<Promise<IPokemon | IPokemonError>> } = await fetch(`https://tyradex.vercel.app/api/v1/pokemon/${pkmnId}${regionName}`);
 
         return req.json();
     } catch (error) {
@@ -35,7 +35,7 @@ export const fetchPokemon = async (pkmnId: number | string, region: string | nul
 
 export const fetchAllTypes = async () => {
     try {
-        const req: { json: () => Promise<IType[]> } = await fetch("https://tyradex.app/api/v1/types");
+        const req: { json: () => Readonly<Promise<IType[]>> } = await fetch("https://tyradex.app/api/v1/types");
         return req.json();
     } catch (error) {
         return [];

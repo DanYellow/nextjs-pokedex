@@ -1,8 +1,8 @@
 export interface IPokemonExtraData {
     abilities: { ability: { name: string; url: string }, is_hidden: boolean; slot: number }[];
     cries: {
-        latest: URL;
-        legacy: URL;
+        latest: string;
+        legacy: string;
     };
     stats: { base_stat: number; effort: number; stat: { name: string } }[];
     sprites: { other: { home: { [key: string]: string } } };
@@ -12,8 +12,8 @@ export interface IPokemonExtraData {
 export interface IPokemonSpecies {
     is_legendary: boolean;
     is_mythical: boolean;
-    names: { language: { name: string; url: URL; }; name: string; }[];
-    flavor_text_entries: { language: { name: string; url: URL; }; flavor_text: string; version: { name: string; } }[];
+    names: { language: { name: string; url: string; }; name: string; }[];
+    flavor_text_entries: { language: { name: string; url: string; }; flavor_text: string; version: { name: string; } }[];
     pokedex_numbers: { entry_number: number; pokedex: { name: string; } }[];
     varieties: { is_default: boolean; pokemon: { name: string; url: string } }[];
 }
