@@ -9,9 +9,23 @@ import { useEffect, useState } from 'react';
 
 const GameCoverFormSchema = z.object({
     cover: z
-        .file({ message: 'File is required' })
-        // .mime(["image/png", "image/jpg", "image/jpeg", "image/avif"], "Format incorrect")
-        // .max(1024 * 1024, "Fichier trop lourd")
+        .instanceof(File)
+        .refine((file) => file?.size !== 0, "Image requise")
+        .refine(
+            (file) => {
+                if (file?.size === 0) {
+                    return true;
+                }
+
+                return ["image/png", "image/jpg", "image/jpeg", "image/avif"].includes(file.type);
+            },
+            "Format incorrect"
+        )
+        .refine((file) => {
+            return file.size <= 1024 * 1024;
+        }, {
+            message: "File size should not exceed 5MB",
+        })
     ,
     game: z
         .string().min(1, "Veuillez choisir un jeu"),
