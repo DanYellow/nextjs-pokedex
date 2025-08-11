@@ -182,7 +182,7 @@ const Uploader = ({ classNames = "" }: { classNames?: string }) => {
                         block
                     ">
                         Sélectionnez un fichier
-                        <input ref={inputFile} type="file" onChange={change} className="w-0 h-0 file:hidden contents" required name="cover" id="cover" accept=".jpg, .jpeg, .avif, .png" />
+                        <input ref={inputFile} type="file" onChange={change} className="w-0 h-0 file:hidden contents" name="cover" id="cover" accept=".jpg, .jpeg, .avif, .png" />
                     </label>
                 </div>
                 {errorMessage && (

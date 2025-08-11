@@ -2,10 +2,11 @@
 
 import Form from 'next/form';
 import { z } from 'zod';
+import { useActionState, useEffect, useState } from 'react';
 
 import Uploader from "../_components/Uploader"
 import { FRENCH_GAMES_NAME } from "@/app/_utils";
-import { useEffect, useState } from 'react';
+import { uploadGameAction } from './form-actions';
 
 const GameCoverFormSchema = z.object({
     cover: z
@@ -41,12 +42,24 @@ interface IGameCoverForm {
 
 const UploadForm = ({ onSubmitSuccess }: { onSubmitSuccess: (formData: FormData) => void }) => {
     const [formError, setFormError] = useState<IGameCoverForm>();
+    const [formValues, setFormValues] = useState<{ game?: string, cover?: File } | {}>();
+
+    const [state, formAction, pending] = useActionState(
+        uploadGameAction,
+        null
+    );
 
     useEffect(() => {
-        console.log("ggggge")
-    }, [])
+        if (state?.values?.cover) {
 
-    const handleSubmit = (formData: FormData) => {
+        }
+    }, [state])
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+
         const game = formData.get("game") as string;
         const file = formData.get("cover") as File;
 
@@ -58,26 +71,32 @@ const UploadForm = ({ onSubmitSuccess }: { onSubmitSuccess: (formData: FormData)
             setFormError({
                 errors: z.flattenError(validatedFields.error).fieldErrors
             })
+
+            setFormValues({
+                ...(game ? { game } : {}),
+                ...(file ? { cover: file } : {}),
+            })
         } else {
             onSubmitSuccess(formData)
         }
     }
+            // e.preventDefault();
+            // startTransition(() => uploadGameAction(new FormData(e.currentTarget)));
 
     return (
-        <Form action={handleSubmit}>
+        <Form action={formAction}>
             <div className='flex items-stretch sm:items-center flex-col gap-2 mb-3'>
                 <Uploader classNames="mt-5 md:w-2/3 lg:w-1/2 w-full" />
-                <div>
+                <div className='w-full'>
                     {
-                        formError?.errors?.cover?.map((errorMessage: string, index) => (
-                            <p className='bg-red-100 text-red-800 px-2.5 py-1.75 rounded-xl' aria-live="polite" key={index}>{errorMessage}</p>
+                        state?.errors?.cover?.map((errorMessage: string, index) => (
+                            <p className='bg-red-100 mx-auto md:w-2/3 lg:w-1/2 w-full text-red-800 px-2.5 py-1.75 rounded-xl  mb-1.5' aria-live="polite" key={index}>{errorMessage}</p>
                         ))
                     }
                 </div>
                 <div className="flex flex-col">
                     <label htmlFor="cover-select">Choisir jeu :</label>
-
-                    <select id="cover-select" name="game">
+                    <select id="cover-select" name="game" key={state?.values?.game} defaultValue={state?.values?.game}>
                         <option value="">-- --</option>
                         {Object.entries(FRENCH_GAMES_NAME).map(([key, value]) => (
                             <option key={key} value={key}>
@@ -88,8 +107,8 @@ const UploadForm = ({ onSubmitSuccess }: { onSubmitSuccess: (formData: FormData)
                 </div>
                 <div>
                     {
-                        formError?.errors?.game?.map((errorMessage: string, index) => (
-                            <p className='bg-red-100 text-red-800 px-2.5 py-1.75 rounded-xl' aria-live="polite" key={index}>{errorMessage}</p>
+                        state?.errors?.game?.map((errorMessage: string, index) => (
+                            <p className='bg-red-100 text-red-800 px-2.5 py-1.75 rounded-xl mb-1.5' aria-live="polite" key={index}>{errorMessage}</p>
                         ))
                     }
                 </div>
