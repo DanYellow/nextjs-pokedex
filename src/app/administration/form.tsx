@@ -18,7 +18,7 @@ const UploadForm = ({ onSubmitSuccess }: { onSubmitSuccess: (formData: FormData)
                     if (formActionRes) {
                         setFormError(formActionRes)
                     } else {
-                        onSubmitSuccess()
+                        onSubmitSuccess(new FormData(e.currentTarget))
                     }
                 });
             }}
